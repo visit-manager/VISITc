@@ -34,6 +34,20 @@ void daily_scheme(
 	f_growth_period(grid, loct, &(echar->tree));
 	f_growth_period(grid, loct, &(echar->c3));
 	f_growth_period(grid, loct, &(echar->c4));
+    
+    if(FIX_PHENOLOGY == 1 && loct->adyear>=1990){
+        (echar->tree).season = fixlp_tree_season[loct->doy];
+        (echar->c3).season = fixlp_c3_season[loct->doy];
+        (echar->c4).season = fixlp_c4_season[loct->doy];
+        
+        (echar->tree).day_flush = fixlp_tree_dayflush[loct->doy];
+        (echar->c3).day_flush = fixlp_c3_dayflush[loct->doy];
+        (echar->c4).day_flush = fixlp_c4_dayflush[loct->doy];
+        
+        (echar->tree).day_shed = fixlp_tree_dayshed[loct->doy];
+        (echar->c3).day_shed = fixlp_c3_dayshed[loct->doy];
+        (echar->c4).day_shed = fixlp_c4_dayshed[loct->doy];
+    }
 
 	/* plant process *********/
 	plant_process(grid, loct, &(flux->tree), &(echar->tree), &(mass->tree));
@@ -53,7 +67,7 @@ void daily_scheme(
 	(flux->soil).li_gc = loct->funder_c3 * (flux->c3).lc + loct->funder_c4 * (flux->c4).lc;	
 	(flux->soil).li_gr = loct->funder_c3 * (flux->c3).lr + loct->funder_c4 * (flux->c4).lr;	
 	/**/
-	if(SCI_SCHEME==1){
+	if(SCI_SCHEME == 1){
 		(flux->soil).d13c_li_f = d13c_addition((flux->tree).d13c_lf,(flux->tree).lf, 
 				(flux->c3).d13c_lf,(flux->c3).lf);
 		(flux->soil).d13c_li_c = d13c_addition((flux->tree).d13c_lc,(flux->tree).lc, 

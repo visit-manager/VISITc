@@ -90,6 +90,10 @@ void f_loct_proc(
 	flux->er = 0.0;
 	flux->sr = 0.0;
 	flux->rr = 0.0;
+    
+    if(FIX_PHENOLOGY == 1 && loct->adyear >= 1990){
+        (echar->tree).day_flush = fixlp_tree_dayflush[loct->doy];
+    }
 
 	/*  leaf area index (LAI), m2 m-2 ***/
 	if(grid->veg_type == 4){
@@ -103,6 +107,14 @@ void f_loct_proc(
 	loct->lai = (mass->tree).lai + (mass->c3).lai*loct->funder_c3 + 
 			(mass->c4).lai*loct->funder_c4;
 	
+    if(FIX_PHENOLOGY == 1 && loct->adyear >= 1990){
+        (mass->tree).lai = fixlp_tree_lai[loct->doy];
+        (mass->c3).lai = fixlp_c3_lai[loct->doy];
+        (mass->c4).lai = fixlp_c4_lai[loct->doy];
+        loct->lai = (mass->tree).lai + (mass->c3).lai*loct->funder_c3 + 
+			(mass->c4).lai*loct->funder_c4;
+    }
+    
 	/* fractional cover by vegetation and soil */
 	aaa = 1.0 - exp(-(echar->tree).eK0*(mass->tree).lai);
 	loct->fcover_tree = aaa;

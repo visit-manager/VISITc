@@ -97,6 +97,23 @@ extern short SA_PARA;
 extern short SA_PARA_EN;
 extern double SA_PARA_VAR;
 
+/* fix phenology ****************/
+extern long fixlp_tree_season[YSTEP];
+extern long fixlp_c3_season[YSTEP];
+extern long fixlp_c4_season[YSTEP];
+
+extern long fixlp_tree_dayflush[YSTEP];
+extern long fixlp_c3_dayflush[YSTEP];
+extern long fixlp_c4_dayflush[YSTEP];
+
+extern long fixlp_tree_dayshed[YSTEP];
+extern long fixlp_c3_dayshed[YSTEP];
+extern long fixlp_c4_dayshed[YSTEP];
+
+extern double fixlp_tree_lai[YSTEP];
+extern double fixlp_c3_lai[YSTEP];
+extern double fixlp_c4_lai[YSTEP];
+
 /***** INITIALIZATION *****/
 void f_setting(				struct Grid *grid);
 void f_open_files(			struct Grid *grid, short rnum, FILE *fp_r[NFILE]);

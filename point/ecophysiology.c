@@ -80,16 +80,16 @@ void f_ecophysiology(
 			pchar->max_nsch_storage = 0.1*mass->stm_sp + 0.3*mass->rot_fn;
 			break;
 		case 8: case 9: case 10: case 11: case 12: case 13: case 14: case 15: case 16: 
-			if(pchar->phototype==3){
+			if(pchar->phototype == 3){
 				pchar->max_nsch_storage = 0.1*mass->stm_sp + 0.4*mass->rot_fn;
-			}else if(pchar->phototype==4){
+			}else if(pchar->phototype == 4){
 				pchar->max_nsch_storage = 0.1*mass->stm_sp + 0.4*mass->rot_fn;
 			}
 			break;
 	}
     
     /* rooting depth */
-	g=1;
+	g = 1;
 	ccc = 0.0;
 	do{
 		aaa = 0.01*(double)g;

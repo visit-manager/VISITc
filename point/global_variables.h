@@ -105,3 +105,20 @@ short SA_PARA = 0;
 short SA_PARA_EN = 0;
 double SA_PARA_VAR = 0.0;
 
+/* fix phenology ****************/
+long fixlp_tree_season[YSTEP];
+long fixlp_c3_season[YSTEP];
+long fixlp_c4_season[YSTEP];
+
+long fixlp_tree_dayflush[YSTEP];
+long fixlp_c3_dayflush[YSTEP];
+long fixlp_c4_dayflush[YSTEP];
+
+long fixlp_tree_dayshed[YSTEP];
+long fixlp_c3_dayshed[YSTEP];
+long fixlp_c4_dayshed[YSTEP];
+
+double fixlp_tree_lai[YSTEP];
+double fixlp_c3_lai[YSTEP];
+double fixlp_c4_lai[YSTEP];
+

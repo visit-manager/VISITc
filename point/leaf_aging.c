@@ -7,6 +7,7 @@
 
 #include<stdio.h>
 #include<math.h>
+#include<string.h>
 #include"structure.h"
 #include"prototype.h"
 #include"definition.h"
@@ -152,7 +153,7 @@ void f_sla_change(
     
     if(strcmp(grid->site_id, "TKY")==0){
         if(AG_LMA==1){
-            if((echar->tree).day_flush<=0){
+            if((echar->tree).day_flush<=0 && loct->doy<210){
                 lma1 = 50.0;
             }else if((echar->tree).day_flush>0&&(echar->tree).day_flush<15){
                 lma1 = 50.0+2.0*((double)(echar->tree).day_flush);
@@ -166,7 +167,7 @@ void f_sla_change(
             }else{
                 lma1 = 88.0;
             }
-            if((echar->tree).day_flush<=0){
+            if((echar->tree).day_flush<=0 && loct->doy<210){
                 lma2 = 60.0;
             }else if((echar->tree).day_flush>0&&(echar->tree).day_flush<15){
                 lma2 = 60.0+0.12*((double)(echar->tree).day_flush);

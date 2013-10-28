@@ -110,6 +110,16 @@ void plant_process(
 	mass->stm -= flux->lc;
 	mass->rot -= flux->lr;
 	mass->lai = lai_mass(mass, pchar);
+    
+    if(FIX_PHENOLOGY == 1 && loct->adyear>=1990 && pchar->c_layer == 0){
+        mass->lai = fixlp_tree_lai[loct->doy];
+    }
+    if(FIX_PHENOLOGY == 1 && loct->adyear>=1990 && pchar->c_layer == 1 && pchar->phototype==3){
+        mass->lai = fixlp_c3_lai[loct->doy];
+    }
+    if(FIX_PHENOLOGY == 1 && loct->adyear>=1990 && pchar->c_layer == 1 && pchar->phototype==4){
+        mass->lai = fixlp_c4_lai[loct->doy];
+    }
 
 	/* photosynthesis, gross primary production *****************/
 	/* Monsi-Saeki */
@@ -160,14 +170,14 @@ void plant_process(
 		flux->rfg = flux->rcg = flux->rrg = 0.0;
 	}
 	
-	if(SCI_SCHEME==1){
+	if(SCI_SCHEME == 1){
 		/* stable carbon isotope */
 		flux->d13c_rfg = mass->d13c_fol;
 		flux->d13c_rcg = mass->d13c_stm;
 		flux->d13c_rrg = mass->d13c_rot;
 	}
 	
-	if(SCI_SCHEME==1){
+	if(SCI_SCHEME == 1){
 		/* stable carbon isotope */
 		if(flux->epp>0.0){
 			mass->d13c_fol = d13c_addition(mass->d13c_fol, mass->fol, flux->d13c_tpf, flux->tpf);
@@ -224,6 +234,16 @@ void plant_process(
 	
 	/* update LAI */
 	mass->lai = lai_mass(mass, pchar);
+    
+    if(FIX_PHENOLOGY == 1 && loct->adyear>=1990 && pchar->c_layer == 0){
+        mass->lai = fixlp_tree_lai[loct->doy];
+    }
+    if(FIX_PHENOLOGY == 1 && loct->adyear>=1990 && pchar->c_layer == 1 && pchar->phototype==3){
+        mass->lai = fixlp_c3_lai[loct->doy];
+    }
+    if(FIX_PHENOLOGY == 1 && loct->adyear>=1990 && pchar->c_layer == 1 && pchar->phototype==4){
+        mass->lai = fixlp_c4_lai[loct->doy];
+    }
 	
 	/* plant growth respiration */
 	flux->rpg = flux->rfg + flux->rcg + flux->rrg;

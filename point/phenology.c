@@ -32,7 +32,7 @@ void f_growth_period(
 	if(loct->tmp_2m <= pchar->ctmp_lfshd && loct->doy>=210){
 		pchar->cdd += loct->tmp_2m - pchar->ctmp_lfshd;
 	}else{
-		pchar->cdd = 0.0;
+		//pchar->cdd = 0.0;
 	}
 	/* initialization of coldness */
 	if( (loct->tmp_2m > 18.0)){

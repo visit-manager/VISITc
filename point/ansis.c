@@ -38,24 +38,44 @@ void output_ansis_daily(
 	fprintf(fp,"%4ld ", loct->climy);
 	fprintf(fp,"%3ld ", loct->doy);
     
+    fprintf(fp,"%ld ", (echar->tree).season);
+    fprintf(fp,"%ld ", (echar->tree).day_flush);
+    fprintf(fp,"%ld ", (echar->tree).day_shed);
+    fprintf(fp,"%lf ", (mass->tree).lai);
+    
+    fprintf(fp,"%ld ", (echar->c3).season);
+    fprintf(fp,"%ld ", (echar->c3).day_flush);
+    fprintf(fp,"%ld ", (echar->c3).day_shed);
+    fprintf(fp,"%lf ", (mass->c3).lai);
+    
+    fprintf(fp,"%ld ", (echar->c4).season);
+    fprintf(fp,"%ld ", (echar->c4).day_flush);
+    fprintf(fp,"%ld ", (echar->c4).day_shed);
+    fprintf(fp,"%lf ", (mass->c4).lai);
+    
+    fprintf(fp,"%lf ", flux->gpp * 100.0);
+    fprintf(fp,"%lf ", flux->er * 100.0);
+    fprintf(fp,"%lf ", flux->nep * 100.0);
+    
+    /* fprintf(fp,"%lf ", loct->tmp_2m);
+    fprintf(fp,"%ld ", (echar->tree).season);
+    fprintf(fp,"%lf ", (echar->tree).gdd);
+    fprintf(fp,"%lf ", (echar->tree).cdd); */
+    
+    
+    
 	/* fprintf(fp,"%7.2lf ", loct->prate_sfc);
 	fprintf(fp,"%7.2lf ", loct->tmp_2m); */
     
     /* MSE output: 2013/03/30 by A.Ito */
-    fprintf(fp,"%10.4lf ", loct->funder_c3*(mass->c3).lai);
+    /* fprintf(fp,"%10.4lf ", loct->funder_c3*(mass->c3).lai);
     fprintf(fp,"%10.4lf ", flux->gpp*100.0);
 	fprintf(fp,"%10.4lf ", flux->nep*100.0);
     fprintf(fp,"%10.4lf ", loct->rooting_depth);
     fprintf(fp,"%10.4lf ", (flux->soil).ch4_wh_diff);
     fprintf(fp,"%10.4lf ", (flux->soil).ch4_wh_ebull);
     fprintf(fp,"%10.4lf ", (flux->soil).ch4_wh_plant);
-    fprintf(fp,"%10.4lf ", (flux->soil).ch4_wh_diff + (flux->soil).ch4_wh_ebull + (flux->soil).ch4_wh_plant);
-
-
-
-
-
-
+    fprintf(fp,"%10.4lf ", (flux->soil).ch4_wh_diff + (flux->soil).ch4_wh_ebull + (flux->soil).ch4_wh_plant); */
 
     /* CEAMIP */
     /* fprintf(fp,"%10.4lf ", (mass->tree).lai+loct->funder_c3*(mass->c3).lai+loct->funder_c4*(mass->c4).lai);
@@ -566,26 +586,29 @@ void output_ansis_ann(
 	c_litter = ansis_ann[17]+ansis_ann[18]+ansis_ann[19]+ansis_ann[20]+ansis_ann[21]+ansis_ann[22];
 	c_humus = ansis_ann[23]+ansis_ann[24]+ansis_ann[25];
 	
-	/* fprintf(fp, "%ld,", year);
+	fprintf(fp, "%ld ", year);
 	
-	fprintf(fp, "%lf,", ansis_ann[0]);
-	fprintf(fp, "%lf,", ansis_ann[1]);
-	fprintf(fp, "%lf,", ansis_ann[2]);
+	/* fprintf(fp, "%lf,", ansis_ann[6]+ansis_ann[7]+ansis_ann[8] + ansis_ann[10]+ansis_ann[11]+ansis_ann[12]);
+	fprintf(fp, "%lf,", c_litter + c_humus); */
+
+	fprintf(fp, "%lf ", ansis_ann[0]);
+	fprintf(fp, "%lf ", ansis_ann[1]);
+	fprintf(fp, "%lf ", ansis_ann[2]);
+	fprintf(fp, "%lf ", ansis_ann[3]);
+	fprintf(fp, "%lf ", ansis_ann[4]);
 	
-	fprintf(fp, "%lf,", ansis_ann[5]+ansis_ann[9]);
-	fprintf(fp, "%lf,", ansis_ann[6]+ansis_ann[10]);
+	/* fprintf(fp, "%lf,", c_litter);
+	fprintf(fp, "%lf,", c_humus); */
 	
-	fprintf(fp, "%lf,", ansis_ann[6]+ansis_ann[7]+ansis_ann[8]);
-	fprintf(fp, "%lf,", ansis_ann[10]+ansis_ann[11]+ansis_ann[12]);
-	fprintf(fp, "%lf,", c_litter);
-	fprintf(fp, "%lf,", c_humus);
-	
-	fprintf(fp, "%lf,", ansis_ann[23]);
+	/* fprintf(fp, "%lf,", ansis_ann[23]);
 	fprintf(fp, "%lf,", ansis_ann[24]);
 	fprintf(fp, "%lf,", ansis_ann[25]);
-	fprintf(fp, "%lf,", ansis_ann[4]); */
+	fprintf(fp, "%lf,", ansis_ann[4]); 
+	fprintf(fp, "%lf,", ansis_ann[5]+ansis_ann[9]);
+	fprintf(fp, "%lf,", ansis_ann[6]+ansis_ann[10]);*/
+	
 
-	fprintf(fp, "%ld ", year);
+	/* fprintf(fp, "%ld ", year);
 	
 	fprintf(fp, "%lf ", ansis_ann[112]);
 	fprintf(fp, "%lf ", ansis_ann[113]);
@@ -612,7 +635,7 @@ void output_ansis_ann(
     fprintf(fp, "%lf ", ansis_ann[118]);
     fprintf(fp, "%lf ", ansis_ann[119]);
     fprintf(fp, "%lf ", ansis_ann[120]);
-    fprintf(fp, "%lf ", ansis_ann[121]);
+    fprintf(fp, "%lf ", ansis_ann[121]); */
 		
 	
 	/* fprintf(fp, "%lf ", ansis_ann[5]+ansis_ann[9]);

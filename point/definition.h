@@ -81,7 +81,7 @@
 /* 1: calculate */
 
 /* 30-min canopy scheme */
-#define FLUX_SCHEME  1 /***************************************/
+#define FLUX_SCHEME  0 /***************************************/
 /* 0: skip, i.e. not calculate */
 /* 1: calculate */
 
@@ -103,7 +103,7 @@
 /* 0: none */
 
 /* CH4 emission with a multi-layer model */
-#define WH_CH4 1
+#define WH_CH4 0
 /* 0: off */
 /* 1: on (activate Walter & Heimann CH4 scheme) */
 
@@ -167,4 +167,5 @@
 /* 0: control */
 /* 1: kn=>0.5 */
 
+#define FIX_PHENOLOGY 1
 

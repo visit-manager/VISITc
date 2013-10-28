@@ -26,10 +26,10 @@ void f_experiment(
 ){
 	long e, f, g, h, i;
 	char filename[100];
-	long ndy, end_year;
-	double ansis_ann[256];
+	long ndy, end_year, ddummy;
+	double ansis_ann[256],fdummy;
 	double aet_a, flux_mon[6][12],dmon[12],aaa;
-	FILE *fp_fxd;	
+	FILE *fp_fxd, *fp_lp;
 	FILE *fp_restart;
 	
 	if(NOTICE==1){
@@ -54,6 +54,34 @@ void f_experiment(
 			exit (1);
 		}
 	}
+    
+    if(FIX_PHENOLOGY == 1){
+        fp_lp = fopen("TKY_131024_phenology.txt","rt");
+        
+        for(f=0; f<366; f++){
+            fscanf(fp_lp,"%ld", &ddummy);
+            fscanf(fp_lp,"%ld", &ddummy);
+            
+            fscanf(fp_lp,"%ld", &fixlp_tree_season[f]);
+            fscanf(fp_lp,"%ld", &fixlp_tree_dayflush[f]);
+            fscanf(fp_lp,"%ld", &fixlp_tree_dayshed[f]);
+            fscanf(fp_lp,"%lf", &fixlp_tree_lai[f]);
+            
+            fscanf(fp_lp,"%ld", &fixlp_c3_season[f]);
+            fscanf(fp_lp,"%ld", &fixlp_c3_dayflush[f]);
+            fscanf(fp_lp,"%ld", &fixlp_c3_dayshed[f]);
+            fscanf(fp_lp,"%lf", &fixlp_c3_lai[f]);
+            
+            fscanf(fp_lp,"%ld", &fixlp_c4_season[f]);
+            fscanf(fp_lp,"%ld", &fixlp_c4_dayflush[f]);
+            fscanf(fp_lp,"%ld", &fixlp_c4_dayshed[f]);
+            fscanf(fp_lp,"%lf", &fixlp_c4_lai[f]);
+            
+            fscanf(fp_lp,"%lf", &fdummy);
+            fscanf(fp_lp,"%lf", &fdummy);
+            fscanf(fp_lp,"%lf", &fdummy);
+        }
+    }
 	
 	/***************************************************************************/
 	for(f=0; f<NROW; f++){
@@ -367,4 +395,8 @@ void f_experiment(
 	if(NOTICE==1){
 		printf("done\n");
 	}
+    
+    if(FIX_PHENOLOGY == 1){
+        fclose(fp_lp);
+    }
 }
