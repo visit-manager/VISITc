@@ -64,31 +64,40 @@ void f_allocation(
 		}
         
         /* allocation to grain **/
-		if(pchar->crop_stage==4){
+		if(pchar->crop_stage == 4){
 			alloc_g = 0.7;
 		}else{
 			alloc_g = 0.0;
 		}
 				
 		/* monthly translocation fluxes */
-		flux->tpp = (alloc_g + (1.0 - alloc_g)*(alloc_f + alloc_c + alloc_r))*flux->epp;
+		flux->tpp = (alloc_g + (1.0 - alloc_g) * (alloc_f + alloc_c + alloc_r))*flux->epp;
 		flux->tpf = (1.0 - alloc_g)*alloc_f*flux->epp;
 		flux->tpc = (1.0 - alloc_g)*alloc_c*flux->epp;
 		flux->tpr = (1.0 - alloc_g)*alloc_r*flux->epp;
+        
 		/**/
 		flux->tpg = alloc_g * flux->epp;
 		
 	}else if(flux->epp<=0.0){ /* during NON growing-period */
 		/* allocation ratios of GPP, not EPP */
 		alloc_f = pchar->alloc_ass;
-		alloc_c = (1.0-pchar->alloc_ass)*pchar->alloc_abg;
-		alloc_r = (1.0-pchar->alloc_ass)*(1.0-pchar->alloc_abg);
+		alloc_c = (1.0 - pchar->alloc_ass)*pchar->alloc_abg;
+		alloc_r = (1.0 - pchar->alloc_ass)*(1.0 - pchar->alloc_abg);
 				
-		/* monthly translocation fluxes */
+		/* daily translocation fluxes */
 		flux->tpp = (alloc_f + alloc_c + alloc_r)*flux->epp;
 		flux->tpf = alloc_f*flux->gpp - flux->rfm;
 		flux->tpc = alloc_c*flux->gpp - flux->rcm;
 		flux->tpr = alloc_r*flux->gpp - flux->rrm;
+
+		//flux->tpf = alloc_f*flux->epp;
+		//flux->tpc = alloc_c*flux->epp;
+		//flux->tpr = alloc_r*flux->epp;
+        
+        /* if(flux->tpc < 0.0){
+            printf("### %lf %lf %lf %lf\n", flux->tpc, alloc_c, flux->gpp, flux->rcm);
+        } */
         
         alloc_g = 0.0;
 		flux->tpg = 0.0;
@@ -105,7 +114,8 @@ void f_allocation(
 void reallocation_survival(
 	struct Grid *grid, 
 	struct Pchar *pchar, 
-	struct Pmas *mass
+	struct Pmas *mass,
+    struct Pflx *flux
 ){
 	double crit_lai;
 	double ral_cap_stf, ral_cap_rtf;
@@ -130,12 +140,15 @@ void reallocation_survival(
 		bbb = mass->stm*ral_cap_stf;
 		ccc = mass->rot*ral_cap_rtf;
 		
-		ral_stf = aaa*pchar->alloc_abg*(bbb/aaa)/(0.5+(bbb/aaa));
-		ral_rtf = aaa*(1.0-pchar->alloc_abg)*(ccc/aaa)/(0.5+(ccc/aaa));
+		ral_stf = aaa * pchar->alloc_abg * (bbb/aaa)/(0.5 + (bbb/aaa));
+		ral_rtf = aaa * (1.0 - pchar->alloc_abg) * (ccc/aaa)/(0.5 + (ccc/aaa));
 
-		mass->fol += ral_stf+ral_rtf;
+		mass->fol += ral_stf + ral_rtf;
 		mass->stm -= ral_stf;
 		mass->rot -= ral_rtf;
+        
+        flux->rtpc += ral_stf;
+        flux->rtpr += ral_rtf;
 	}
 	
 	/* to fliage, improve production */

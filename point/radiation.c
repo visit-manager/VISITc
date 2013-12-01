@@ -97,13 +97,13 @@ double f_toprad(
 	double ge, dtc, ho, solconst;
 	double aa, bb;
 	
-	ge = 2.0*PI/365.0*loct->doy;
+	ge = 2.0 * PI / 365.0 * loct->doy;
 		
 	/** relative distance between the sun and the earth **/
 	/* Mizu-Knakyo-no-Kisyougaku (J. Kondo) pp 57, eq.4.5 */
-	aa = 0.034221*cos(ge)+0.00128*sin(ge);
-	bb = 0.000719*cos(2.0*ge)+0.000077*sin(2.0*ge);
-	dtc = 1.00011+aa+bb;
+	aa = 0.034221 * cos(ge) + 0.00128 * sin(ge);
+	bb = 0.000719 * cos(2.0 * ge) + 0.000077 * sin(2.0 * ge);
+	dtc = 1.00011 + aa + bb;
 		 
 	/* solar constant = 4.921 MJ/m2 =1367 W/m2 = 1.96 cal/cm2/min
 		 = 6151.5 micro mol photons/m2/s */	
@@ -187,7 +187,7 @@ void f_ppfd(
 		/* updated PPFD ************************************/
 		/* PAR->PPFD conversion factor after Dye (2004) */
 		/* diffuse / total */
-		dd = 0.958-0.982*kt;
+		dd = 0.958 - 0.982 * kt;
 		dd = (dd>0.01)?dd:0.01;		/* minimum 1 percent */
 		
 		/* diffuse*/

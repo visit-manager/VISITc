@@ -54,7 +54,7 @@ void f_pc_sat(
 	/* optimum temperature for photosynthesis ********************/
 	if(pchar->phototype==3){ /* C3 plants with change */
 		pchar->topt = pchar->topt0 + 0.01*pchar->ci;	
-	}else if(pchar->phototype==4){ /* c3 plants without change */
+	}else if(pchar->phototype==4){ /* C4 plants without change */
 		pchar->topt = pchar->topt0;
 	}
 	
@@ -66,29 +66,29 @@ void f_pc_sat(
 		CO2/O2 specificity of ribulose-1,5-bisphosphate carboxylase/oxygenase 
 		and the rate of respiration in the light. Planta 165:397-406.
 		*/
-		aa3 = 0.000347*(loct->tmp_sfc-20.0)*(loct->tmp_sfc-20.0);
-		aa1 = 1.0 + 0.0451*(loct->tmp_sfc-20.0)+aa3;
+		aa3 = 0.000347*(loct->tmp_sfc - 20.0)*(loct->tmp_sfc - 20.0);
+		aa1 = 1.0 + 0.0451*(loct->tmp_sfc - 20.0)+aa3;
 		aa1 = (aa1>0.0)?aa1:0.0;
-		pchar->cmpcd = pchar->cmpcd0*aa1;	
-	}else if(pchar->phototype==4){ 
-		/* c3 plants without change */
+		pchar->cmpcd = pchar->cmpcd0 * aa1;	
+	}else if(pchar->phototype == 4){ 
+		/* C4 plants without change */
 		pchar->cmpcd = pchar->cmpcd0;
 	}
 		
 	/* temperature schalar on photosynthesis ********************************/
 	/* equation from Raich et al. (1991) Ecol. Appl (used in TEM) */
-	aa1 = (loct->tmp_sfc-pchar->tmax)*(loct->tmp_sfc-pchar->tmin);
-	aa2 = (loct->tmp_sfc-pchar->topt)*(loct->tmp_sfc-pchar->topt);
-	ftem = aa1/(aa1-aa2);
-	ftem = (ftem<=1.0)?ftem:1.0; 
-	ftem = (ftem>=0.0)?ftem:0.0;
+	aa1 = (loct->tmp_sfc - pchar->tmax)*(loct->tmp_sfc - pchar->tmin);
+	aa2 = (loct->tmp_sfc - pchar->topt)*(loct->tmp_sfc - pchar->topt);
+	ftem = aa1/(aa1 - aa2);
+	ftem = (ftem <= 1.0)?ftem:1.0; 
+	ftem = (ftem >= 0.0)?ftem:0.0;
 	
 	/* stomatal limitation on photosynthesis via intercellular CO2 concentration *****/
 	if(pchar->phototype==3){ /* C3 plants */
 		/*fstl=0.05+0.95*(pchar->ci-pchar->cmpcd)/(pchar->kmci+pchar->ci); */
-		fstl = 0.30 + 0.70*(pchar->ci-pchar->cmpcd)/(pchar->kmci+pchar->ci); 
-	}else if(pchar->phototype==4){ /* c3 plants */
-		fstl = 0.50 + 0.50*(pchar->ci-pchar->cmpcd)/(pchar->kmci+pchar->ci); 
+		fstl = 0.30 + 0.70*(pchar->ci - pchar->cmpcd)/(pchar->kmci + pchar->ci); 
+	}else if(pchar->phototype==4){ /* C4 plants */
+		fstl = 0.50 + 0.50*(pchar->ci - pchar->cmpcd)/(pchar->kmci + pchar->ci); 
 	}
 	fstl = (fstl<=1.0)?fstl:1.0; 
 	fstl = (fstl>=0.0)?fstl:0.0;
@@ -103,7 +103,7 @@ void f_pc_sat(
 	fnstl = (fnstl>=0.0)?fnstl:0.0;
 		
 	/** light-saturated photosynthesis rate **/
-	pchar->psat = pchar->pmax*ftem*fstl*fnstl; 
+	pchar->psat = pchar->pmax * ftem * fstl * fnstl; 
 	
 	/* printf("%ld %.2lf %.2lf %.2lf\n", pchar->phototype, ftem, fstl, fnstl);*/
 }

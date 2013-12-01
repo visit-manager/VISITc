@@ -48,14 +48,21 @@ void plant_process(
 			/* cost_new_leaf = 0.0; */
 		
 			mass->fol += emerge - cost_new_leaf;
+            
+            flux->rtpc = emerge * (0.1*mass->stm_sp / pchar->max_nsch_storage);
+            flux->rtpr = emerge * (0.3*mass->rot_fn / pchar->max_nsch_storage);
 			
 			mass->nsch_storage -= emerge;
 						
 		}else{
 			cost_new_leaf = 0.0;
+            flux->rtpc = 0.0;
+            flux->rtpr = 0.0;
 		}
 	}else{
 		cost_new_leaf = 0.0;
+        flux->rtpc = 0.0;
+        flux->rtpr = 0.0;
 	}
     
     /* planting (crop with stage==1) ****************************/
@@ -229,7 +236,7 @@ void plant_process(
 	}
     
 	/* if(pchar->phenoltype==1){ */
-		reallocation_survival(grid, pchar, mass); /* */
+		reallocation_survival(grid, pchar, mass, flux); /* */
 	/* } */
 	
 	/* update LAI */
@@ -252,12 +259,12 @@ void plant_process(
 	/* surplus production */
 	flux->spp = flux->gpp - flux->rfm - flux->rfg;
 	/* net primary production */
-	flux->npp = flux->gpp -flux->rp;
+	flux->npp = flux->gpp - flux->rp;
 
 	/* plant litterfall */
 	flux->lL = flux->lf + flux->lc + flux->lr;
 	
-	if(SCI_SCHEME==1){
+	if(SCI_SCHEME == 1){
 		flux->d13c_lL = d13c_addition3(
 			flux->d13c_lf, flux->lf, flux->d13c_lc, flux->lc, flux->d13c_lr, flux->lr);
 	}
@@ -266,7 +273,7 @@ void plant_process(
 	mass->plant = mass->fol + mass->stm + mass->rot;
 	
 	/* nitrogen cycle */
-	if(N_CYCLE ==1){
+	if(N_CYCLE == 1){
 		/* n allocation */
 		f_n_alloc(grid, loct, pchar, mass, flux);
 
@@ -276,5 +283,4 @@ void plant_process(
 		/* abandon by litterfall */
 		f_n_abandon_salvage(grid, loct, pchar, mass, flux);
 	}
-
 }

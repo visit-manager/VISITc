@@ -26,7 +26,7 @@ double f_rfm(
 	/* temperature dependence, exponential */
 	ft = exp(log(pchar->qTf)/10.0*(loct->tmp_sfc-t0));
 	
-	if(mass->fol>=0.0){	
+	if(mass->fol >= 0.0){	
 		rfm = mass->fol*rfmt0*ft;
 	}else{
 		rfm = 0.0;
@@ -44,7 +44,7 @@ double f_rfg(
 	double rfg;
 	
 	/* construction cost is proportional to biomass growth */
-	rfg = pchar->rgf*flux->tpf; 
+	rfg = pchar->rgf * flux->tpf; 
 	/* flux->tpf: carbon translocation */
 	
 	return (rfg);
@@ -63,10 +63,10 @@ double f_rcm(
 	rfmt0 = pchar->rmc/1000.0; 
 	t0 = 15.0; 
 	/* temperature dependence, exponential */
-	ft = exp(log(pchar->qTc)/10.0*(loct->tmp_sfc-t0));
+	ft = exp(log(pchar->qTc)/10.0*(loct->tmp_sfc - t0));
 	
-	if(mass->stm>=0.0){	
-		rfm = mass->stm*rfmt0*ft;
+	if(mass->stm >= 0.0){	
+		rfm = mass->stm * rfmt0 * ft;
 	}else{
 		rfm = 0.0;
 	}
@@ -83,7 +83,7 @@ double f_rcg(
 	double rcg;
 	
 	/* construction cost is proportional to biomass growth */
-	rcg = pchar->rgc*flux->tpc; 
+	rcg = pchar->rgc * flux->tpc; 
 	
 	return (rcg);
 }
@@ -106,7 +106,7 @@ double f_rrm(
 	ft = exp(log(pchar->qTr)/10.0*(loct->tmp10_soil-t0));
 	
 	if(mass->rot>=0.0){	
-		rfm = mass->rot*rfmt0*ft;
+		rfm = mass->rot * rfmt0 * ft;
 	}else{
 		rfm = 0.0;
 	}
@@ -123,7 +123,7 @@ double f_rrg(
 	double rrg;
 	
 	/* construction cost is proportional to biomass growth */
-	rrg = pchar->rgr*flux->tpr; 
+	rrg = pchar->rgr * flux->tpr; 
 	
 	return (rrg);
 }

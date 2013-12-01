@@ -227,7 +227,7 @@ void leaf_ansolv_df97(		double vpd, double aco2, double lai, double ft_rd, doubl
 							double *debug2, double *debug3);
 
 void f_allocation(			struct Pchar *pchar, struct Pmas *mass, struct Pflx *flux);
-void reallocation_survival(	struct Grid *grid, struct Pchar *pchar, struct Pmas *mass);
+void reallocation_survival(	struct Grid *grid, struct Pchar *pchar, struct Pmas *mass, struct Pflx *flux);
 
 double frl(					struct Grid *grid, struct Loct *loct, struct Schar *schar);
 double frh(					struct Grid *grid, struct Loct *loct, struct Schar *schar);

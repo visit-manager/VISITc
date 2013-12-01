@@ -38,7 +38,7 @@ void output_ansis_daily(
 	fprintf(fp,"%4ld ", loct->climy);
 	fprintf(fp,"%3ld ", loct->doy);
     
-    fprintf(fp,"%ld ", (echar->tree).season);
+    /* fprintf(fp,"%ld ", (echar->tree).season);
     fprintf(fp,"%ld ", (echar->tree).day_flush);
     fprintf(fp,"%ld ", (echar->tree).day_shed);
     fprintf(fp,"%lf ", (mass->tree).lai);
@@ -55,7 +55,7 @@ void output_ansis_daily(
     
     fprintf(fp,"%lf ", flux->gpp * 100.0);
     fprintf(fp,"%lf ", flux->er * 100.0);
-    fprintf(fp,"%lf ", flux->nep * 100.0);
+    fprintf(fp,"%lf ", flux->nep * 100.0); */
     
     /* fprintf(fp,"%lf ", loct->tmp_2m);
     fprintf(fp,"%ld ", (echar->tree).season);

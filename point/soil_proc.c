@@ -34,23 +34,23 @@ void f_cycle_soil(
 	schar->f_tm_h = frh(grid, loct, schar);		/* humus */
 	
 	/* degraded soil organic carbon */
-	degrade_tf = mass->ltr_tf*schar->sr_lf/1000.0*schar->f_tm_l;
-	degrade_tc = mass->ltr_tc*schar->sr_lc/1000.0*schar->f_tm_l;
-	degrade_tr = mass->ltr_tr*schar->sr_lr/1000.0*schar->f_tm_l;	
-	degrade_gf = mass->ltr_gf*schar->sr_lf/1000.0*schar->f_tm_l;
-	degrade_gc = mass->ltr_gc*schar->sr_lc/1000.0*schar->f_tm_l;
-	degrade_gr = mass->ltr_gr*schar->sr_lr/1000.0*schar->f_tm_l;	
-	degrade_ha = mass->msl_a*schar->sr_ha/1000.0*schar->f_tm_h;
-	degrade_hi = mass->msl_i*schar->sr_hi/1000.0*schar->f_tm_h;
-	degrade_hp = mass->msl_p*schar->sr_hp/1000.0*schar->f_tm_h;
+	degrade_tf = mass->ltr_tf * schar->sr_lf/1000.0 * schar->f_tm_l;
+	degrade_tc = mass->ltr_tc * schar->sr_lc/1000.0 * schar->f_tm_l;
+	degrade_tr = mass->ltr_tr * schar->sr_lr/1000.0 * schar->f_tm_l;	
+	degrade_gf = mass->ltr_gf * schar->sr_lf/1000.0 * schar->f_tm_l;
+	degrade_gc = mass->ltr_gc * schar->sr_lc/1000.0 * schar->f_tm_l;
+	degrade_gr = mass->ltr_gr * schar->sr_lr/1000.0 * schar->f_tm_l;	
+	degrade_ha = mass->msl_a * schar->sr_ha/1000.0 * schar->f_tm_h;
+	degrade_hi = mass->msl_i * schar->sr_hi/1000.0 * schar->f_tm_h;
+	degrade_hp = mass->msl_p * schar->sr_hp/1000.0 * schar->f_tm_h;
 
 	/* microbial respiration */
-	flux->mr_tf = degrade_tf*schar->f_co2_lf;
-	flux->mr_tc = degrade_tc*schar->f_co2_lc;
-	flux->mr_tr = degrade_tr*schar->f_co2_lr;
-	flux->mr_gf = degrade_gf*schar->f_co2_lf;
-	flux->mr_gc = degrade_gc*schar->f_co2_lc;
-	flux->mr_gr = degrade_gr*schar->f_co2_lr;
+	flux->mr_tf = degrade_tf * schar->f_co2_lf;
+	flux->mr_tc = degrade_tc * schar->f_co2_lc;
+	flux->mr_tr = degrade_tr * schar->f_co2_lr;
+	flux->mr_gf = degrade_gf * schar->f_co2_lf;
+	flux->mr_gc = degrade_gc * schar->f_co2_lc;
+	flux->mr_gr = degrade_gr * schar->f_co2_lr;
 	flux->mr_a = degrade_ha;
 	flux->mr_i = degrade_hi;
 	flux->mr_p = degrade_hp;

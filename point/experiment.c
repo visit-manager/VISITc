@@ -118,7 +118,7 @@ void f_experiment(
 				fscanf(fp_restart,"%lf", &((mass[f][g].soil).msl_p));
 			}
 			
-			if(grid[f][g].flag_datavl==1){
+			if(grid[f][g].flag_datavl == 1){
 				/* initialize N cycle */
 				/* init_nitrogen(mass, flux); */
 				
@@ -146,7 +146,7 @@ void f_experiment(
 				/* roop for experimental stage ************************************************/
 				for(e=BYR; e<=end_year; e++){	
 					loct->climy = e;
-					if(SENSANS_ACO2==1){
+					if(SENSANS_ACO2 == 1){
 						loct->CO2y = BYR;
 					}else{
 						loct->CO2y = e;
@@ -217,7 +217,7 @@ void f_experiment(
 						f_doyTmody(e, h, &(loct->month), &(loct->mday));
 						loct->hour = 24;
 						
-						if(loct->mday==0){
+						if(loct->mday == 0){
                             dmon[loct->month]= 0.0;
 							flux_mon[0][loct->month] = flux_mon[1][loct->month] = flux_mon[2][loct->month] = 0.0;
 							flux_mon[3][loct->month] = flux_mon[4][loct->month] = flux_mon[5][loct->month] = 0.0;

@@ -167,5 +167,18 @@
 /* 0: control */
 /* 1: kn=>0.5 */
 
-#define FIX_PHENOLOGY 1
+/* fix LAI phenology */
+#define FIX_PHENOLOGY 0
+/* 0: off */
+/* 1: on */
 
+/* SASU implimentation: 2013/10/29 */
+#define USE_SASU 0
+/* 0: not */
+/* 1: use for soil */
+/* 2: use for soil + vegetation */
+
+/* randomization of climate data in spin-up */
+#define RANDCLIM_SU 1
+/* 0: off */
+/* 1: on */

@@ -752,7 +752,7 @@ struct Pflx{
 		double		tpp;				/* translocation of photosynthate, total */
         double      tpg;
 		
-		double		rtpc;
+		double		rtpc;               
 		double		rtpr;
 		
 		double		rp;					/* plant respiration, =rpm+rpg */
