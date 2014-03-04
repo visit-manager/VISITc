@@ -64,7 +64,7 @@
 #define NFILE 9
 
 /* number of climate data length (years) */
-#define HCLIMD 65 /* NCEP/NCAR 1948-2012 */
+#define HCLIMD 66 /* NCEP/NCAR 1948-2013 */
 //#define HCLIMD 110 /* CEAMIP 1901-2010 */
 
 /* control debugging messages */
@@ -81,15 +81,15 @@
 /* 1: calculate */
 
 /* 30-min canopy scheme */
-#define FLUX_SCHEME  0 /***************************************/
+#define FLUX_SCHEME 1 /***************************************/
 /* 0: skip, i.e. not calculate */
 /* 1: calculate */
 
 /* stable carbon isotope */
-#define SCI_SCHEME  0
+#define SCI_SCHEME 0
 
 /* restart */
-#define USE_RESTART  0
+#define USE_RESTART 0
 /* 0: none */
 
 /* choice of algorithm to solve leaf gas exchange */
@@ -163,7 +163,7 @@
 /* 0: off */
 /* 1: on */
 
-#define EX_N_ECOPHYS 0
+#define EX_N_ECOPHYS 2
 /* 0: control */
 /* 1: kn=>0.5 */
 

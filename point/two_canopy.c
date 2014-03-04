@@ -157,19 +157,36 @@ void f_gpp_sunshade(
 	struct Cchar *cchar
 ){
 	long nn;
-	double crit, step, kn;
+	double crit, step, kn, nadj, nc_con, nc_ex, n_top;
 	
 	step = 0.1;
     
     if(EX_N_ECOPHYS==1){
-        kn = 0.5;
+        kn = 0.4;
+        nadj = 1.0;
+    }else if(EX_N_ECOPHYS==2){
+        
+        kn = 0.68;
+   
+        nc_con = cchar->lai * ((cchar->nc_ct-cchar->nc_np) * exp(-cchar->ke_n) / cchar->ke_n + cchar->nc_np);
+        nc_ex = cchar->lai * ((cchar->nc_ct-cchar->nc_np) * exp(-kn) / kn + cchar->nc_np);
+        
+        if(nc_ex > 0.0){
+            nadj = nc_con / nc_ex;
+        }else{
+            nadj = 0.0;
+        }
+        
     }else{
         kn = cchar->ke_n;
+        nadj = 1.0;
     }
+    
+    n_top = nadj * cchar->nc_ct;
 	
 	/****** sunny ******/
 	/* maximum carboxylation rate at 25 deg-C: Eq.22 in DF97 */
-	cchar->vcmx_sn0 = cchar->lai*cchar->photocap_n*(cchar->nc_ct-cchar->nc_np)*
+	cchar->vcmx_sn0 = cchar->lai*cchar->photocap_n*(n_top - cchar->nc_np)*
 		(1.0-exp(-(kn + cchar->ke_b1*cchar->lai)))/(kn + cchar->ke_b1*cchar->lai);
 	/* maximum carboxylation rate: Eq.8 in DF97 */
 	cchar->vcmx_sn = cchar->vcmx_sn0*exp(cchar->acen_vc*(cchar->tmp-25.0)/(298.15*UGC*(cchar->tmp+ZAT)));
@@ -220,7 +237,7 @@ void f_gpp_sunshade(
 	/****** shade ******/
 	/* maximum carboxylation rate at 25 deg-C: Eq.A27 in DF97 */
 	/* Vcmax(shade) = Vcmax - Vcmax(sun) */
-	cchar->vcmx_sd0 = cchar->lai*cchar->photocap_n*(cchar->nc_ct-cchar->nc_np)*((1.0-exp(-kn))/
+	cchar->vcmx_sd0 = cchar->lai*cchar->photocap_n*(n_top - cchar->nc_np)*((1.0-exp(-kn))/
 		kn - (1.0-exp(-(kn + cchar->ke_b1*cchar->lai)))/(kn + cchar->ke_b1*cchar->lai));
 	/* maximum carboxylation rate: Eq.8 in DF97 */
 	cchar->vcmx_sd = cchar->vcmx_sd0*exp(cchar->acen_vc*(cchar->tmp-25.0)/(298.15*UGC*(cchar->tmp+ZAT)));

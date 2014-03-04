@@ -111,6 +111,13 @@ void f_open_files(
                 if(LCCONV==1){
 					strcat(filename, "_lcconv");
 				}
+
+                if(EX_N_ECOPHYS==1){
+					strcat(filename, "_nex1");
+				}
+                if(EX_N_ECOPHYS==2){
+					strcat(filename, "_nex2");
+				}
             
 				switch(h){
 					case 0:		strcat(filename, "_spinup");		break;

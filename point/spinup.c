@@ -53,7 +53,7 @@ void f_spinup(
 		fprintf(fp_spinup,"%s %s\n", echar_type[0].para_ver_id, echar_type[0].para_date_id);
 	}
     
-    srand(962);
+    srand(113);
 
 	for(h=0; h<NROW; h++){
 		for(i=0; i<NCOL; i++){
