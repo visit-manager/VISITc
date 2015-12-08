@@ -98,9 +98,9 @@ void f_flux_site(
 		limit_ac[3] = limit_aj[3] = 0.0;
 		
 		/*  seasonal change in leaf properties  ********************************/
-		if(strcmp(grid->site_id, "TKY")==0 || strcmp(grid->site_id, "CEAMIP_TSE")==0){
+		/* if(strcmp(grid->site_id, "TKY")==0 || strcmp(grid->site_id, "CEAMIP_TSE")==0){
 			f_leaf_aging(grid, loct, echar, mass);
-		}
+		} */
 		if(AG_VMX==1){
 			(echar->overs1).photocap_n = (echar->overs1).photocap_n0* (echar->overs1).vcmx_b;
 			(echar->overs2).photocap_n = (echar->overs2).photocap_n0* (echar->overs2).vcmx_b;

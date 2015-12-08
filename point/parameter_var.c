@@ -9,7 +9,8 @@
 #include<stdlib.h>
 #include<math.h>
 #include<string.h>
-#include"definition.h"
+#include"structure.h"
+#include"prototype.h"
 
 /* parameter perturbation ************************************/
 void f_parameter_perturbation(
@@ -51,7 +52,7 @@ void f_parameter_perturbation(
 	
 	/* attaribution analysis *****************/
 	
-	if(rnum==0){
+	if(rnum == 0){
 		SENSANS_DIST = 0;
 		SENSANS_ACO2 = 0;
 		SENSANS_TEMP = 0;

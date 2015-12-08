@@ -17,7 +17,8 @@
 double frl(
 	struct Grid *grid,
 	struct Loct *loct,
-	struct Schar *schar
+	struct Schar *schar,
+    short stype
 ){
 	double ftl, fwl, fal, fsm;
 	double satmp_var, sasw_var;
@@ -39,7 +40,19 @@ double frl(
 	/* after Lloyd & Taylor (1994), Func. Ecol. */
 	if(loct->tmp10_soil > -20.0){
 		/* ftl=0.1+0.9*exp(308.56*(1.0/56.02-1.0/(grid->tmp10_soil+46.02))); */
-		ftl = 0.01 + exp(308.56*(1.0/56.02-1.0/(loct->tmp10_soil+46.02*satmp_var)));
+        
+        if(EX_DECTMP == 2 || EX_DECTMP == 3){
+            
+            if(stype == 0){
+                ftl = 0.01 + exp(308.56*(1.0/56.02 - 1.0/(loct->tmp10_soil+46.02*satmp_var)));
+            }else if(stype == 1){
+                ftl = 0.01 + exp(308.56*(1.0/66.02 - 1.0/(loct->tmp10_soil+56.02*satmp_var)));
+            }
+            
+        }else{
+            ftl = 0.01 + exp(308.56*(1.0/56.02 - 1.0/(loct->tmp10_soil+46.02*satmp_var)));
+        }
+        
 	}else{
 		ftl = 0.01;
 	} 
@@ -66,7 +79,8 @@ double frl(
 double frh(
 	struct Grid *grid,
 	struct Loct *loct, 
-	struct Schar *schar
+	struct Schar *schar, 
+    short stype
 ){
 	double fth, fwh, fah, fsm;	
 	double satmp_var, sasw_var;
@@ -88,7 +102,21 @@ double frh(
 	/* after Lloyd & Taylor (1994), Func. Ecol. */
 	if(loct->tmp200_soil > -20.0){
 		/* fth=0.1+0.9*exp(308.56*(1.0/56.02-1.0/(grid->tmp200_soil+46.02))); */
-		fth = 0.01 + exp(308.56*(1.0/56.02-1.0/(loct->tmp200_soil+46.02*satmp_var)));
+        
+        if(EX_DECTMP == 2 || EX_DECTMP == 3){
+        
+            if(stype == 0){
+                fth = 0.01 + exp(308.56*(1.0/56.02-1.0/(loct->tmp200_soil + 46.02*satmp_var)));
+            }else if(stype == 0){
+                fth = 0.01 + exp(308.56*(1.0/50.02-1.0/(loct->tmp200_soil + 40.02*satmp_var)));
+            }else if(stype == 0){
+                fth = 0.01 + exp(308.56*(1.0/44.02-1.0/(loct->tmp200_soil + 34.02*satmp_var)));
+            }
+            
+        }else{
+            fth = 0.01 + exp(308.56*(1.0/56.02-1.0/(loct->tmp200_soil + 46.02*satmp_var)));
+        }
+        
 	}else{
 		fth = 0.01;
 	} 

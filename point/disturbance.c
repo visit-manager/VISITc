@@ -32,6 +32,12 @@ void disturbance_regime(
 		if(dyear==YLDIST && loct->doy==354){
 			logging_event(grid, mass);  	   
 		}
+        if(dyear==1600 && loct->doy==354){
+			logging_event(grid, mass);  	   
+		}
+        if(dyear==1800 && loct->doy==354){
+			logging_event(grid, mass);  	   
+		} /* */
 		
 		/* TYPHOON *************************/
         /*
@@ -104,22 +110,313 @@ void disturbance_regime(
 			loct->age_stand = 0.0;
 			loct->veg_state = 1;
             
-            if(LCCONV==1){
+            if(EX_LCCONV==1){
                 strcpy(filename,"parameter_PSO_op.txt");		
                 set_parameter(1, filename, echar);
             }
 		}
         
-	}else{
+	}else if(strcmp(grid->site_id, "LUCMIP0")==0 || strcmp(grid->site_id, "LUCMIP0")==1
+            || strcmp(grid->site_id, "LUCMIP0")==2 || strcmp(grid->site_id, "LUCMIP0")==3){
+        
+        /* normal run */
+        if(EX_LUCMIP==0 && (dyear==YLDIST) && loct->doy==364){
+            logging_event(grid, mass);
+            loct->age_stand = 0.0;
+            loct->veg_state = 1;
+        }
+        
+        if(EX_LUCMIP==11){
+           if(loct->adyear==1931 && loct->doy==1){
+                logging_event(grid, mass);  	   /*   */
+                loct->age_stand = 0.0;
+                loct->veg_state = 1;
+           
+                if(strcmp(grid->site_id, "LUCMIP0")==0){
+                    strcpy(filename,"parameter_LUCMIP0_crop.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP1")==0){
+                    strcpy(filename,"parameter_LUCMIP1_crop.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP2")==0){
+                    strcpy(filename,"parameter_LUCMIP2_crop.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP3")==0){
+                    strcpy(filename,"parameter_LUCMIP3_crop.txt");
+                }
+                set_parameter(1, filename, echar);
+            }
+            
+            if(loct->adyear >=1931 && loct->adyear<=1940){
+                if(loct->doy==120){
+                    (mass->c3).fol = 0.5;
+                    (mass->c3).stm = 0.5;
+                    (mass->c3).rot = 0.5;
+                }
+                
+                if(loct->doy==270){
+                    harvest_event(grid, mass);
+                }
+            }
+           
+            if(loct->adyear==1941 && loct->doy==1){
+                logging_event(grid, mass);  	   /*   */
+                loct->age_stand = 0.0;
+                loct->veg_state = 1;
+                
+                initTree(mass);
+           
+                if(strcmp(grid->site_id, "LUCMIP0")==0){
+                    strcpy(filename,"parameter_LUCMIP0.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP1")==0){
+                    strcpy(filename,"parameter_LUCMIP1.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP2")==0){
+                    strcpy(filename,"parameter_LUCMIP2.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP3")==0){
+                    strcpy(filename,"parameter_LUCMIP3.txt");
+                }
+                set_parameter(1, filename, echar);
+           }
+        }
+        
+        if(EX_LUCMIP==12){
+           if(loct->adyear==1931 && loct->doy==1){
+                logging_event(grid, mass);  	   /*   */
+                loct->age_stand = 0.0;
+                loct->veg_state = 1;
+           
+                if(strcmp(grid->site_id, "LUCMIP0")==0){
+                    strcpy(filename,"parameter_LUCMIP0_crop.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP1")==0){
+                    strcpy(filename,"parameter_LUCMIP1_crop.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP2")==0){
+                    strcpy(filename,"parameter_LUCMIP2_crop.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP3")==0){
+                    strcpy(filename,"parameter_LUCMIP3_crop.txt");
+                }
+                set_parameter(1, filename, echar);
+            }
+            
+            if(loct->adyear >=1931 && loct->adyear<=1990){
+                if(loct->doy==120){
+                    (mass->c3).fol = 0.5;
+                    (mass->c3).stm = 0.5;
+                    (mass->c3).rot = 0.5;
+                }
+                
+                if(loct->doy==270){
+                    harvest_event(grid, mass);
+                }
+            }
+           
+            if(loct->adyear==1991 && loct->doy==1){
+                logging_event(grid, mass);  	   /*   */
+                loct->age_stand = 0.0;
+                loct->veg_state = 1;
+                
+                initTree(mass);
+           
+                if(strcmp(grid->site_id, "LUCMIP0")==0){
+                    strcpy(filename,"parameter_LUCMIP0.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP1")==0){
+                    strcpy(filename,"parameter_LUCMIP1.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP2")==0){
+                    strcpy(filename,"parameter_LUCMIP2.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP3")==0){
+                    strcpy(filename,"parameter_LUCMIP3.txt");
+                }
+                set_parameter(1, filename, echar);
+           }
+        }
+        
+        if(EX_LUCMIP==13){
+           if(loct->adyear==1931 && loct->doy==1){
+                logging_event(grid, mass);  	   /*   */
+                loct->age_stand = 0.0;
+                loct->veg_state = 1;
+           
+                if(strcmp(grid->site_id, "LUCMIP0")==0){
+                    strcpy(filename,"parameter_LUCMIP0_crop.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP1")==0){
+                    strcpy(filename,"parameter_LUCMIP1_crop.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP2")==0){
+                    strcpy(filename,"parameter_LUCMIP2_crop.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP3")==0){
+                    strcpy(filename,"parameter_LUCMIP3_crop.txt");
+                }
+                set_parameter(1, filename, echar);
+            }
+            
+            if(loct->adyear >=1931 && loct->adyear<=2130){
+                if(loct->doy==120){
+                    (mass->c3).fol = 0.5;
+                    (mass->c3).stm = 0.5;
+                    (mass->c3).rot = 0.5;
+                }
+                
+                if(loct->doy==270){
+                    harvest_event(grid, mass);
+                }
+            }
+           
+            if(loct->adyear==2131 && loct->doy==1){
+                logging_event(grid, mass);  	   /*   */
+                loct->age_stand = 0.0;
+                loct->veg_state = 1;
+                
+                initTree(mass);
+           
+                if(strcmp(grid->site_id, "LUCMIP0")==0){
+                    strcpy(filename,"parameter_LUCMIP0.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP1")==0){
+                    strcpy(filename,"parameter_LUCMIP1.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP2")==0){
+                    strcpy(filename,"parameter_LUCMIP2.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP3")==0){
+                    strcpy(filename,"parameter_LUCMIP3.txt");
+                }
+                set_parameter(1, filename, echar);
+           }
+        }
+        
+        if(EX_LUCMIP==2){
+           if(loct->adyear==1931 && loct->doy==1){
+                logging_event(grid, mass);  	   /*   */
+                loct->age_stand = 0.0;
+                loct->veg_state = 1;
+           
+                if(strcmp(grid->site_id, "LUCMIP0")==0){
+                    strcpy(filename,"parameter_LUCMIP0_crop.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP1")==0){
+                    strcpy(filename,"parameter_LUCMIP1_crop.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP2")==0){
+                    strcpy(filename,"parameter_LUCMIP2_crop.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP3")==0){
+                    strcpy(filename,"parameter_LUCMIP3_crop.txt");
+                }
+                set_parameter(1, filename, echar);
+            }
+            
+            if(loct->adyear >=1931){
+                if(loct->doy==120){
+                    (mass->c3).fol = 0.5;
+                    (mass->c3).stm = 0.5;
+                    (mass->c3).rot = 0.5;
+                }
+                
+                if(loct->doy==270){
+                    harvest_event(grid, mass);
+                }
+            }
+        }
+
+        if(EX_LUCMIP==3){
+            if(loct->adyear <=1930){
+                if(loct->doy==120){
+                    (mass->c3).fol = 0.5;
+                    (mass->c3).stm = 0.5;
+                    (mass->c3).rot = 0.5;
+                }
+                
+                if(loct->doy==270){
+                    harvest_event(grid, mass);
+                }
+            }
+
+            if(loct->adyear==1931 && loct->doy==1){
+                logging_event(grid, mass);  	   /*   */
+                loct->age_stand = 0.0;
+                loct->veg_state = 1;
+               
+                initTree(mass);
+           
+                if(strcmp(grid->site_id, "LUCMIP0")==0){
+                    strcpy(filename,"parameter_LUCMIP0.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP1")==0){
+                    strcpy(filename,"parameter_LUCMIP1.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP2")==0){
+                    strcpy(filename,"parameter_LUCMIP2.txt");
+                }else if(strcmp(grid->site_id, "LUCMIP3")==0){
+                    strcpy(filename,"parameter_LUCMIP3.txt");
+                }
+                set_parameter(1, filename, echar);
+            }
+        }
+
+        if(EX_LUCMIP==4){
+           if(loct->adyear==1931 && loct->doy==1){
+                delete_plant(&(mass->tree));
+                delete_plant(&(mass->c3));
+                delete_plant(&(mass->c4));
+                delete_soil(&(mass->soil));
+                
+                initTree(mass);
+                initFloor(mass);
+                initSoil(mass);
+            }
+        }
+        if(EX_LUCMIP==5){
+        
+            if(loct->adyear==1931 && loct->doy==1){
+                delete_plant(&(mass->tree));
+                delete_plant(&(mass->c3));
+                delete_plant(&(mass->c4));
+                delete_soil(&(mass->soil));
+                
+                initFloor(mass);
+                initSoil(mass);
+            }
+        
+            if(loct->doy==120){
+            //if(loct->doy==300){
+                (mass->c3).fol = 0.5;
+                (mass->c3).stm = 0.5;
+                (mass->c3).rot = 0.5;
+            }
+            
+            //if(loct->doy==90){
+            if(loct->doy==270){
+                harvest_event(grid, mass);
+            }
+        }
+    
+        if(EX_LUCMIP==6){
+            if(loct->adyear==1930 && loct->doy==364){
+                logging_event(grid, mass);
+            }
+            
+            if(loct->adyear>=1931 && loct->doy==1){
+                delete_plant(&(mass->tree));
+                delete_plant(&(mass->c3));
+                delete_plant(&(mass->c4));
+            }
+        }
+    
+        if(EX_LUCMIP==7){
+            if(loct->adyear <=1930){
+                if(loct->doy==120){
+                    (mass->c3).fol = 0.5;
+                    (mass->c3).stm = 0.5;
+                    (mass->c3).rot = 0.5;
+                }
+                
+                if(loct->doy==270){
+                    harvest_event(grid, mass);
+                }
+            }
+            
+           if(loct->adyear==1930 && loct->doy==364){
+                logging_event(grid, mass);
+            }
+            
+            if(loct->adyear>=1931 && loct->doy==1){
+                delete_plant(&(mass->tree));
+                delete_plant(&(mass->c3));
+                delete_plant(&(mass->c4));
+            }
+        }
+        
+    }else{
 		if(dyear==YLDIST && loct->doy==354){
 			logging_event(grid, mass);  	   /* */
 			loct->age_stand = 0.0;
-		}
-	}
-	
-	if(WMODE==2||WMODE==3){
-		if(dyear==YLDIST && loct->doy==354){
-			logging_event(grid, mass); 
 		}
 	}
 }
@@ -164,7 +461,7 @@ void logging_event(
 
 	/* emission */
 	if(strcmp(grid->site_id, "TKY")==0){
-		ems_fol = (mass->tree).fol*0.45;
+		/* ems_fol = (mass->tree).fol*0.45;
 		ems_stm = (mass->tree).stm*0.65;
 		ems_rot = (mass->tree).rot*0.65;
 		ems_ltr_f = (mass->soil).ltr_tf*0.40;
@@ -172,7 +469,17 @@ void logging_event(
 		ems_ltr_r = (mass->soil).ltr_tr*0.40;
 		brn_fol = (mass->tree).fol*0.35;
 		brn_stm = (mass->tree).stm*0.20;
-		brn_rot = (mass->tree).rot*0.25; /* */
+		brn_rot = (mass->tree).rot*0.25; */
+
+		ems_fol = (mass->tree).fol*0.35;
+		ems_stm = (mass->tree).stm*0.45;
+		ems_rot = (mass->tree).rot*0.45;
+		ems_ltr_f = (mass->soil).ltr_tf*0.30;
+		ems_ltr_c = (mass->soil).ltr_tc*0.30;
+		ems_ltr_r = (mass->soil).ltr_tr*0.30;
+		brn_fol = (mass->tree).fol*0.25;
+		brn_stm = (mass->tree).stm*0.10;
+		brn_rot = (mass->tree).rot*0.15; /* */
 		
         /* perturbed simulation: 2012/02/20 by A.Ito */
         if(PERTURB_MPARA==1){
@@ -256,7 +563,7 @@ void logging_event(
 	/*	(mass->soil).msl_a *= 0.95;
 		(mass->soil).msl_i *= 0.95;
 		(mass->soil).msl_p *= 0.95;  */
-	}else if((strcmp(grid->site_id, "PSO")==0) && LCCONV==0){
+	}else if((strcmp(grid->site_id, "PSO")==0) && EX_LCCONV==0){
 	/*	ems_fol = (mass->tree).fol*0.2;
 		ems_stm = (mass->tree).stm*0.2;
 		ems_rot = (mass->tree).rot*0.2;
@@ -271,7 +578,7 @@ void logging_event(
 		brn_stm = (mass->tree).stm*0.4;
 		brn_rot = (mass->tree).rot*0.4;
 		
-	}else if((strcmp(grid->site_id, "PSO")==0) && LCCONV==1){
+	}else if((strcmp(grid->site_id, "PSO")==0) && EX_LCCONV==1){
 	/*	ems_fol = (mass->tree).fol*0.2;
 		ems_stm = (mass->tree).stm*0.2;
 		ems_rot = (mass->tree).rot*0.2;
@@ -293,6 +600,15 @@ void logging_event(
 		brn_fol = (mass->tree).fol*0.25;
 		brn_stm = (mass->tree).stm*0.25;
 		brn_rot = (mass->tree).rot*0.25;
+	}else if((strcmp(grid->site_id, "LUCMIP0")==0) || (strcmp(grid->site_id, "LUCMIP1")==0)
+        ||(strcmp(grid->site_id, "LUCMIP2")==0) || (strcmp(grid->site_id, "LUCMIP3")==0)){
+        /* LUCMIP: 89.9% cut + 10% residue*/
+        ems_fol = (mass->tree).fol*0.899;
+        ems_stm = (mass->tree).stm*0.899;
+        ems_rot = (mass->tree).rot*0.899;
+        brn_fol = (mass->tree).fol*0.1;
+        brn_stm = (mass->tree).stm*0.1;
+        brn_rot = (mass->tree).rot*0.1;
 	}else{
 		ems_fol = (mass->tree).fol*0.55;
 		ems_stm = (mass->tree).stm*0.85;
@@ -354,7 +670,30 @@ void logging_event(
 	(mass->tree).n_storage -= nloss_storage;
 	(mass->soil).n_lttr += nloss_fol + nloss_storage;
 
-	(mass->c3).fol += 0.01;
-	(mass->c3).stm += 0.01;
-	(mass->c3).rot += 0.01;
+	//(mass->c3).fol += 0.01;
+	//(mass->c3).stm += 0.01;
+	//(mass->c3).rot += 0.01;
+}
+
+void harvest_event(
+	struct Grid *grid, 
+	struct Mass *mass
+){
+    double brn_fol, brn_stm, brn_rot;
+    
+    brn_fol = (mass->c3).fol*0.2 + (mass->c4).fol*0.2;
+    brn_stm = (mass->c3).stm*0.2 + (mass->c4).stm*0.2;
+    brn_rot = (mass->c3).rot*0.2 + (mass->c4).rot*0.2;
+
+    (mass->soil).ltr_tf += brn_fol;
+    (mass->soil).ltr_tc += brn_stm;
+    (mass->soil).ltr_tr += brn_rot;
+
+    (mass->c3).fol *= 0.1;
+    (mass->c3).stm *= 0.1;
+    (mass->c3).rot *= 0.1;
+    
+    (mass->c4).fol *= 0.1;
+    (mass->c4).stm *= 0.1;
+    (mass->c4).rot *= 0.1;
 }

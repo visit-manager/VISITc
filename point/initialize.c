@@ -66,19 +66,10 @@ void f_initialize(
 	if(NOTICE==1){
 		printf("Initializing site...");
 	}
-	switch(WMODE){
-		case 1:
-			/* point scale */
-			f_init_site(&grid[0][0]); 
-			break;
-		case 2: case 3:
-			/* regional scale */
-			f_init_region(grid); 
-			break;
-		default:
-			break;
-	}
-	if(NOTICE==1){
+    
+    f_init_site(&grid[0][0]);
+
+    if(NOTICE==1){
 		printf("done\n");
 	}
 		
@@ -517,7 +508,7 @@ void f_initialize(
 			exit(1);
 		}
 		
-		for(h=0;h<63;h++){
+		for(h=0;h<HCLIMD;h++){
 			for(i=0;i<365;i++){
 				fscanf(fp_dmw,"%ld %ld", &year, &day);
 				fscanf(fp_dmw,"%lf", &lars_tmin[h][i]);
@@ -534,6 +525,28 @@ void f_initialize(
 			printf("done\n");
 		}
 	}
+    
+    if(SPINUP==4){
+        fp_dmw = fopen("TakayamaWG_10000y.txt","rt");
+        
+        for(h=0;h<N_SU_LARS;h++){
+			for(i=0;i<365;i++){
+				fscanf(fp_dmw,"%ld %ld", &year, &day);
+				fscanf(fp_dmw,"%lf", &su_lars_tmin[h][i]);
+				fscanf(fp_dmw,"%lf", &su_lars_tmax[h][i]);
+				fscanf(fp_dmw,"%lf", &su_lars_prec[h][i]);
+				fscanf(fp_dmw,"%lf", &su_lars_srad[h][i]);
+				fscanf(fp_dmw,"%lf", &sunshine);
+			}
+            
+            su_lars_tmin[h][365] = su_lars_tmin[h][364];
+            su_lars_tmax[h][365] = su_lars_tmax[h][364];
+            su_lars_prec[h][365] = su_lars_prec[h][364];
+            su_lars_srad[h][365] = su_lars_srad[h][364];
+		}
+        
+        fclose(fp_dmw);
+    }
 
 	/******************************************************************/	
 	/** initialize vegatation and soil conditions **/ 
@@ -542,15 +555,25 @@ void f_initialize(
 	}
 	/*** parameters ***/
 	strcpy(filename, "parameter_S1b.txt");
-	switch(WMODE){
-		case 1:
-			set_parameter(1, grid[0][0].file_para, echar);
-			set_parameter(2, filename, echar_type);
-			break;
-		case 2: case 3:
-			set_parameter(2, filename, echar_type);
-			break;
-	}
+    
+    if(EX_LUCMIP==3 || EX_LUCMIP==5 || EX_LUCMIP==7){
+        
+        if(strcmp(grid[0][0].site_id, "LUCMIP0")==0){
+            strcpy(grid[0][0].file_para,"parameter_LUCMIP0_crop.txt");
+        }
+        if(strcmp(grid[0][0].site_id, "LUCMIP1")==0){
+            strcpy(grid[0][0].file_para,"parameter_LUCMIP1_crop.txt");
+        }
+        if(strcmp(grid[0][0].site_id, "LUCMIP2")==0){
+            strcpy(grid[0][0].file_para,"parameter_LUCMIP2_crop.txt");
+        }
+        if(strcmp(grid[0][0].site_id, "LUCMIP3")==0){
+            strcpy(grid[0][0].file_para,"parameter_LUCMIP3_crop.txt");
+        }
+    }
+    
+    set_parameter(1, grid[0][0].file_para, echar);
+    set_parameter(2, filename, echar_type);
 	
 	/* using default parameter set ************************ (2008/12/07 A.Ito) */
 	if(PARA_CHOICE == 1){
@@ -597,7 +620,7 @@ void f_initialize(
 	}
 	
     /* multiple perturbation: 2012/02/20 by A.Ito */
-    if(PERTURB_MPARA==1){
+    if(PERTURB_MPARA == 1){
         /* pmax */
         ss = 0.0;
         for(h=0;h<12;h++){
@@ -726,23 +749,11 @@ void f_initialize(
 	if(NOTICE==1){
 		printf("Initializing stable carbon isotope...");
 	}
-	switch(WMODE){
-		case 1:
-			f_init_d13c(&grid[0][0], loct, echar, &mass[0][0], flux);
-			break;
-		case 2: 
-			for(h=0;h<NROW;h++){
-				for(i=0;i<NCOL;i++){
-					f_init_d13c(&grid[h][i], loct, echar, &mass[h][i], flux);
-				}
-			}
-			break;
-		default:
-			break;
-	}
+    
+    f_init_d13c(&grid[0][0], loct, echar, &mass[0][0], flux);
+
 	if(NOTICE==1){
 		printf("done\n");
 	}
 
-	
 }

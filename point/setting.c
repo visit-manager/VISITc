@@ -111,7 +111,7 @@ void f_setting(
 			if(strcmp(varread, sparaf)==0){
 				fscanf(fp_set,"%s", &grid->file_para);
 			}
-
+            
 			NCOL = 1;
 			NROW = 1;
 			WROW = 0;

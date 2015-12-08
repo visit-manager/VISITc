@@ -6,6 +6,7 @@
 /*	version in January 24, 2013                                         */
 
 #include"definition.h"
+#include"setting.h"
 
 /* global variables ****************************/
 /* configuration */
@@ -53,6 +54,7 @@ double	prate_sfc_dav[YSTEP];
 double	dswrf_sfc_dav[YSTEP];	
 double	spfh_2m_dav[YSTEP];	
 double	tcdc_clm_dav[YSTEP];	
+double	wind_10m_dav[YSTEP];	
 
 double	paddy_wtd[5][YSTEP];
 
@@ -69,16 +71,23 @@ double gcm_ahmd_av[YSTEP];
 double gcm_dswrf_av[YSTEP];
 
 /* LARS-generated dummy weather data */
-double lars_tmin[63][YSTEP];
-double lars_tmax[63][YSTEP];
-double lars_prec[63][YSTEP];
-double lars_srad[63][YSTEP];
+double lars_tmin[HCLIMD][YSTEP];
+double lars_tmax[HCLIMD][YSTEP];
+double lars_prec[HCLIMD][YSTEP];
+double lars_srad[HCLIMD][YSTEP];
+
+/* LARS-generated spin-up weather data */
+double su_lars_tmin[N_SU_LARS][YSTEP];
+double su_lars_tmax[N_SU_LARS][YSTEP];
+double su_lars_prec[N_SU_LARS][YSTEP];
+double su_lars_srad[N_SU_LARS][YSTEP];
 
 /* sensitivity analysis */
 short SENSANS_DIST = 0;
 /* 1: no disturbance */
 short SENSANS_ACO2 = 0;
 /* 1: no atmospheric CO2 rise */
+/* 2: fix atmospheric CO2 at 2005 */
 short SENSANS_TEMP = 0;
 /* 1: no temperature change */
 /* 2: use LARS-generated dammy data */

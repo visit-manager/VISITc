@@ -170,18 +170,18 @@ double pm_transp(
 	psycon = 0.667; /** psychlometer constant, in hPa K-1 **/
 	eta = 0.0224*1.0/1000.0; /** unit conversion of conductance from mmol H2O m-2 s-1 to m s-1 **/
 	
-	if(canopy_layer==1){
+	if(canopy_layer == 1){
 		canopy_con = loct->gc_tree;
 		rad_net = loct->rn_tree;
-	}else if(canopy_layer==2){
+	}else if(canopy_layer == 2){
 		canopy_con = loct->gc_c3;
 		rad_net = loct->rn_c3;
-	}else if(canopy_layer==3){
+	}else if(canopy_layer == 3){
 		canopy_con = loct->gc_c4;
 		rad_net = loct->rn_c4;
 	}
 	
-	if(canopy_con>0.0&&rad_net>0.0){
+	if(canopy_con>0.0 && rad_net>0.0){
 		/** canopy resistance **/
 		rc_p = 1.0/(canopy_con*eta);
 		

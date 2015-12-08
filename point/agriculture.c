@@ -57,7 +57,7 @@ void phenology_crop(
 	/* critical GDD for the end of leaf shedding */
 	crit_cdd_e = -190.0;
 	
-	if(pchar->gdd<crit_gdd_b){
+	if(pchar->gdd < crit_gdd_b){
 		/* dormancy */
 		pchar->season = 0;
 		pchar->day_flush = 0;

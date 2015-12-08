@@ -268,6 +268,15 @@ void phenology_colddeciduous(
 		crit_cdd_b = -20.0; 
 		/* critical GDD for the end of leaf shedding */
 		crit_cdd_e = -190.0;
+	}else if((strcmp(grid->site_id, "LUCMIP0")==0)){
+		/* critical GDD for the beginning of leaf flush */
+		crit_gdd_b = 160.0; 
+		/* critical GDD for the end of leaf flush */
+		crit_gdd_e = 380.0; 
+		/* critical GDD for the beginning of leaf shedding */
+		crit_cdd_b = -20.0; 
+		/* critical GDD for the end of leaf shedding */
+		crit_cdd_e = -190.0;
 	}else{
 		/* critical GDD for the beginning of leaf flush */
 		crit_gdd_b = 260.0; 

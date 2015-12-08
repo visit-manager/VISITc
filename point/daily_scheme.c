@@ -21,6 +21,8 @@ void daily_scheme(
 	struct Mass *mass, 
 	struct Flux *flux
 ){
+    double bvoc, leaf;
+
 	/* nitrogen input ************************/
 	if(N_CYCLE ==1){
 		/* biological N2 fixation */
@@ -58,6 +60,17 @@ void daily_scheme(
 	f_voc_emit_guenther97(grid, loct, echar, mass, flux);
 	/* plant CH4 emission */
 	f_ch4emit_plant(grid, loct, echar, mass, flux);
+    
+    bvoc = (flux->voc_acetacd_g97 + flux->voc_acetone_g97 + flux->voc_actaldhd_g97 +
+            flux->voc_isopr_g97 + flux->voc_formacd_g97 + flux->voc_frmardhd_g97 +
+            flux->voc_methanl_g97 + flux->voc_co_g97) / 1000000.0;
+    
+    leaf = (mass->tree).fol + loct->fcover_c3*(mass->c3).fol + loct->fcover_c4*(mass->c4).fol;
+    if(leaf>0 && NECB_BVOC==1){
+        (mass->tree).fol -= bvoc * (mass->tree).fol/leaf;
+        (mass->c3).fol -= bvoc * (mass->c3).fol/leaf;
+        (mass->c4).fol -= bvoc * (mass->c4).fol/leaf;
+    }
 
 	/**/
 	(flux->soil).li_tf = (flux->tree).lf;			
@@ -81,7 +94,7 @@ void daily_scheme(
 	
 	/* dissolved organic carbon */
 	f_doc_boyer(grid, loct, mass, flux);
-	if(loct->time > 100){
+	if(loct->time > 100 && NECB_DOC==1){
 		(mass->soil).msl_a -= (flux->soil).doc_boyer / 1000000.0; 
 	}
 

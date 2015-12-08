@@ -69,6 +69,7 @@ void clear_b(
 		dswrf_sfc_dav[e] = 0.0;
 		spfh_2m_dav[e] = 0.0;
 		tcdc_clm_dav[e] = 0.0;
+		wind_10m_dav[e] = 0.0;
 		
 		(echar->tree).lai_contemp[e] = 0.0;
 		(echar->c3).lai_contemp[e] = 0.0;

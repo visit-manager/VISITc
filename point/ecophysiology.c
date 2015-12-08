@@ -416,3 +416,81 @@ void f_n_conc(
 		pchar->n_max_mobile = 1.0;
 	}
 }
+
+/* optimal leaf area index estimated by Hikosaka & Anten (2012) */
+/*
+Hikosaka K & Anten NPR (2012) An evolutionary game of leaf dynamics and 
+its consequences for canopy structure. Func.Ecol. 26:1024–1032.
+*/
+void f_opt_lai_hikosaka_anten(
+    struct Grid *grid,
+    struct Loct *loct,
+    struct Cchar *cchar,
+    struct Pmas *mass
+){
+    long h, i;
+    double spp_t, spp_n, lai_t, spp_opt, lai_opt;
+    struct Loct *cloct;
+    struct Cchar *c_target, *c_neighbor;
+    
+    /* same properties */
+    
+    cloct = loct;
+    c_target = cchar;
+    c_neighbor = cchar;
+ 
+    c_target->photocap_n =  c_neighbor->photocap_n = cchar->photocap_n0 * cchar->vcmx_b;
+    c_target->lai =  c_neighbor->lai = cchar->lai;
+
+    /* initialize air conditions */
+    c_target->tmp =  c_neighbor->tmp = loct->tmp_2m;
+    c_target->vpd_a =  c_neighbor->vpd_a = loct->vpd;
+    
+    spp_opt = lai_opt = 0.0;
+    for(i=0;i<20;i++){
+        
+        lai_t = 10.0 - 0.5 * (double)i;
+        
+        c_target->lai = lai_t;
+        c_neighbor->lai = lai_t;
+    
+        spp_t = spp_n = 0.0;
+        for(h=0;h<DSTEP;h++){
+            cloct->hour = h;
+            cloct->hangle = -180.0+(double)h*7.5;
+        
+            /* canopy-top PPFD */
+            c_target->ppfdb_top =  c_neighbor->ppfdb_top = loct->ppfdb_h[h];
+            c_target->ppfdd_top =  c_neighbor->ppfdd_top = loct->ppfdd_h[h];
+            
+            c_target->ci_sn =  c_neighbor->ci_sn = 0.7 * loct->aCO2 / 10.0;
+            c_target->ci_sd =  c_neighbor->ci_sd = 0.7 * loct->aCO2 / 10.0;
+            
+            /* leaf properties */
+            f_leaf_prop(grid, cloct, c_target);
+            f_leaf_prop(grid, cloct, c_neighbor);
+            
+            /* sun/shade canopy radiation absorption */
+            f_apar_sunshade(grid, cloct, c_target);
+            f_apar_sunshade(grid, cloct, c_neighbor);
+            
+            /* sun/shade carbon assimilation */
+            f_gpp_sunshade(1, grid, cloct, c_target);
+            f_gpp_sunshade(1, grid, cloct, c_neighbor);
+            
+            //gpp_t += c_target->photocap_n;
+            //gpp_n += c_neighbor->photocap_n;
+
+            spp_t += (c_target->a_sn + c_target->a_sd) * 12.0*1800.0/1000000.0;
+            spp_n += (c_neighbor->a_sn + c_neighbor->a_sd) * 12.0*1800.0/1000000.0;
+        }
+        
+        if(spp_t > spp_opt){
+            spp_opt = spp_t;
+            lai_opt = lai_t;
+        }
+        //printf("T: %6.1lf %8.2lf  N: %6.1lf %8.2lf\n", lai_t, spp_t, lai_t,spp_n);
+    }
+    
+    //printf("%ld %ld Opt: %6.1lf %8.2lf\n", loct->climy, loct->doy, lai_opt, spp_opt);
+}

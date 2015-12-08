@@ -32,11 +32,9 @@ void f_spinup(
 	FILE *fp_restart;
     
     /* variables for SASU: 2013/10/29 */
-    double ss_v[9], ss_l[6], ss_h[3];
-    double nsasu_v[10], nsasu[10];
-    double nppi[10][9],lf[10][9], tpc[10][9];
-    double li[10][6][9],ld[10][6];
-    double hf[10][3][6],hd[10][3];
+    double ss_l[6], ss_h[3];
+    double li[6],ld[6];
+    double hf[3],hd[3];
 	
 	/* roop to stable stage *****************************/	
 	strcpy(filename, grid[0][0].site_id);
@@ -48,18 +46,13 @@ void f_spinup(
 	}
 	
 	if(WMODE==1){
-		fprintf(fp_spinup,"%s %s\n", echar->para_ver_id, echar->para_date_id);
+		//fprintf(fp_spinup,"%s %s\n", echar->para_ver_id, echar->para_date_id);
 	}else if(WMODE==2){
 		fprintf(fp_spinup,"%s %s\n", echar_type[0].para_ver_id, echar_type[0].para_date_id);
 	}
     
-    srand(113);
-
 	for(h=0; h<NROW; h++){
 		for(i=0; i<NCOL; i++){
-			if(WMODE==2){
-				echar = &(echar_type[grid[h][i].veg_type]);
-			}
 			
 			loct->time = 0;
 			loct->age_stand = 0.0;
@@ -71,17 +64,40 @@ void f_spinup(
 					
                     /* yearly roop **********************************/
 					for(e=BYR ; e<=EYR ; e++){	
+						loct->time++;
 						
                         /**/
-                        if(RANDCLIM_SU == 1){
+                        if(SPINUP == 0){
+                            loct->climy = e;
+                        }else if(SPINUP == 1){
+                            loct->climy = BYR;
+                        }else if(SPINUP == 3){
                             loct->climy = BYR + (long)(PERIOD * (double)rand() / (double)RAND_MAX);
+                        }else if(SPINUP == 5){
+                            if(g%2 == 0){
+                                loct->climy = e;
+                            }else{
+                                loct->climy = EYR - (e-BYR);
+                            }
                         }else{
                             loct->climy = e;
                         }
                         
-						loct->CO2y = BYR;
-						loct->time++;
+                        if(SENSANS_ACO2 ==2){
+                            loct->CO2y = 2005;
+                        }else{
+                            loct->CO2y = BYR;
+                        }
 						
+                        /* LUC-MIP: random 1983-2012: 2014/11/06 by A.Ito */
+                        if((strcmp(grid[h][i].site_id, "LUCMIP0")==0) || (strcmp(grid[h][i].site_id, "LUCMIP0")==1)
+                            || (strcmp(grid[h][i].site_id, "LUCMIP0")==2) || (strcmp(grid[h][i].site_id, "LUCMIP0")==3)){
+                            
+                            loct->climy = 1983 + (long)(30.0 * (double)rand() / (double)RAND_MAX);
+                            
+                            loct->CO2y = 2005;
+                        }
+                        
 						/* stand age, year */
 						loct->age_stand += 1.0;
 				
@@ -95,37 +111,20 @@ void f_spinup(
 							aaa[f] = 0.0;
 						}
 						
-                        /* SASU: 2013/10/29 by A.Ito */
-                        if(USE_SASU ==2 && (loct->time>=20 && loct->time<=50)){
-                            nsasu_v[loct->time%10] = 0.0;
-                            /* initialization: vegetation */
-                            for(j=0;j<9;j++){
-                                ss_v[j] = 0.0;
-                                nppi[loct->time%10][j] = tpc[loct->time%10][j] = 0.0;
-                                lf[loct->time%10][j] = 0.0;
-                            }
-                        }
-
-                        if(USE_SASU >=1 && ((loct->time>=30 && loct->time<=60)
-                                || loct->time==80 || loct->time==110)){
+                        if(USE_SASU >=1 && (loct->time>=10 && loct->time<=(PERIOD*nroop-10))){
                             
-                            nsasu[loct->time%10] = 0.0;
                             /* initialization: litter */
                             for(j=0;j<6;j++){
                                 ss_l[j] = 0.0;
-                                for(k=0;k<9;k++){
-                                    li[loct->time%10][j][k] = 0.0;
-                                }
-                                ld[loct->time%10][j] = 0.0;
+                                li[j] = 0.0;
+                                ld[j] = 0.0;
                             }
 
                             /* initialization: humus */
                             for(j=0;j<3;j++){
                                 ss_h[j] = 0.0;
-                                for(k=0;k<6;k++){
-                                    hf[loct->time%10][j][k] = 0.0;
-                                }
-                                hd[loct->time%10][j] = 0.0;
+                                hf[j] = 0.0;
+                                hd[j] = 0.0;
                             }
                         }
                         
@@ -134,6 +133,7 @@ void f_spinup(
                         /* daily roop **********************************/
                         xx = 0;
                         for(f=0;f<ndy;f++){
+                            
 							loct->doy = f;
 							if(FIX_CLIM==1){
 								loct->climy = 2001;
@@ -163,8 +163,8 @@ void f_spinup(
 							if(loct->npp_max < 1.0){
 								loct->npp_max = 1.0;
 							}
-
-							/* fprintf(fp_spinup, "%4ld %4ld ", e, f); 
+                            
+							/* fprintf(fp_spinup, "%4ld %4ld ", e, f);
 							fprintf(fp_spinup, "%6.2lf ", (flux->tree).gpp*100.0); 
 							fprintf(fp_spinup, "%6.2lf ", (echar->tree).psat); 
 							fprintf(fp_spinup, "%6.2lf ", (echar->tree).opt_lai); 
@@ -204,108 +204,57 @@ void f_spinup(
 							aaa[13] += (mass[h][i].soil).n_hums/365.0;
 							aaa[14] += (mass[h][i].soil).n_mcrb/365.0;
 							
-							if(g==nroop){
+							if(g == nroop){
 								(echar->tree).lai_contemp[f] += (mass[h][i].tree).lai / (double)(EYR-BYR+1);
 								(echar->c3).lai_contemp[f] += (mass[h][i].c3).lai / (double)(EYR-BYR+1);
 								(echar->c4).lai_contemp[f] += (mass[h][i].c4).lai / (double)(EYR-BYR+1);
 							}
                             
-                            /* SASU: 2013/10/29 by A.Ito */
-                            if(USE_SASU ==2 && (loct->time>=20 && loct->time<=59)){
-                                
-                                /* vegetation */
-                                for(j=0;j<10;j++){
-                                    nsasu_v[j] += 1.0;
-                                
-                                    nppi[j][0] += (flux->tree).tpf + (flux->tree).rtpc + (flux->tree).rtpr - (flux->tree).rfg;
-                                    nppi[j][1] += (flux->tree).tpc - (flux->tree).rcg;
-                                    nppi[j][2] += (flux->tree).tpr - (flux->tree).rrg;
-                                    nppi[j][3] += (flux->c3).tpf - (flux->c3).rfg;
-                                    nppi[j][4] += (flux->c3).tpc - (flux->c3).rcg;
-                                    nppi[j][5] += (flux->c3).tpr - (flux->c3).rrg;
-                                    nppi[j][6] += (flux->c4).tpf - (flux->c4).rfg;
-                                    nppi[j][7] += (flux->c4).tpc - (flux->c4).rcg;
-                                    nppi[j][8] += (flux->c4).tpr - (flux->c4).rrg;
-
-                                    lf[j][0] += (echar->tree).lf;
-                                    lf[j][1] += (echar->tree).lc + (flux->tree).rtpc/(mass[h][i].tree).stm;
-                                    lf[j][2] += (echar->tree).lr + (flux->tree).rtpr/(mass[h][i].tree).rot;
-                                    lf[j][3] += (echar->c3).lf;
-                                    lf[j][4] += (echar->c3).lc;
-                                    lf[j][5] += (echar->c3).lr;
-                                    lf[j][6] += (echar->c4).lf;
-                                    lf[j][7] += (echar->c4).lc;
-                                    lf[j][8] += (echar->c4).lr;
-                                    
-                                    tpc[j][0] += (flux->tree).tpf;
-                                    tpc[j][1] += (flux->tree).tpc;
-                                    tpc[j][2] += (flux->tree).tpr;
-                                    tpc[j][3] += (flux->c3).tpf;
-                                    tpc[j][4] += (flux->c3).tpc;
-                                    tpc[j][5] += (flux->c3).tpr;
-                                    tpc[j][6] += (flux->c4).tpf;
-                                    tpc[j][7] += (flux->c4).tpc;
-                                    tpc[j][8] += (flux->c4).tpr;
-                                }
-                               
-                                /* if((flux->tree).tpc < 0.0){
-                                    printf("%ld %ld %lf %lf\n", loct->adyear, f, (flux->tree).tpc);
-                                } */
-                            }
+                            if(USE_SASU >=1 && (loct->time>=10 && loct->time<=(PERIOD*nroop-10))){
+                                /* litter */
+                                li[0] += (flux->tree).lf;
+                                li[1] += (flux->tree).lc;
+                                li[2] += (flux->tree).lr;
+                                li[3] += loct->fcover_c3 * (flux->c3).lf + loct->fcover_c4 * (flux->c4).lf;
+                                li[4] += loct->fcover_c3 * (flux->c3).lc + loct->fcover_c4 * (flux->c4).lc;
+                                li[5] += loct->fcover_c3 * (flux->c3).lr + loct->fcover_c4 * (flux->c4).lr;
                             
-                            if(USE_SASU >=1 && (loct->time>=30 && loct->time<=69)
-                                || (loct->time>=80 && loct->time<=99)|| (loct->time>=110 && loct->time<=139)){
-                            /* if(USE_SASU ==1 && ((loct->time>=30 && loct->time<=50) ||
-                                                (loct->time>=60 && loct->time<=80) ||
-                                                (loct->time>=90 && loct->time<=110) ||
-                                                (loct->time>=120 && loct->time<=140) ||
-                                                (loct->time>=150 && loct->time<=170)) ){ */
-                                for(j=0;j<10;j++){
-                                    nsasu[j] += 1.0;
-                                    /* litter */
-                                    li[j][0][3] += loct->fcover_c3 * (flux->c3).lf;
-                                    li[j][1][4] += loct->fcover_c3 * (flux->c3).lc;
-                                    li[j][2][5] += loct->fcover_c3 * (flux->c3).lr;
-                                    li[j][0][6] += loct->fcover_c4 * (flux->c4).lf;
-                                    li[j][1][7] += loct->fcover_c4 * (flux->c4).lc;
-                                    li[j][2][8] += loct->fcover_c4 * (flux->c4).lr;
-                                    li[j][3][0] += (flux->tree).lf;
-                                    li[j][4][1] += (flux->tree).lc;
-                                    li[j][5][2] += (flux->tree).lr;
-                                    ld[j][0] += (echar->soil).sr_lf/1000.0 * (echar->soil).f_tm_l;
-                                    ld[j][1] += (echar->soil).sr_lc/1000.0 * (echar->soil).f_tm_l;
-                                    ld[j][2] += (echar->soil).sr_lr/1000.0 * (echar->soil).f_tm_l;
-                                    ld[j][3] += (echar->soil).sr_lf/1000.0 * (echar->soil).f_tm_l;
-                                    ld[j][4] += (echar->soil).sr_lc/1000.0 * (echar->soil).f_tm_l;
-                                    ld[j][5] += (echar->soil).sr_lr/1000.0 * (echar->soil).f_tm_l;
-                                    
-                                    /* humus */
-                                    hf[j][0][0] += (flux->soil).hf_gfa;
-                                    hf[j][0][1] += (flux->soil).hf_gca;
-                                    hf[j][0][2] += (flux->soil).hf_gra;
-                                    hf[j][0][3] += (flux->soil).hf_tfa;
-                                    hf[j][0][4] += (flux->soil).hf_tca;
-                                    hf[j][0][5] += (flux->soil).hf_tra;
-                                    hf[j][1][0] += (flux->soil).hf_gfi;
-                                    hf[j][1][1] += (flux->soil).hf_gci;
-                                    hf[j][1][2] += (flux->soil).hf_gri;
-                                    hf[j][1][3] += (flux->soil).hf_tfi;
-                                    hf[j][1][4] += (flux->soil).hf_tci;
-                                    hf[j][1][5] += (flux->soil).hf_tri;
-                                    hf[j][2][0] += (flux->soil).hf_gfp;
-                                    hf[j][2][1] += (flux->soil).hf_gcp;
-                                    hf[j][2][2] += (flux->soil).hf_grp;
-                                    hf[j][2][3] += (flux->soil).hf_tfp;
-                                    hf[j][2][4] += (flux->soil).hf_tcp;
-                                    hf[j][2][5] += (flux->soil).hf_trp;
-                                    hd[j][0] += (echar->soil).sr_ha/1000.0 * (echar->soil).f_tm_h;
-                                    hd[j][1] += (echar->soil).sr_hi/1000.0 * (echar->soil).f_tm_h;
-                                    hd[j][2] += (echar->soil).sr_hp/1000.0 * (echar->soil).f_tm_h;
-                                }
+                                ld[0] += (echar->soil).sr_lf/1000.0 * (echar->soil).f_tm_l;
+                                ld[1] += (echar->soil).sr_lc/1000.0 * (echar->soil).f_tm_l;
+                                ld[2] += (echar->soil).sr_lr/1000.0 * (echar->soil).f_tm_l;
+                                ld[3] += (echar->soil).sr_lf/1000.0 * (echar->soil).f_tm_l;
+                                ld[4] += (echar->soil).sr_lc/1000.0 * (echar->soil).f_tm_l;
+                                ld[5] += (echar->soil).sr_lr/1000.0 * (echar->soil).f_tm_l;
+                                
+                                /* humus */
+                                hf[0] += (flux->soil).hf_gfa;
+                                hf[0] += (flux->soil).hf_gca;
+                                hf[0] += (flux->soil).hf_gra;
+                                hf[0] += (flux->soil).hf_tfa;
+                                hf[0] += (flux->soil).hf_tca;
+                                hf[0] += (flux->soil).hf_tra;
+                            
+                                hf[1] += (flux->soil).hf_gfi;
+                                hf[1] += (flux->soil).hf_gci;
+                                hf[1] += (flux->soil).hf_gri;
+                                hf[1] += (flux->soil).hf_tfi;
+                                hf[1] += (flux->soil).hf_tci;
+                                hf[1] += (flux->soil).hf_tri;
+                            
+                                hf[2] += (flux->soil).hf_gfp;
+                                hf[2] += (flux->soil).hf_gcp;
+                                hf[2] += (flux->soil).hf_grp;
+                                hf[2] += (flux->soil).hf_tfp;
+                                hf[2] += (flux->soil).hf_tcp;
+                                hf[2] += (flux->soil).hf_trp;
+                            
+                                hd[0] += (echar->soil).sr_ha/1000.0 * (echar->soil).f_tm_h;
+                                hd[1] += (echar->soil).sr_hi/1000.0 * (echar->soil).f_tm_h;
+                                hd[2] += (echar->soil).sr_hp/1000.0 * (echar->soil).f_tm_h;
                             }
 						}
 						f_erosion_rusle(&grid[h][i], loct, &mass[h][i], flux);
-						if(loct->time > 100){
+						if(loct->time > 100 && NECB_POC==1){
 							(mass[h][i].soil).msl_a -= (flux->soil).erosion_carbon;
 						}
 						
@@ -326,8 +275,8 @@ void f_spinup(
 						fprintf(fp_spinup, "%8.4lf ", aaa[12]);
 						fprintf(fp_spinup, "%8.4lf ", aaa[13]);
 						fprintf(fp_spinup, "%8.4lf ", aaa[14]); */
-						
-						fprintf(fp_spinup,"%ld ", loct->adyear); 
+                        
+						fprintf(fp_spinup,"%ld ", loct->adyear);
 						if(WMODE==2){
 							fprintf(fp_spinup,"%4d %4d ", grid[h][i].dg_row, grid[h][i].dg_col); 
 						}
@@ -379,90 +328,14 @@ void f_spinup(
 						printf("\n");
                         
                         /* SASU: 2013/10/29 by A.Ito */
-                        if(USE_SASU ==2 && (loct->time>=29 && loct->time<=59) ){
-                            /* vegetation */
-                            /* average paramepers *****************/
-                            for(j=0;j<9;j++){
-                                ss_v[j] = 0.0;
-                                //nppi[loct->time%10][j] *= 1.0 / nsasu_v[loct->time%10];
-                                //lf[loct->time%10][j] *= 1.0 / nsasu_v[loct->time%10];
-                            }
- 
-                            /* estimate steady-state carbon stock *****************/
-                            /* vegetation */
-                            for(j=0;j<9;j++){
-                                ss_v[j] += nppi[(loct->time+1)%10][j];
-                                if(lf[loct->time%10][j] > 0.0){
-                                    ss_v[j] *= 1.0 / lf[(loct->time+1)%10][j];
-                                }else{
-                                    ss_v[j] = 0.0;
-                                }
-
-                                fprintf(fp_spinup,"%lf %lf %lf ", ss_v[j],nppi[(loct->time+1)%10][j],lf[(loct->time+1)%10][j]);
-                            }
+                        if(USE_SASU >=1 && (loct->time>=10 && loct->time<=(PERIOD*nroop-10))){
                             
-                            /* update carbon stock by using SASU-estimated one */    
-                            /* vegetation */
-                            if(nppi[(loct->time+1)%10][0] > 0.0){
-                                (mass[h][i].tree).fol = ss_v[0];
-                            }
-                            if(nppi[(loct->time+1)%10][1] > 0.0){
-                                (mass[h][i].tree).stm = ss_v[1];
-                            }
-                            if(nppi[(loct->time+1)%10][2] > 0.0){
-                                (mass[h][i].tree).rot = ss_v[2];
-                            }
-                            if(nppi[(loct->time+1)%10][3] > 0.0){
-                                (mass[h][i].c3).fol = ss_v[3];
-                            }
-                            if(nppi[(loct->time+1)%10][4] > 0.0){
-                                (mass[h][i].c3).stm = ss_v[4];
-                            }
-                            if(nppi[(loct->time+1)%10][5] > 0.0){
-                                (mass[h][i].c3).rot = ss_v[5];
-                            }
-                            if(nppi[(loct->time+1)%10][6] > 0.0){
-                                (mass[h][i].c4).fol = ss_v[6];
-                            }
-                            if(nppi[(loct->time+1)%10][7] > 0.0){
-                                (mass[h][i].c4).stm = ss_v[7];
-                            }
-                            if(nppi[(loct->time+1)%10][8] > 0.0){
-                                (mass[h][i].c4).rot = ss_v[8];
-                            }
-                        }
-                        
-                        if(USE_SASU >=1 && ((loct->time>=39 && loct->time<=69) || loct->time == 99 || loct->time == 139) ){
-                        /* if(USE_SASU ==1 && (loct->time==50 || loct->time==80 || loct->time==110 ||
-                                            loct->time==140 || loct->time==170)){ */
-                            
-                            /* average paramepers *****************/
-                           
+                           /* estimate steady-state carbon stock *****************/
                             /* litter */
                             for(j=0;j<6;j++){
-                                ss_l[j] = 0.0;
-                                for(k=0;k<9;k++){
-                                    //li[loct->time%10][j][k] *= 1.0 / nsasu[loct->time%10];
-                                }
-                                //ld[loct->time%10][j] *= 1.0 / nsasu[loct->time%10];
-                            }
-                            /* humus */
-                            for(j=0;j<3;j++){
-                                ss_h[j] = 0.0;
-                                for(k=0;k<6;k++){
-                                    //hf[loct->time%10][j][k] *= 1.0 / nsasu[loct->time%10];
-                                }
-                                //hd[loct->time%10][j] *= 1.0 / nsasu[loct->time%10];
-                            }
-                            
-                            /* estimate steady-state carbon stock *****************/
-                            /* litter */
-                            for(j=0;j<6;j++){
-                                for(k=0;k<9;k++){
-                                    ss_l[j] += li[(loct->time+1)%10][j][k];
-                                }
-                                if(ld[(loct->time+1)%10][j] > 0.0){
-                                    ss_l[j] *= 1.0 / ld[(loct->time+1)%10][j];
+                                ss_l[j] += li[j];
+                                if(ld[j] > 0.0){
+                                    ss_l[j] *= 1.0 / ld[j];
                                 }else{
                                     ss_l[j] = 0.0;
                                 }
@@ -472,11 +345,9 @@ void f_spinup(
                             
                             /* humus */
                             for(j=0;j<3;j++){
-                                for(k=0;k<6;k++){
-                                    ss_h[j] += hf[(loct->time+1)%10][j][k];
-                                }
-                                if(hd[(loct->time+1)%10][j] > 0.0){
-                                    ss_h[j] *= 1.0 / hd[(loct->time+1)%10][j];
+                                ss_h[j] += hf[j];
+                                if(hd[j] > 0.0){
+                                    ss_h[j] *= 1.0 / hd[j];
                                 }else{
                                     ss_h[j] = 0.0;
                                 }

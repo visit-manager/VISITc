@@ -25,7 +25,7 @@ void f_loct_proc(
 	struct Flux *flux
 ){
 	long h;
-	double  aaa, bbb, ccc, alt, tcK;
+	double aaa, bbb, ccc, alt, tcK;
 	double temp_factor, prec_factor;
 	double dat_0, dat_1, dat_2, rr;
 	double temp_diff, prec_diff, ahmd_diff, dswrf_diff;
@@ -34,7 +34,7 @@ void f_loct_proc(
 	double temp_wclim_d, temp_corr, prec_corr;
 	
 	/* vegetation  ********************************************************/
-	if(loct->time==1 && loct->doy==0){
+	if(loct->time == 1 && loct->doy == 0){
 		/* herbaceous C3/C4 composition (fixed) *************************/
 		switch(grid->veg_type){
 			case 9: case 10:
@@ -100,7 +100,11 @@ void f_loct_proc(
 		/* deciduous broadleaved forest (e.g. Takayama) */
 		f_sla_change(grid, loct, echar, mass);
 	}
-	
+    /* seasonal change in leaf properties */
+    if(strcmp(grid->site_id, "TKY")==0 || strcmp(grid->site_id, "CEAMIP_TSE")==0){
+        f_leaf_aging(grid, loct, echar, mass);
+    }
+
 	(mass->tree).lai = lai_mass(&(mass->tree), &(echar->tree));
 	(mass->c3).lai = lai_mass(&(mass->c3), &(echar->c3));
 	(mass->c4).lai = lai_mass(&(mass->c4), &(echar->c4));
@@ -143,6 +147,7 @@ void f_loct_proc(
 	if(loct->doy == 0){
 		loct->prate_ann = 0.0;
 	}
+    
 	/*  sequential climatic conditions  */
 	if(loct->climy >= BYR && loct->climy <= EYR){
 		loct->dswrf_sfc = dswrf_sfc_d[loct->climy-BYR][loct->doy];
@@ -158,7 +163,51 @@ void f_loct_proc(
 		if((strcmp(grid->site_id, "PSO")==0) && (loct->climy<1955)){
 			loct->prate_sfc = prate_sfc_dav[loct->doy];	
 		}
+        
+        if(strcmp(grid->site_id, "LUCMIP0")==0 || strcmp(grid->site_id, "LUCMIP1")==0 ||
+            strcmp(grid->site_id, "LUCMIP2")==0 || strcmp(grid->site_id, "LUCMIP3")==0){
+            
+            if(loct->day_srad[loct->doy] > 0.0){
+                aaa = loct->dswrf_sfc / (loct->day_srad[loct->doy]*1000000.0/24.0/3600.0);
+                aaa = (aaa>1.0)?1.0:aaa;
+                aaa = (aaa<0.0)?0.0:aaa;
+                
+                bbb = (0.8964 - aaa) / 0.5392;
+                bbb = (bbb>1.0)?1.0:bbb;
+                bbb = (bbb<0.0)?0.0:bbb;
+                
+                loct->tcdc_clm = bbb;
+            }else{
+                /* assumption */
+                loct->tcdc_clm = 0.5;
+            }
+        }
 	}
+    
+    /* use average climate data in spin-up phase */
+    if(loct->adyear < BYR && SPINUP==2){
+		loct->dswrf_sfc = dswrf_sfc_dav[loct->doy];
+		loct->tcdc_clm = tcdc_clm_dav[loct->doy]/100.0;
+		loct->tmp_2m = tmp_2m_dav[loct->doy]-ZAT;
+		loct->tmp_sfc = tmp_sfc_dav[loct->doy]-ZAT;
+		loct->tmp10_soil = tmp10_soil_dav[loct->doy]-ZAT;
+		loct->tmp200_soil = tmp200_soil_dav[loct->doy]-ZAT;
+		loct->spfh_2m = spfh_2m_dav[loct->doy];
+		loct->prate_sfc = prate_sfc_dav[loct->doy];
+		loct->wnd_10m = wind_10m_dav[loct->doy];
+    }
+    
+    /* LARS-weathergenerator data in spin-up phase */
+    if(loct->adyear < BYR && SPINUP==4){
+		loct->tmp_2m = (su_lars_tmin[loct->time][loct->doy] + su_lars_tmax[loct->time][loct->doy])/2.0;
+		loct->tmp_sfc = loct->tmp_2m + (tmp_sfc_d[loct->climy-BYR][loct->doy] - tmp_2m_d[loct->climy-BYR][loct->doy]);
+		loct->tmp10_soil = loct->tmp_2m + (tmp10_soil_d[loct->climy-BYR][loct->doy] - tmp_2m_d[loct->climy-BYR][loct->doy]);
+		loct->tmp200_soil = loct->tmp_2m + (tmp200_soil_d[loct->climy-BYR][loct->doy] - tmp_2m_d[loct->climy-BYR][loct->doy]);
+
+		loct->prate_sfc = su_lars_prec[loct->time][loct->doy];
+
+		loct->dswrf_sfc = su_lars_srad[loct->time][loct->doy]*1000000.0/3600.0/24.0;
+    }
 	
 	/* future prediction */
 	if(PREDICT >= 1 && loct->climy > EYR){
@@ -181,9 +230,6 @@ void f_loct_proc(
 		loct->wnd_10m = wind_10m_d[EYR-BYR][loct->doy];
 		loct->tcdc_clm = tcdc_clm_d[EYR-BYR][loct->doy]/100.0;
 	}
-	
-	/* annual precipitation */
-	loct->prate_ann += loct->prate_sfc;
 	
 	/* sensitivity analysis ***********************************************/
 	if(SENSANS_TEMP==1 && loct->adyear >= YLDIST){  // BYR
@@ -213,11 +259,20 @@ void f_loct_proc(
 		loct->prate_sfc = lars_prec[loct->climy-BYR][loct->doy];
 	}
 	if(SENSANS_SRAD==2){
-		
 		loct->dswrf_sfc = lars_srad[loct->climy-BYR][loct->doy]*1000000.0/3600.0/24.0;
 	}
+    
+    /* decomposition temperature sensitivity */
+    if(EX_DECTMP == 1 || EX_DECTMP == 3){
+        if(loct->adyear >= BYR){
+            loct->tmp_2m += 0.05*(double)(loct->adyear - BYR);
+            loct->tmp_sfc += 0.05*(double)(loct->adyear - BYR);
+            loct->tmp10_soil += 0.05*(double)(loct->adyear - BYR);
+            loct->tmp200_soil += 0.05*(double)(loct->adyear - BYR);
+        }
+    }
 	
-	/** climate corrections for FLUX site *******************/
+	/** climate corrections for FLUX site ****************************/
 	if(WMODE == 1 && (strcmp(grid->site_id, "TKY")==0)){ 
 		f_clim_correct_TKY(grid, loct);		
 	}
@@ -240,7 +295,6 @@ void f_loct_proc(
 		f_clim_correct_QHB(grid, loct);
 	}
 	
-	
 	if(WMODE == 1 && (strcmp(grid->site_id, "KBU")==0)){
 		//f_clim_correct_KBU(grid, loct);
 	}
@@ -248,60 +302,14 @@ void f_loct_proc(
 		//f_clim_correct_Tongyu(grid, loct);
 	}
 	
-	/* local climate by WorldClim ***************************************/
-	if(WMODE == 2){
-		/* temperature (daily intepolation) */
-		if(loct->month==0){
-			dat_0 = grid->temp_wclim[11];
-		}else{
-			dat_0 = grid->temp_wclim[loct->month-1];
-		}
-								
-		if(loct->month==11){
-			dat_1 = grid->temp_wclim[11];
-			dat_2 = grid->temp_wclim[0];
-		}else{
-			dat_1 = grid->temp_wclim[loct->month];
-			dat_2 = grid->temp_wclim[loct->month+1];
-		}
-		rr = (double)(loct->mday + mm[loct->month])/mi[loct->month];
-					
-		temp_wclim_d = dat_0 + rr * (dat_1 - dat_0) + rr * (rr - 1.0) /2.0 * 
-								((dat_2 - dat_1) - (dat_1 - dat_0));
-				
-		temp_corr = temp_wclim_d - tmp_2m_ncep_dav[loct->doy];
-
-		/* precipitation */
-		if(prate_sfc_ncep_mav[loct->month]>0.0){
-			prec_corr = grid->prec_wclim[loct->month] / prate_sfc_ncep_mav[loct->month];
-		}else{
-			prec_corr = 0.0;
-		}
+	/* annual precipitation */
+	loct->prate_ann += loct->prate_sfc;
 		
-		/* check */
-		if(NOTICE==1 && grid->flag_datavl==1 && (temp_corr>20.0 || temp_corr<-20.0)){
-			printf("! Suspicious temp_corr:%ld %.2lf %.2lf %.2lf\n", loct->doy, temp_wclim_d, 
-						tmp_2m_ncep_dav[loct->doy], temp_corr);
-		}
-		if(NOTICE==1 && grid->flag_datavl==1 && (prec_corr<0.0 || prec_corr>10.0)){
-			printf("! Suspicious prec_corr: %.2lf %.2lf %.2lf\n", grid->prec_wclim[loct->month],
-					prate_sfc_ncep_mav[loct->month], prec_corr);
-		}
-		
-		/* correction */
-		loct->tmp_2m += temp_corr;
-		loct->tmp_sfc += temp_corr;
-		loct->tmp10_soil += temp_corr;
-		loct->tmp200_soil += temp_corr;
-		
-		loct->prate_sfc *= prec_corr;
-	}
-	
 	/*  snow-packing effect on soil temperature  */
 	if(mass->snwa > 0.2){
 		aaa = mass->snwa/(3.0 + mass->snwa);
-		loct->tmp10_soil = 0.0*aaa + loct->tmp10_soil*(1.0-aaa);
-		loct->tmp200_soil = 2.0*aaa + loct->tmp200_soil*(1.0-aaa);
+		loct->tmp10_soil = 0.0*aaa + loct->tmp10_soil*(1.0 - aaa);
+		loct->tmp200_soil = 2.0*aaa + loct->tmp200_soil*(1.0 - aaa);
 	}
 	
 	/* atmosphere ****************************************************/
@@ -348,7 +356,7 @@ void f_loct_proc(
             || strcmp(grid->site_id, "CEAMIP_HFK")==0|| strcmp(grid->site_id, "CEAMIP_MSE")==0){
 		loct->vp = loct->vps * spfh_2m_d[loct->climy-BYR][loct->doy];
 	}else{
-		loct->vp = loct->air_prsr*loct->spfh_2m/(0.622+0.378*loct->spfh_2m);    
+		loct->vp = loct->air_prsr * loct->spfh_2m/(0.622 + 0.378*loct->spfh_2m);
 	}
 	
 	/*  vapour pressure deficit, hPa  */
@@ -432,7 +440,7 @@ void f_loct_proc(
 	
 	/* hydrological water budget  ************************************************/
     /* soil degradation */
-    if(strcmp(grid->site_id, "PSO")==0 && DGSOIL==1){
+    if(strcmp(grid->site_id, "PSO")==0 && EX_DGSOIL==1){
     
         if(loct->veg_state==1 && loct->age_stand>=1 && loct->doy==0){
             /* loss of soil clay */
@@ -521,17 +529,20 @@ void f_loct_proc(
 	}
 	loct->pot_total_h = loct->pot_grav_h + loct->pot_matric_h;
 
-	/* ecophysiology: changing  ***************************************************/
+	/* ecophysiology: changing ***************************************************/
 	f_ecophysiology(grid, loct, &(echar->tree), &(mass->tree));
 	f_ecophysiology(grid, loct, &(echar->c3), &(mass->c3));
 	f_ecophysiology(grid, loct, &(echar->c4), &(mass->c4));
-	
+    
+    /* optimal LAi considering Game-Theory: 2014/03/04 by A.Ito */
+    //f_opt_lai_hikosaka_anten(grid, loct, &(echar->overs1), &(mass->tree));
+    
 	if(WMODE == 1 && (strcmp(grid->site_id, "TMK")==0)){
 		(echar->tree).lc = (echar->tree).lc0 * (0.3 + 0.9*exp(-0.03*loct->age_stand));
 		(echar->tree).lr = (echar->tree).lr0 * (0.3 + 0.9*exp(-0.03*loct->age_stand));
 	}
     
-    /* developmental process in rice***********************************************/
+    /* developmental process in rice ***********************************************/
 	if(loct->doy==0){
 		loct->dvi = 0.0;
 	}

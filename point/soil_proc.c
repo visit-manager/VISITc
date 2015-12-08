@@ -28,10 +28,18 @@ void f_cycle_soil(
 	double d13c_hf_a,  d13c_hf_i,  d13c_hf_p;
 	double d13c_mrl, d13c_mrh;
 	double d13c_ltr, d13c_msl;
+    double f_tm_ha, f_tm_hi, f_tm_hp;
 		
 	/** environmental scalars **/
-	schar->f_tm_l = frl(grid, loct, schar);		/* litter */
-	schar->f_tm_h = frh(grid, loct, schar);		/* humus */
+    if(EX_DECTMP == 0 || EX_DECTMP == 1){
+        schar->f_tm_l = frl(grid, loct, schar, 0);		/* litter */
+        schar->f_tm_h = frh(grid, loct, schar, 0);		/* humus */
+    }else if(EX_DECTMP == 2 || EX_DECTMP == 3){
+        schar->f_tm_l = frl(grid, loct, schar, 1);		/* litter */
+        f_tm_ha = schar->f_tm_h = frh(grid, loct, schar, 0);		/* humus */
+        f_tm_hi = frh(grid, loct, schar, 1);		/* humus */
+        f_tm_hp = frh(grid, loct, schar, 2);		/* humus */
+    }
 	
 	/* degraded soil organic carbon */
 	degrade_tf = mass->ltr_tf * schar->sr_lf/1000.0 * schar->f_tm_l;
@@ -39,10 +47,17 @@ void f_cycle_soil(
 	degrade_tr = mass->ltr_tr * schar->sr_lr/1000.0 * schar->f_tm_l;	
 	degrade_gf = mass->ltr_gf * schar->sr_lf/1000.0 * schar->f_tm_l;
 	degrade_gc = mass->ltr_gc * schar->sr_lc/1000.0 * schar->f_tm_l;
-	degrade_gr = mass->ltr_gr * schar->sr_lr/1000.0 * schar->f_tm_l;	
-	degrade_ha = mass->msl_a * schar->sr_ha/1000.0 * schar->f_tm_h;
-	degrade_hi = mass->msl_i * schar->sr_hi/1000.0 * schar->f_tm_h;
-	degrade_hp = mass->msl_p * schar->sr_hp/1000.0 * schar->f_tm_h;
+	degrade_gr = mass->ltr_gr * schar->sr_lr/1000.0 * schar->f_tm_l;
+    
+    if(EX_DECTMP == 0 || EX_DECTMP == 1){
+        degrade_ha = mass->msl_a * schar->sr_ha/1000.0 * schar->f_tm_h;
+        degrade_hi = mass->msl_i * schar->sr_hi/1000.0 * schar->f_tm_h;
+        degrade_hp = mass->msl_p * schar->sr_hp/1000.0 * schar->f_tm_h;
+    }else if(EX_DECTMP == 2 || EX_DECTMP == 3){
+        degrade_ha = mass->msl_a * schar->sr_ha/1000.0 * f_tm_ha;
+        degrade_hi = mass->msl_i * schar->sr_hi/1000.0 * f_tm_hi;
+        degrade_hp = mass->msl_p * schar->sr_hp/1000.0 * f_tm_hp;
+    }
 
 	/* microbial respiration */
 	flux->mr_tf = degrade_tf * schar->f_co2_lf;
@@ -79,7 +94,7 @@ void f_cycle_soil(
 	hf_a = flux->hf_tfa + flux->hf_tca + flux->hf_tra 
 		+ flux->hf_gfa + flux->hf_gca + flux->hf_gra;	/* input to active humus */
 	hf_i = flux->hf_tfi + flux->hf_tci + flux->hf_tri 
-		+ flux->hf_gfi + flux->hf_gci + flux->hf_gri;		/* input to intermediate humus */
+		+ flux->hf_gfi + flux->hf_gci + flux->hf_gri;	/* input to intermediate humus */
 	hf_p = flux->hf_tfp + flux->hf_tcp + flux->hf_trp 
 		+ flux->hf_gfp + flux->hf_gcp + flux->hf_grp;	/* input to passive humus */
 

@@ -75,16 +75,17 @@ void f_loct_init(
 	prate_sfc_a[365] *= 1.0/(double)nlyr;
 	
 	/* 1980-1999 average */
-	for(f=1980;f<2000;f++){
+	for(f=1980;f<2010;f++){
 		for(h=0;h<365;h++){
-			tmp_sfc_dav[h] += tmp_sfc_d[f-BYR][h]/20.0;
-			tmp_2m_dav[h] += tmp_2m_d[f-BYR][h]/20.0;
-			tmp10_soil_dav[h] += tmp10_soil_d[f-BYR][h]/20.0;
-			tmp200_soil_dav[h] += tmp200_soil_d[f-BYR][h]/20.0;
-			prate_sfc_dav[h] += prate_sfc_d[f-BYR][h]/20.0;
-			dswrf_sfc_dav[h] += dswrf_sfc_d[f-BYR][h]/20.0;
-			spfh_2m_dav[h] += spfh_2m_d[f-BYR][h]/20.0;
-			tcdc_clm_dav[h] += tcdc_clm_d[f-BYR][h]/20.0;
+			tmp_sfc_dav[h] += tmp_sfc_d[f-BYR][h]/30.0;
+			tmp_2m_dav[h] += tmp_2m_d[f-BYR][h]/30.0;
+			tmp10_soil_dav[h] += tmp10_soil_d[f-BYR][h]/30.0;
+			tmp200_soil_dav[h] += tmp200_soil_d[f-BYR][h]/30.0;
+			prate_sfc_dav[h] += prate_sfc_d[f-BYR][h]/30.0;
+			dswrf_sfc_dav[h] += dswrf_sfc_d[f-BYR][h]/30.0;
+			spfh_2m_dav[h] += spfh_2m_d[f-BYR][h]/30.0;
+			tcdc_clm_dav[h] += tcdc_clm_d[f-BYR][h]/30.0;
+			wind_10m_dav[h] += wind_10m_d[f-BYR][h]/30.0;
 		}
 	}
     tmp_sfc_dav[365] = tmp_sfc_dav[364];
@@ -95,6 +96,7 @@ void f_loct_init(
     dswrf_sfc_dav[365] = dswrf_sfc_dav[364];
     spfh_2m_dav[365] = spfh_2m_dav[364];
     tcdc_clm_dav[365] = tcdc_clm_dav[364];
+    wind_10m_dav[365] = wind_10m_dav[364];
 
 	grid->atmp2m_av = grid->stmp10cm_av = 0.0;
 	grid->atmp2m_max = -100.0;

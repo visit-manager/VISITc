@@ -25,7 +25,7 @@ void f_experiment(
 	FILE *fp_r[NFILE]
 ){
 	long e, f, g, h, i;
-	char filename[100];
+	char filename[128];
 	long ndy, end_year, ddummy;
 	double ansis_ann[256],fdummy;
 	double aet_a, flux_mon[6][12],dmon[12],aaa;
@@ -35,16 +35,6 @@ void f_experiment(
 	if(NOTICE==1){
 		printf("Start experimental phase\n");
 	}
-	
-/*	if(WMODE==1){
-		for(f=1;f<=16;f++){
-			fprintf(fp_r[f],"%s %s\n", echar->para_ver_id, echar->para_date_id);
-		}
-	}else if(WMODE==2){
-		for(f=1;f<=16;f++){
-			fprintf(fp_r[f],"%s %s\n", echar_type[0].para_ver_id, echar_type[0].para_date_id);
-		}
-	} */
 	
 	if(USE_RESTART == 1){
 		strcpy(filename, grid[0][0].site_id);
@@ -86,10 +76,6 @@ void f_experiment(
 	/***************************************************************************/
 	for(f=0; f<NROW; f++){
 		for(g=0; g<NCOL; g++){
-			if(WMODE==2){
-				echar = &(echar_type[grid[f][g].veg_type]);
-			}
-			
 		/*	for(h=1;h<NFILE;h++){
 				fprintf(fp_r[h],"%ld %ld\n", f, g);
 			} */
@@ -142,15 +128,58 @@ void f_experiment(
                         end_year = 2100;
                     }
 				}
+                
+                /* LUC-MIP 2014/11/11 by A.Ito */
+                if(EX_LUCMIP==11){
+                    end_year = 2940;
+                }
+                if(EX_LUCMIP==12){
+                    end_year = 2990;
+                }
+                if(EX_LUCMIP==13){
+                    end_year = 3130;
+                }
+                if(EX_LUCMIP==2){
+                    end_year = 2930;
+                }
+                if(EX_LUCMIP==3){
+                    end_year = 2930;
+                }
+                if(EX_LUCMIP==4){
+                    end_year = 1930+3000;
+                }
+                if(EX_LUCMIP==5){
+                    end_year = 1930+3000;
+                }
+                if(EX_LUCMIP==6){
+                    end_year = 2930;
+                }
+                if(EX_LUCMIP==7){
+                    end_year = 2930;
+                }
 				
 				/* roop for experimental stage ************************************************/
 				for(e=BYR; e<=end_year; e++){	
-					loct->climy = e;
+					
 					if(SENSANS_ACO2 == 1){
 						loct->CO2y = BYR;
+					}else if(SENSANS_ACO2 == 2){
+						loct->CO2y = 2005;
 					}else{
 						loct->CO2y = e;
 					}
+                    
+                    loct->climy = e;
+                    /* LUC-MIP: random 1983-2012: 2014/11/06 by A.Ito */
+                    if((strcmp(grid[f][g].site_id, "LUCMIP0")==0) || (strcmp(grid[f][g].site_id, "LUCMIP0")==1)
+                        || (strcmp(grid[f][g].site_id, "LUCMIP0")==2) || (strcmp(grid[f][g].site_id, "LUCMIP0")==3)){
+                        
+                        //loct->climy = 1983 + (long)(30.0 * (double)rand() / (double)RAND_MAX);
+                        loct->climy = 1983 + (e - BYR)%30;
+                        
+                        loct->CO2y = 2005;
+                    }
+                    
 					loct->time++;
 					loct->adyear = e;
 					loct->age_stand += 1.0;
@@ -202,6 +231,7 @@ void f_experiment(
 					/* seasonal roop */
 					ndy = (e%4==0)?366:365;
 					for(h=0;h<ndy;h++){
+                    
 						loct->doy = h;
 						/* simulation suing fixed climate data: 2010/09/06 by A.Ito */
 						/* no diurnal and no  */
@@ -214,6 +244,7 @@ void f_experiment(
 								loct->CO2y = 2050;
 							}
 						}
+                        
 						f_doyTmody(e, h, &(loct->month), &(loct->mday));
 						loct->hour = 24;
 						
@@ -327,22 +358,20 @@ void f_experiment(
 						}
 						
 						/******************************************************************************/
-						f_ansis_ann(&(grid[f][g]), loct, echar, &(mass[f][g]), flux, ansis_ann);									
+						f_ansis_ann(&(grid[f][g]), loct, echar, &(mass[f][g]), flux, ansis_ann);
 						
 						/* daily result iutput */
-						if(WMODE==1 && (loct->climy>=1990 && loct->climy<=2012)){
+						//if(WMODE==1 && (loct->climy>=1995 && loct->climy<=2013)){
 							output_ansis_daily(&(grid[f][g]), loct, echar, &(mass[f][g]), flux, fp_r[2]);
-						}
-						if((WMODE==2) && (loct->climy>=1990 && loct->climy<=2012)){
-							output_ansis_daily(&(grid[f][g]), loct, echar, &(mass[f][g]), flux, fp_r[loct->climy - 1998 + 9]);
-						}
+						//}
 					}
 					f_erosion_rusle(&grid[f][g], loct, &mass[f][g], flux);
+                    if(NECB_POC==1){
+                        (mass[f][g].soil).msl_a -= (flux->soil).erosion_carbon;
+                    }
 					
-					(mass[f][g].soil).msl_a -= (flux->soil).erosion_carbon;
-					
-					/* annual result iutput */
-					output_ansis_ann(loct->climy, ansis_ann, fp_r[1]);
+					/* annual result output */
+					output_ansis_ann(loct->adyear, ansis_ann, fp_r[1]);
 				
                 /*	fprintf(fp_r[1],"%lf ", loct->f_rain);
 					fprintf(fp_r[1],"%lf ", loct->f_slope);
@@ -359,10 +388,7 @@ void f_experiment(
                     } */
 					
 					/* monitoring */
-					if(WMODE==2){
-						printf("%4d %4d ", grid[f][g].dg_row, grid[f][g].dg_col);
-					}
-					printf("%4ld GPP:%5.1lf NPP:%5.1lf NEP:%6.3lf  LAI:%4.1lf TREE:%5.1lf C3:%5.1lf C4:%5.1lf  LITTER:%5.1lf SOIL:%6.1lf\n", 
+					printf("%4ld GPP:%5.1lf NPP:%5.1lf NEP:%6.3lf  LAI:%4.1lf TREE:%5.1lf C3:%5.1lf C4:%5.1lf  LITTER:%5.1lf SOIL:%6.1lf\n",
 						e, ansis_ann[0], ansis_ann[1], ansis_ann[2], 
 						ansis_ann[5]+ansis_ann[9]+ansis_ann[13], 
 						ansis_ann[6]+ansis_ann[7]+ansis_ann[8], 

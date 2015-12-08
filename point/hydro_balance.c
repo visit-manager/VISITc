@@ -112,8 +112,9 @@ void f_hydrology(
 	/**  runoff 1, estimated by the bucket model  **/
 	dry_inx = grid->fieldcap30 - mass->sw30;
 	gain = lqd_in_soil;
-	loct->ro1 = pow(gain, 3.0) + pow(dry_inx, 3.0);
-	loct->ro1 = (loct->ro1>=0.0)?loct->ro1:0.0;
+    /* revised 2014/03/29 by A.Ito after T.Hajima's comment */
+	cc = pow(gain, 3.0) + pow(dry_inx, 3.0);  
+	cc = (cc>=0.0)?cc:0.0;
 	loct->ro1 = pow(cc, 0.33333) - dry_inx;
 	loct->ro1 = (loct->ro1>=0.0)?loct->ro1:0.0;
 

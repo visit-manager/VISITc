@@ -67,6 +67,7 @@ void f_erosion_rusle(
 	/* C: vegetation cover *****************************************/
     if(loct->veg_state == 0){
         loct->f_cover = 0.001;	/* forest */
+        //loct->f_cover = 0.01;	/* forest */
     }else if(loct->veg_state == 1){
         loct->f_cover = 0.5;	/* cropland */
     }

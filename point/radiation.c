@@ -13,22 +13,6 @@
 #include"prototype.h"
 #include"definition.h"
 
-/* sensitivity analysis */
-extern short SENSANS_DIST;
-/* 1: no disturbance */
-extern short SENSANS_ACO2;
-/* 1: no atmospheric CO2 rise */
-extern short SENSANS_TEMP;
-/* 1: no temperature change */
-/* 2: use LARS-generated dammy data */
-extern short SENSANS_PREC;
-/* 1: no precipitation change */
-/* 2: use LARS-generated dammy data */
-extern short SENSANS_SRAD;
-/* 1: no solar radiation change */
-/* 2: use LARS-generated dammy data */
-extern short N_LARS;
-
 /* solar declination, degree *******************************/
 double f_soldec(
 	struct Grid *grid, 

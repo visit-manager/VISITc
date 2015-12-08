@@ -33,7 +33,8 @@ void plant_process(
 		}else if(grid->veg_type == 3){
 			emerge = 0.025 * mass->nsch_storage;
 		}else if(grid->veg_type == 4){
-			emerge = 0.04 * mass->nsch_storage; //TKY (2013/01/24 by A.Ito)
+			//emerge = 0.04 * mass->nsch_storage; //TKY (2013/01/24 by A.Ito)
+			emerge = 0.03 * mass->nsch_storage; //TKY (2013/01/24 by A.Ito)
 			//emerge = 0.08 * mass->nsch_storage;
 			//emerge = 0.03 * mass->nsch_storage;  //GDK
 			//emerge = 0.03 * mass->nsch_storage;  //SMF

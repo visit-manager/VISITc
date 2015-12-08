@@ -10,6 +10,7 @@
 /*********************************/
 
 #include"definition.h"
+#include"setting.h"
 
 #define N_ANSIS 256
 

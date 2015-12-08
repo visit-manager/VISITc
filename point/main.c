@@ -11,6 +11,7 @@
 #include<math.h>
 #include<string.h>
 #include"definition.h"			/* definition of constants */
+#include"setting.h"             /* simulation settings */
 #include"structure.h"			/* definition of structures */
 #include"prototype.h"			/* prototypes of functions */
 #include"global_variables.h"	/* definition of global variables */
@@ -26,7 +27,9 @@ int main(int argc, char *argv[]){
 	/* rnum = (short)atol(argv[1]); */ /* used in ensemble simulations */
 	rnum = 0; /* */
 	
-	/********************************************************************/	
+    srand(192);
+
+	/********************************************************************/
 	/* optional: parameter perturbation for sensitivity analysis */
 	f_parameter_perturbation(rnum);
 	

@@ -10,7 +10,6 @@
 #include<math.h>
 #include"structure.h"
 #include"prototype.h"
-#include"definition.h"
 
 /* initialization ************************************************/
 void f_init_d13c(

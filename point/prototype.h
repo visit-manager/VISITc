@@ -6,6 +6,7 @@
 /*	version in January 24, 2013                                         */
 
 #include"definition.h"
+#include"setting.h"
 
 /* global variables ****************************/
 /* configuration */
@@ -45,6 +46,7 @@ extern double	prate_sfc_dav[YSTEP];
 extern double	dswrf_sfc_dav[YSTEP];	
 extern double	spfh_2m_dav[YSTEP];	
 extern double	tcdc_clm_dav[YSTEP];	
+extern double	wind_10m_dav[YSTEP];
 
 extern double	paddy_wtd[5][YSTEP];
 
@@ -61,10 +63,16 @@ extern double gcm_ahmd_av[YSTEP];
 extern double gcm_dswrf_av[YSTEP];
 
 /* LARS-generated dummy weather data */
-extern double lars_tmin[63][YSTEP];
-extern double lars_tmax[63][YSTEP];
-extern double lars_prec[63][YSTEP];
-extern double lars_srad[63][YSTEP];
+extern double lars_tmin[HCLIMD][YSTEP];
+extern double lars_tmax[HCLIMD][YSTEP];
+extern double lars_prec[HCLIMD][YSTEP];
+extern double lars_srad[HCLIMD][YSTEP];
+
+/* LARS-generated spin-up weather data */
+extern double su_lars_tmin[N_SU_LARS][YSTEP];
+extern double su_lars_tmax[N_SU_LARS][YSTEP];
+extern double su_lars_prec[N_SU_LARS][YSTEP];
+extern double su_lars_srad[N_SU_LARS][YSTEP];
 
 /* sensitivity analysis */
 extern short SENSANS_DIST;
@@ -122,12 +130,12 @@ void f_close_files(			FILE *fp_r[NFILE]);
 void f_initialize(			struct Grid grid[DROW][DCOL], struct Loct *loct, struct Echar *echar, 
 							struct Echar echar_type[17], struct Mass mass[DROW][DCOL], 
 							struct Flux *flux, FILE *fp_r[NFILE]);
-void f_init_site(				struct Grid *grid); 
+void f_init_site(			struct Grid *grid); 
 void f_loct_proc(			struct Grid *grid, struct Loct *loct, struct Echar *echar, 
 							struct Mass *mass, struct Flux *flux);
 void f_loct_init(			struct Grid *grid, struct Loct *loct, struct Echar *echar, 
 							struct Mass *mass, struct Flux *flux);
-void atmco2_trend(				struct Grid *grid,	struct Loct* loct);
+void atmco2_trend(			struct Grid *grid,	struct Loct* loct);
 void set_parameter(			long mode, char [], struct Echar echar[]);
 void f_init_region(			struct Grid grid[DROW][DCOL]);
 void f_parameter_perturbation(short pnum);
@@ -174,6 +182,8 @@ void f_ecophysiology(		struct Grid *grid, struct Loct *loct, struct Pchar *pchar
 void f_incelco2(			struct Loct *loct, struct Pchar *pchar);
 void f_photo_qy(			struct Loct *loct, struct Pchar *pchar);
 void f_opt_lai(				struct Grid *grid, struct Loct *loct, struct Pchar *pchar);
+void f_opt_lai_hikosaka_anten(		struct Grid *grid, struct Loct *loct, struct Cchar *cchar, struct Pmas *mass);
+
 double lai_mass(			struct Pmas *mass, struct Pchar *pchar);
 double irr_attn(			struct Grid *grid, struct Loct *loct, struct Pchar *pchar);
 void f_q10_ar(				struct Loct *loct, struct Pchar *pchar);
@@ -229,8 +239,8 @@ void leaf_ansolv_df97(		double vpd, double aco2, double lai, double ft_rd, doubl
 void f_allocation(			struct Pchar *pchar, struct Pmas *mass, struct Pflx *flux);
 void reallocation_survival(	struct Grid *grid, struct Pchar *pchar, struct Pmas *mass, struct Pflx *flux);
 
-double frl(					struct Grid *grid, struct Loct *loct, struct Schar *schar);
-double frh(					struct Grid *grid, struct Loct *loct, struct Schar *schar);
+double frl(					struct Grid *grid, struct Loct *loct, struct Schar *schar, short stype);
+double frh(					struct Grid *grid, struct Loct *loct, struct Schar *schar, short stype);
 
 /***** CROP CYCLES *****/
 void planting(				struct Grid *grid, struct Loct *loct, struct Pchar *pchar, 
@@ -256,6 +266,7 @@ void f_flux_site(			struct Grid *grid, struct Loct *loct, struct Echar *echar,
 void disturbance_regime(	long year, struct Grid *grid, struct Loct *loct, struct Echar *echar,
 							struct Mass *mass, struct Flux *flux);
 void logging_event(			struct Grid *grid, struct Mass *mass);
+void harvest_event(			struct Grid *grid, struct Mass *mass);
 void plant_process(			struct Grid *grid, struct Loct* loct, struct Pflx *flux,
 							struct Pchar *pchar, struct Pmas *mass);
 
