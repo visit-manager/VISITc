@@ -7,7 +7,8 @@
 
 /* calculation step */
 #define DSTEP 48		/* dayly 48 steps: i.e.,  30-minute interval */
-#define YSTEP 366		/* dayly 48 steps: i.e.,  30-minute interval */
+#define MSTEP 12		/* monthly 12 steps: i.e.,  monthly interval */
+#define YSTEP 366		/* dayly 366 steps: i.e.,  daily interval */
 /* number of soil layers */
 #define SOIL_LAYER 20
 
@@ -21,10 +22,17 @@
 /* number of outputfiles */
 #define NFILE 9
 
-/* number of climate data length (years) */
-//#define HCLIMD 66 /* NCEP/NCAR 1948-2013 */
+#define NBIOME 17
+
+/* number of historical climate data length (years) */
+#define HCLIMD 68 /* NCEP/NCAR 1948-2015 */
 //#define HCLIMD 110 /* CEAMIP 1901-2010 */
-#define HCLIMD 730 /* LUCMIP 1901-2630 */
+//#define HCLIMD 730 /* LUCMIP 1901-2630 */
+//#define HCLIMD 212 /* ASIAMIP 1801-2012 */
+
+#define LEAPYEAR 1
+/* 0: no leap year */
+/* 1: with leap year */
 
 /* control debugging messages */
 #define NOTICE  1
@@ -136,7 +144,7 @@
 /* 0: not */
 /* 1: use for soil */
 
-#define SPINUP 0
+#define EX_SPINUP 0
 /* 0: default repeated */
 /* 1: first year */
 /* 2: average */
@@ -144,6 +152,7 @@
 /* 4: lars-generated */
 /* 5: alternately repeated */
 
+/* LARS-generated data length */
 #define N_SU_LARS 1
 
 /* soil decomposition temperature sensitivity */
@@ -159,7 +168,7 @@
 #define NECB_BVOC 0
 
 /* experiments for LUC-MIP: 2014/11/11 */
-#define EX_LUCMIP 5
+#define EX_LUCMIP 0
 /* 0: no luc mip */
 /* 11: nat-crop-nat 10y  */
 /* 12: nat-crop-nat 60y  */
@@ -170,4 +179,14 @@
 /* 5: crop */
 /* 6: nat clear */
 /* 7: crop clear */
+
+/* ASIAMIP: 2015/12/08 by A.Ito ******/
+#define EX_ASIAMIP 0
+/* 0: off */
+/* 1: on */
+
+/* experiments of standing dead trees */
+#define EX_SDW 0
+/* 0: off */
+/* 1: on */
 

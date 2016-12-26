@@ -28,7 +28,7 @@ struct Mass mass[DROW][DCOL];
 struct Loct loct;
 struct Echar echar;
 struct Flux flux;
-struct Echar echar_type[NFILE];		/* default parameters */
+struct Echar echar_type[NBIOME];		/* default parameters */
 
 /* climatology: *_d[] means the time-series during 1948 to 2005 */	
 long	month_day[12];

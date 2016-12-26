@@ -23,7 +23,7 @@ void atmco2_trend(
 	
 	/**  time (AD)  **/
 	time = (double)(loct->CO2y);
-	if(time<1900.0 || time>2100.0){
+	if(time<1800.0 || time>2100.0){
 		printf("!! Wrong CO2 year: %.1lf\n", time);
 	}
 	

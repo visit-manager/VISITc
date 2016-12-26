@@ -128,7 +128,7 @@ void f_open_files(			struct Grid *grid, short rnum, FILE *fp_r[NFILE]);
 void f_close_files(			FILE *fp_r[NFILE]);
 
 void f_initialize(			struct Grid grid[DROW][DCOL], struct Loct *loct, struct Echar *echar, 
-							struct Echar echar_type[17], struct Mass mass[DROW][DCOL], 
+							struct Echar echar_type[NBIOME], struct Mass mass[DROW][DCOL],
 							struct Flux *flux, FILE *fp_r[NFILE]);
 void f_init_site(			struct Grid *grid); 
 void f_loct_proc(			struct Grid *grid, struct Loct *loct, struct Echar *echar, 
@@ -252,10 +252,10 @@ void interval(				struct Grid *grid, struct Loct *loct, struct Pchar *pchar,
 
 /***** SCHEMES *****/
 void f_spinup(				struct Grid grid[DROW][DCOL], struct Loct *loct, struct Echar *echar, 
-							struct Echar echar_type[17], struct Mass mass[DROW][DCOL], 
+							struct Echar echar_type[NBIOME], struct Mass mass[DROW][DCOL],
 							struct Flux *flux, FILE *fp_r);
 void f_experiment(			struct Grid grid[DROW][DCOL], struct Loct *loct, struct Echar *echar, 
-							struct Echar echar_type[17], struct Mass mass[DROW][DCOL], 
+							struct Echar echar_type[NBIOME], struct Mass mass[DROW][DCOL], 
 							struct Flux *flux, FILE *fp_r[NFILE]);
 void daily_scheme(			struct Grid *grid, struct Loct *loct, struct Echar *echar, 
 							struct Mass *mass, struct Flux *flux);
@@ -339,10 +339,13 @@ void f_erosion_rusle(		struct Grid *grid, struct Loct *loct, struct Mass *mass,
 							struct Flux *flux);
 
 /*** OUTPUT ***/
+void f_ansis_mon(			struct Grid *grid, struct Loct *loct, struct Echar *echar,
+							struct Mass *mass, struct Flux *flux, double ansis_ann[N_ANSIS]);
+void f_ansis_ann(			struct Grid *grid, struct Loct *loct, struct Echar *echar,
+							struct Mass *mass, struct Flux *flux, double ansis_ann[N_ANSIS]);
 void output_ansis_daily(	struct Grid *grid, struct Loct *loct, struct Echar *echar, 
 							struct Mass *mass, struct Flux *flux, FILE *fp);
-void f_ansis_ann(			struct Grid *grid, struct Loct *loct, struct Echar *echar, 
-							struct Mass *mass, struct Flux *flux, double ansis_ann[N_ANSIS]);
+void output_ansis_mon(		short mode, long year, long month, double ansis_mon[N_ANSIS], FILE *fp);
 void output_ansis_ann(		long year, double ansis_ann[N_ANSIS], FILE *fp);
 
 /***** STABLE CARBON ISOTOPE *****/

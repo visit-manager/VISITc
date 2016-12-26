@@ -59,7 +59,7 @@ void f_hydrology(
 	
 	/* SNOW BUDGET ***********************************************/
 	/** snow thaw water  **/
-	if(mass->snwa>0.1){
+	if(mass->snwa > 0.1){
 		thaw = (1.0/11.0)/(1.0+exp(-0.5*(loct->tmp_2m-4.0)));	
 		/* thaw=1.0/(1.0+exp(-0.375*grid->tmp_sfc));  */
 		aa = (1.0 + 10.0/(0.05*mass->snwa+1.0));

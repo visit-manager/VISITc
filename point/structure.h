@@ -26,7 +26,7 @@ struct Grid{
 		short		flag_datavl;		/* data availability, =1 if avalable */
 
 		/* site information *********************************************/
-		char		site_id[16];		/* site ID, e.g. TKY */
+		char		site_id[32];		/* site ID, e.g. TKY */
 		char		file_name[128];		/* file name identifier */
 		char		file_clim[128];		/* NCEP file name for site simulation */
 		char		file_site[128];		/* site file name */
@@ -50,8 +50,8 @@ struct Grid{
 		double		agrPt;				/* fraction of agricultural area */
 		
 		/* climatology: *_a[] means the average during 1948 to 2005 ***********/
-		double		temp_wclim[12];		/* WorldClim monthly temperature, deg C */
-		double		prec_wclim[12];		/* WorldClim monthly precipitation, mm */
+		double		temp_wclim[MSTEP];		/* WorldClim monthly temperature, deg C */
+		double		prec_wclim[MSTEP];		/* WorldClim monthly precipitation, mm */
 		double		atmp2m_av;			/* mean temperature, degree C */
 		double		atmp2m_max;			/* maximum temperature, degree C */
 		double		atmp2m_min;			/* minimum temperature, degree C */
@@ -601,8 +601,8 @@ struct Schar{
 
 /* ecosystem characteristics *************************************/
 struct Echar{ 
-		char		para_ver_id[15];		/* parameter vesion ID */
-		char		para_date_id[15];		/* parameter update date */
+		char		para_ver_id[16];		/* parameter vesion ID */
+		char		para_date_id[16];		/* parameter update date */
 
 		struct		Pchar tree;			/* for tree plants */
 		struct		Pchar c3;			/* for c3 herbaceous plants */
@@ -675,6 +675,8 @@ struct Smas{
 		
 		double		mcrb;				/* microbe */
 		double		doc;				/* dissolved organic carbon, DOC */
+    
+        double      sdw;                /* standing dead wood: 2016/05/10 by A.Ito */
 		
 		double		soil;				/* total soil */
 		
@@ -837,6 +839,8 @@ struct Sflx{
 		double		li_gf;				/* foliage litter */
 		double		li_gc;				/* stem litter */
 		double		li_gr;				/* root litter */
+    
+        double      fd_sdw;             /* fall down of standing dead wood: 2016/05/10 by A.Ito */
 		
 		/* humification */
 		double		hf_tfa;		/* */

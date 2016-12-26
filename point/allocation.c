@@ -37,7 +37,7 @@ void f_allocation(
 			aaa = (pchar->opt_lai - mass->lai)*100.0*2.0/2.2/pchar->sla;
 			bbb = flux->epp*pchar->alloc_ass;
 			
-			/* allocate photosyntahte to foliage to attain the optimum one */
+			/* allocate photosynthate to foliage to attain the optimum LAI */
 			if(aaa<=bbb){
 				ccc = pchar->alloc_ass;
 				

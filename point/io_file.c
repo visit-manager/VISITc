@@ -118,19 +118,19 @@ void f_open_files(
             strcat(filename, "_nex2");
         }
         
-        if(SPINUP==1){
+        if(EX_SPINUP==1){
             strcat(filename, "_su-1");
         }
-        if(SPINUP==2){
+        if(EX_SPINUP==2){
             strcat(filename, "_su-2");
         }
-        if(SPINUP==3){
+        if(EX_SPINUP==3){
             strcat(filename, "_su-3");
         }
-        if(SPINUP==4){
+        if(EX_SPINUP==4){
             strcat(filename, "_su-4");
         }
-        if(SPINUP==5){
+        if(EX_SPINUP==5){
             strcat(filename, "_su-5");
         }
         
@@ -164,28 +164,30 @@ void f_open_files(
         }
     
         switch(h){
-            case 0:		strcat(filename, "_spinup");		break;
-            case 1:		strcat(filename, "_annual");		break;
-            case 2:		strcat(filename, "_daily");			break;
-            case 3:		strcat(filename, "_nee30min");		break;
-            case 4:		strcat(filename, "_needaily");		break;
-            case 5:		strcat(filename, "_needaytime");	break;
-            case 6:		strcat(filename, "_canopy");		break;
-            case 7:		strcat(filename, "_ch4");			break;
-            case 8:		strcat(filename, "_n2o");			break;
-            case 9:		strcat(filename, "_98-30min");		break;
-            case 10:	strcat(filename, "_99-30min");		break;
-            case 11:	strcat(filename, "_00-30min");		break;
-            case 12:	strcat(filename, "_01-30min");		break;
-            case 13:	strcat(filename, "_02-30min");		break;
-            case 14:	strcat(filename, "_03-30min");		break;
-            case 15:	strcat(filename, "_04-30min");		break;
-            case 16:	strcat(filename, "_05-30min");		break;
+            case 0:		strcat(filename, "_E01");		break;
+            case 1:		strcat(filename, "_E02");		break;
+            case 2:		strcat(filename, "_E03");		break;
+            case 3:		strcat(filename, "_E04");		break;
+            case 4:		strcat(filename, "_E05");		break;
+            case 5:		strcat(filename, "_E06");       break;
+            case 6:		strcat(filename, "_E07");		break;
+            case 7:		strcat(filename, "_E08");		break;
+            case 8:		strcat(filename, "_E09");		break;
+            case 9:		strcat(filename, "_E10");		break;
+            case 10:	strcat(filename, "_E11");		break;
+            case 11:	strcat(filename, "_E12");		break;
+            case 12:	strcat(filename, "_E13");		break;
+            case 13:	strcat(filename, "_E14");		break;
+            case 14:	strcat(filename, "_E15");		break;
+            case 15:	strcat(filename, "_E16");		break;
+            case 16:	strcat(filename, "_E17");		break;
         }
         
-        strcat(filename, ".txt");
+        strcat(filename, ".csv");
+        /* strcat(filename, ".txt"); */
+        
         /* if(h==1){
-         strcat(filename, ".csv");
+        strcat(filename, ".txt");
          }else{
          strcat(filename, ".txt");
          } */

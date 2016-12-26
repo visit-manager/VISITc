@@ -21,10 +21,10 @@ double f_rfm(
 	double rfmt0, t0, rfm, ft;
 	
 	/* specific rate, at 15 deg C */
-	rfmt0 = pchar->rmf/1000.0; 
+	rfmt0 = pchar->rmf / 1000.0;
 	t0 = 15.0; /* base temperature */
 	/* temperature dependence, exponential */
-	ft = exp(log(pchar->qTf)/10.0*(loct->tmp_sfc-t0));
+	ft = exp(log(pchar->qTf) / 10.0*(loct->tmp_sfc - t0));
 	
 	if(mass->fol >= 0.0){	
 		rfm = mass->fol*rfmt0*ft;
@@ -60,10 +60,10 @@ double f_rcm(
 	double rfmt0, t0, rfm, ft;
 	
 	/* specific rate, at 15 deg C */
-	rfmt0 = pchar->rmc/1000.0; 
+	rfmt0 = pchar->rmc / 1000.0;
 	t0 = 15.0; 
 	/* temperature dependence, exponential */
-	ft = exp(log(pchar->qTc)/10.0*(loct->tmp_sfc - t0));
+	ft = exp(log(pchar->qTc) / 10.0*(loct->tmp_sfc - t0));
 	
 	if(mass->stm >= 0.0){	
 		rfm = mass->stm * rfmt0 * ft;
@@ -98,12 +98,12 @@ double f_rrm(
 	double rfmt0, t0, rfm, ft;
 	
 	/* specific rate, at 15 deg C */
-	rfmt0 = pchar->rmr/1000.0; 
+	rfmt0 = pchar->rmr / 1000.0;
 	t0 = 15.0; 
 
 	/* temperature dependence, exponential */
 	/* ft=exp(log(pchar->qTr)/10.0*(grid->tmp_sfc-t0)); */
-	ft = exp(log(pchar->qTr)/10.0*(loct->tmp10_soil-t0));
+	ft = exp(log(pchar->qTr) / 10.0*(loct->tmp10_soil - t0));
 	
 	if(mass->rot>=0.0){	
 		rfm = mass->rot * rfmt0 * ft;
@@ -174,12 +174,12 @@ void f_resp_h(
 	rr_f *= conv_dh;
 	
 	/* unit: micro mol CO2 m-2 s-1 */
-	(flux->tree).ar_h = rf_t1*loct->comp_over1 + rf_t2*loct->comp_over2 + rc_t + rr_t;
+	(flux->tree).ar_h = rf_t1 * loct->comp_over1 + rf_t2 * loct->comp_over2 + rc_t + rr_t;
 	(flux->c3).ar_h = rf_f + rc_f + rr_f;
 	
 	/* temperature effect, exponential */
 	if((echar->soil).tmp>-20.0){
-		ftl = 0.01+exp(308.56*(1.0/56.02-1.0/((echar->soil).tmp+46.02)));
+		ftl = 0.01 + exp(308.56*(1.0/56.02-1.0/((echar->soil).tmp+46.02)));
 	}else{
 		ftl = 0.01;
 	} 

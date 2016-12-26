@@ -23,8 +23,8 @@ void f_soil_saxton(
 	struct Grid *grid
 ){
 	double crit_tension;
-	double p_sand = grid->sand_frac*100.0;	/* percent sand fraction */
-	double p_clay = grid->clay_frac*100.0;	/* percent clay fraction */
+	double p_sand = grid->sand_frac * 100.0;	/* percent sand fraction */
+	double p_clay = grid->clay_frac * 100.0;	/* percent clay fraction */
 	
 	switch(grid->stexture){
 		/* 0: sandy */
@@ -45,7 +45,7 @@ void f_soil_saxton(
 	grid->field_cap *= 300.0;
 
 	/* pore space capacity, mm for 30cm-soil */
-	grid->pore_cap = 0.332 -7.251*0.0001*p_sand + 0.1276*log10(p_clay);	
+	grid->pore_cap = 0.332 -7.251 * 0.0001 * p_sand + 0.1276 * log10(p_clay);
 	grid->pore_cap *= 300.0;
 }
 
@@ -57,7 +57,7 @@ double albedo_soil(
 	double albedo;
 	
 	/* a function of soil and snow coverage */
-	albedo = schar->albedo0 + (0.7 - schar->albedo0)/(1.0 + exp(-0.05*(loct->snow_acc-70.0)));
+	albedo = schar->albedo0 + (0.7 - schar->albedo0)/(1.0 + exp(-0.05 * (loct->snow_acc-70.0)));
 	albedo = (albedo>0.05)?albedo:0.05; 
 	albedo = (albedo<0.7)?albedo:0.7;
 	

@@ -52,10 +52,10 @@ void f_ch4oxy_ridgewell(
 	}
 	
 	/* co_ch4 = 1.72; */ /* default */
-	co_ch4 = loct->atm_ch4_a1[loct->CO2y-1750]/1000.0;
+	co_ch4 = loct->atm_ch4_a1[loct->CO2y-1750] / 1000.0;
 	
 	/* moisture factor */
-	if(((loct->prate_sfc + mass->sw30)/loct->pet)>1.0){
+	if(((loct->prate_sfc + mass->sw30)/loct->pet) > 1.0){
 		/* Eq. (11a) in Ridgewell et al. (1999) */
 		r_sm = 1.0;
 	}else{
@@ -305,12 +305,15 @@ void f_ch4oxy_delgrosso(
 ){
 	double max_ch4oxy;
 	double f_tsoil, f_dopt, f_swater;
-	double vac, dopt;
+	double vac, dopt, rfc;
 	double wmin, wopt, wmax, vmc;
 	double aa, bb, cc, dd, ee, ff;
 	double tp1, tp2, tp3, tp4, tp5, tp6, tp7, tp8;
 	double pfc, vfrac, theta_V, theta_P, theta_A, sw_p, s_wat;
 	
+    /* 2016/10/28 revised by A.Ito, thanks to Ueyama-san */
+    rfc = grid->field_cap / 300.0;
+
 	if(grid->veg_type==3||grid->veg_type==4){
 		/* deciduous forests */
 		
@@ -392,9 +395,9 @@ void f_ch4oxy_delgrosso(
 		max_ch4oxy = 53.8 * dopt + 0.58;
 		
 		/* Fig.5a */
-		wmin = 3.0 * grid->field_cap - 0.28;   /* Wmin */
-		wopt = 6.3 * grid->field_cap - 0.58;   /* Wopt */
-		wmax = 10.6 * grid->field_cap + 1.9;   /* Wmax */
+		wmin = 3.0 * rfc - 0.28;   /* Wmin */
+		wopt = 6.3 * rfc - 0.58;   /* Wopt */
+		wmax = 10.6 * rfc + 1.9;   /* Wmax */
 		
 		vmc = loct->soilwtr_l/300.0;
 		

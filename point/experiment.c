@@ -19,7 +19,7 @@ void f_experiment(
 	struct Grid grid[DROW][DCOL], 
 	struct Loct *loct, 
 	struct Echar *echar, 
-	struct Echar echar_type[NFILE], 
+	struct Echar echar_type[NBIOME], 
 	struct Mass mass[DROW][DCOL], 
 	struct Flux *flux, 
 	FILE *fp_r[NFILE]
@@ -27,8 +27,9 @@ void f_experiment(
 	long e, f, g, h, i;
 	char filename[128];
 	long ndy, end_year, ddummy;
-	double ansis_ann[256],fdummy;
-	double aet_a, flux_mon[6][12],dmon[12],aaa;
+	double ansis_ann[N_ANSIS],ansis_mon[N_ANSIS],fdummy;
+	double aet_a, dmon[12];
+    long monday[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 	FILE *fp_fxd, *fp_lp;
 	FILE *fp_restart;
 	
@@ -180,6 +181,16 @@ void f_experiment(
                         loct->CO2y = 2005;
                     }
                     
+                    /* ASIAMIP: 2015/12/08 by A.Ito */
+                    /* ASIAMIP: 2016/01/20 by A.Ito */
+                    if(EX_ASIAMIP == 1){
+                        if(e<=1900){
+                            loct->CO2y = 1901;
+                        }else{
+                            loct->CO2y = e;
+                        }
+                    }
+                    
 					loct->time++;
 					loct->adyear = e;
 					loct->age_stand += 1.0;
@@ -228,30 +239,43 @@ void f_experiment(
                         }
                     }
 					
-					/* seasonal roop */
-					ndy = (e%4==0)?366:365;
+					/* seasonal roop ****************************/
+                    if(e%4!=0 || LEAPYEAR == 0 || EX_ASIAMIP == 1){
+                        ndy = 365;
+                        monday[1] = 28;
+                    }else{
+                        ndy = 366;
+                        monday[1] = 29;
+                    }
+                    
 					for(h=0;h<ndy;h++){
                     
 						loct->doy = h;
 						/* simulation suing fixed climate data: 2010/09/06 by A.Ito */
 						/* no diurnal and no  */
-						if(FIX_CLIM==1){
+						if(FIX_CLIM == 1){
 							loct->climy = 2001;
 							loct->CO2y = BYR;
 							loct->doy = 120;
 							
-							if(e>=(BYR+10)){
+							if(e >= (BYR+10)){
 								loct->CO2y = 2050;
 							}
 						}
                         
-						f_doyTmody(e, h, &(loct->month), &(loct->mday));
+                        if(EX_ASIAMIP == 1){
+                            f_doyTmody(2001, h, &(loct->month), &(loct->mday));
+                        }else{
+                            f_doyTmody(e, h, &(loct->month), &(loct->mday));
+                        }
 						loct->hour = 24;
-						
+                        
 						if(loct->mday == 0){
                             dmon[loct->month]= 0.0;
-							flux_mon[0][loct->month] = flux_mon[1][loct->month] = flux_mon[2][loct->month] = 0.0;
-							flux_mon[3][loct->month] = flux_mon[4][loct->month] = flux_mon[5][loct->month] = 0.0;
+                            
+                            for(i=0;i<N_ANSIS;i++){
+                                ansis_mon[i] = 0.0;
+                            }
 						}
 
 						/*** local condition ************************************************/
@@ -279,16 +303,6 @@ void f_experiment(
 							f_flux_site(&(grid[f][g]), loct, echar, &(mass[f][g]), flux, fp_fxd, fp_r);
 						}
 						loct->hour = 24;
-
-						/* monthly NEE */
-                        dmon[loct->month]+=1.0;
-						flux_mon[0][loct->month] += (mass[f][g].tree).lai
-                                    +loct->funder_c3*(mass[f][g].c3).lai+loct->funder_c4*(mass[f][g].c4).lai;
-						flux_mon[1][loct->month] += flux->gpp*100.0;
-						flux_mon[2][loct->month] += flux->er*100.0;
-						flux_mon[3][loct->month] += flux->nep*100.0;
-						flux_mon[4][loct->month] += flux->sr*100.0;
-						flux_mon[5][loct->month] += (flux->soil).hr*100.0;
 
 						aet_a += loct->aet;
 						
@@ -358,20 +372,28 @@ void f_experiment(
 						}
 						
 						/******************************************************************************/
+						f_ansis_mon(&(grid[f][g]), loct, echar, &(mass[f][g]), flux, ansis_mon);
+
 						f_ansis_ann(&(grid[f][g]), loct, echar, &(mass[f][g]), flux, ansis_ann);
 						
 						/* daily result iutput */
 						//if(WMODE==1 && (loct->climy>=1995 && loct->climy<=2013)){
-							output_ansis_daily(&(grid[f][g]), loct, echar, &(mass[f][g]), flux, fp_r[2]);
+							output_ansis_daily(&(grid[f][g]), loct, echar, &(mass[f][g]), flux, fp_r[1]);
 						//}
+
+                        if(loct->mday == (monday[loct->month]-1)){
+                            output_ansis_mon(1, loct->adyear, loct->month, ansis_mon, fp_r[2]);
+                            output_ansis_mon(2, loct->adyear, loct->month, ansis_mon, fp_r[3]);
+                        }
 					}
+                    
 					f_erosion_rusle(&grid[f][g], loct, &mass[f][g], flux);
                     if(NECB_POC==1){
                         (mass[f][g].soil).msl_a -= (flux->soil).erosion_carbon;
                     }
-					
+                    
 					/* annual result output */
-					output_ansis_ann(loct->adyear, ansis_ann, fp_r[1]);
+					output_ansis_ann(loct->adyear, ansis_ann, fp_r[4]);
 				
                 /*	fprintf(fp_r[1],"%lf ", loct->f_rain);
 					fprintf(fp_r[1],"%lf ", loct->f_slope);

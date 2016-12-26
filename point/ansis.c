@@ -21,7 +21,7 @@ void output_ansis_daily(
 	struct Flux *flux, 
 	FILE *fp
 ){
-	double rr_d, sr_d, voc_d;
+	double rr_d, sr_d, voc_d, dummy;
 	/* double dppfd, dppfdd, dppfdb; */
 
 	rr_d = (flux->tree).rrm + (flux->tree).rrg + loct->funder_c3*(flux->c3).rrm + 
@@ -35,11 +35,49 @@ void output_ansis_daily(
 			flux->voc_formacd_g97 + flux->voc_acetacd_g97 + flux->voc_co_g97);
 
 	/* EDIT here to write results into "daily" file */
-	fprintf(fp,"%4ld ", loct->adyear);
-	fprintf(fp,"%4ld ", loct->adyear-BYR+1);
-	fprintf(fp,"%3ld ", loct->doy);
+	/* fprintf(fp,"%4ld ", loct->adyear); */
+	/* fprintf(fp,"%4ld ", loct->adyear-BYR+1); */
+	/* fprintf(fp,"%3ld ", loct->doy); */
     
- 	fprintf(fp,"%le ", (mass->tree).lai+loct->funder_c3*(mass->c3).lai+loct->funder_c4*(mass->c4).lai);
+    /* AsiaMIP: 2016/03/12 by A.Ito */
+    fprintf(fp,"%ld,", loct->adyear);
+    fprintf(fp,"%ld,", loct->doy);
+    
+    fprintf(fp,"%lf,", 100.0 * flux->gpp);
+    fprintf(fp,"%lf,", 100.0 * flux->npp);
+    fprintf(fp,"%lf,", 100.0 * flux->nep);
+    fprintf(fp,"%lf,", 100.0 * ((flux->tree).rp + loct->funder_c3* (flux->c3).rp + loct->funder_c4* (flux->c4).rp));
+    fprintf(fp,"%lf,", 100.0 * (flux->soil).hr);
+    fprintf(fp,"%lf,", 100.0 * 100.0 * (((flux->tree).rfm +(flux->tree).rfg + (flux->tree).rcm + (flux->tree).rcg) +
+                    loct->funder_c3* ((flux->c3).rfm +(flux->c3).rfg + (flux->c3).rcm + (flux->c3).rcg) +
+                    loct->funder_c4* ((flux->c4).rfm +(flux->c4).rfg + (flux->c4).rcm + (flux->c4).rcg)));
+    fprintf(fp,"%lf,", 100.0 * (((flux->tree).rrm +(flux->tree).rrg) +
+                    loct->funder_c3* ((flux->c3).rrm +(flux->c3).rrg) +
+                    loct->funder_c4* ((flux->c4).rrm +(flux->c4).rrg)));
+    fprintf(fp,"%lf,", 100.0 * flux->sr);
+    fprintf(fp,"%lf,", dummy=0.0);
+    fprintf(fp,"%lf,", 100.0 * flux->nep);
+    fprintf(fp,"%lf,", 0.1 * ((mass->tree).plant + loct->funder_c3* (mass->c3).plant + loct->funder_c4* (mass->c4).plant));
+    fprintf(fp,"%lf,", 0.1 * ((mass->tree).fol + loct->funder_c3* (mass->c3).fol + loct->funder_c4* (mass->c4).fol));
+    fprintf(fp,"%lf,", 0.1 * ((mass->soil).ltr_gf + (mass->soil).ltr_gc + (mass->soil).ltr_gr +
+                    (mass->soil).ltr_tf + (mass->soil).ltr_tc + (mass->soil).ltr_tr));
+    fprintf(fp,"%lf,", 0.1 * ((mass->soil).msl_a + (mass->soil).msl_i + (mass->soil).msl_p));
+    fprintf(fp,"%lf,", (mass->tree).lai + loct->funder_c3* (mass->c3).lai + loct->funder_c4* (mass->c4).lai);
+    fprintf(fp,"%lf,", dummy=0.0);
+    fprintf(fp,"%lf,", loct->aet);
+    fprintf(fp,"%lf,", loct->evpr);
+    fprintf(fp,"%lf,", loct->incep);
+    fprintf(fp,"%lf,", loct->trnsp);
+    fprintf(fp,"%lf,", loct->ro2);
+    fprintf(fp,"%lf,", loct->snp * loct->prate_sfc);
+    fprintf(fp,"%lf,", loct->thaw);
+    fprintf(fp,"%lf,", loct->snow_acc);
+    fprintf(fp,"%lf,", loct->soilwtr_l + loct->soilwtr_h);
+    fprintf(fp,"%lf,", loct->aet * 2500000.0 / 86400.0);
+    
+
+    
+ 	/* fprintf(fp,"%le ", (mass->tree).lai+loct->funder_c3*(mass->c3).lai+loct->funder_c4*(mass->c4).lai);
 	fprintf(fp,"%le ", flux->npp *0.1/24.0/3600.0);
 	fprintf(fp,"%le ", (flux->soil).hr *0.1/24.0/3600.0);
  	fprintf(fp,"%le ", ((mass->tree).fol+loct->funder_c3*(mass->c3).fol+loct->funder_c4*(mass->c4).fol)*0.1);
@@ -47,18 +85,28 @@ void output_ansis_daily(
  	fprintf(fp,"%le ", ((mass->tree).rot+loct->funder_c3*(mass->c3).rot+loct->funder_c4*(mass->c4).rot)*0.1);
  	fprintf(fp,"%le ", ((mass->soil).ltr_gf+(mass->soil).ltr_gc+(mass->soil).ltr_gr+
                             (mass->soil).ltr_tf+(mass->soil).ltr_tc+(mass->soil).ltr_tr)*0.1);
-  	fprintf(fp,"%le ", ((mass->soil).msl_a+(mass->soil).msl_i+(mass->soil).msl_p)*0.1);
+  	fprintf(fp,"%le ", ((mass->soil).msl_a+(mass->soil).msl_i+(mass->soil).msl_p)*0.1); */
     
     
-    /* fprintf(fp,"%9.4lf ", flux->gpp * 100.0);
-    fprintf(fp,"%9.4lf ", flux->nep * 100.0);
-    fprintf(fp,"%9.4lf ", flux->er * 100.0);
-    fprintf(fp,"%9.4lf ", flux->sr * 100.0);
+    /* fprintf(fp,"%lf ", loct->tmp_2m);
+    fprintf(fp,"%lf ", loct->tmp10_soil);
+
+    fprintf(fp,"%lf ", flux->gpp * 100.0);
+    fprintf(fp,"%lf ", flux->er * 100.0);
+    fprintf(fp,"%lf ", flux->nep * 100.0);
     
-    fprintf(fp,"%lf ", loct->tmp_2m);
+    
+    fprintf(fp,"%ld ", (echar->c3).season);
+    fprintf(fp,"%lf ", (echar->c3).gdd);
+    fprintf(fp,"%lf ", (echar->c3).cdd); */
+    
+
+    /*
     fprintf(fp,"%lf ", loct->dswrf_sfc);
     fprintf(fp,"%lf ", loct->prate_sfc);
     fprintf(fp,"%lf ", loct->vpd);
+    
+    fprintf(fp,"%9.4lf ", flux->sr * 100.0);
     
     fprintf(fp,"%ld ", (echar->tree).season);
     fprintf(fp,"%lf ", (echar->tree).gdd);
@@ -443,10 +491,111 @@ void output_ansis_daily(
 }
 
 /*****************************************************************************************************/
+void f_ansis_mon(
+	struct Grid	*grid, 
+	struct Loct	*loct, 
+	struct Echar *echar,
+	struct Mass	*mass, 
+	struct Flux	*flux, 
+	double ansis_mon[N_ANSIS]
+){
+    ansis_mon[0] += 100.0 * flux->gpp;
+    ansis_mon[1] += 100.0 * flux->npp;
+    ansis_mon[2] += 100.0 * flux->nep;
+    ansis_mon[3] += 100.0 * ((flux->tree).rp + loct->funder_c3* (flux->c3).rp + loct->funder_c4* (flux->c4).rp);
+    ansis_mon[4] += 100.0 * (flux->soil).hr;
+    ansis_mon[5] += 100.0 * (((flux->tree).rfm +(flux->tree).rfg + (flux->tree).rcm + (flux->tree).rcg) +
+                    loct->funder_c3* ((flux->c3).rfm +(flux->c3).rfg + (flux->c3).rcm + (flux->c3).rcg) +
+                    loct->funder_c4* ((flux->c4).rfm +(flux->c4).rfg + (flux->c4).rcm + (flux->c4).rcg));
+    ansis_mon[6] += 100.0 * (((flux->tree).rrm +(flux->tree).rrg) +
+                    loct->funder_c3* ((flux->c3).rrm +(flux->c3).rrg) +
+                    loct->funder_c4* ((flux->c4).rrm +(flux->c4).rrg));
+    ansis_mon[7] += 100.0 * flux->sr;
+    ansis_mon[8] += 0.0;
+    ansis_mon[9] += 100.0 * flux->nep;
+    ansis_mon[10] += 0.1 * ((mass->tree).plant + loct->funder_c3* (mass->c3).plant + loct->funder_c4* (mass->c4).plant);
+    ansis_mon[11] += 0.1 * ((mass->tree).fol + loct->funder_c3* (mass->c3).fol + loct->funder_c4* (mass->c4).fol);
+    ansis_mon[12] += 0.1 * ((mass->soil).ltr_gf + (mass->soil).ltr_gc + (mass->soil).ltr_gr +
+                    (mass->soil).ltr_tf + (mass->soil).ltr_tc + (mass->soil).ltr_tr);
+    ansis_mon[13] += 0.1 * ((mass->soil).msl_a + (mass->soil).msl_i + (mass->soil).msl_p);
+    ansis_mon[14] += (mass->tree).lai + loct->funder_c3* (mass->c3).lai + loct->funder_c4* (mass->c4).lai;
+    ansis_mon[15] += 0.0;
+    ansis_mon[16] += loct->aet;
+    ansis_mon[17] += loct->evpr;
+    ansis_mon[18] += loct->incep;
+    ansis_mon[19] += loct->trnsp;
+    ansis_mon[20] += loct->ro2;
+    ansis_mon[21] += loct->snp * loct->prate_sfc;
+    ansis_mon[22] += loct->thaw;
+    ansis_mon[23] += loct->snow_acc;
+    ansis_mon[24] += loct->soilwtr_l + loct->soilwtr_h;
+    ansis_mon[25] += loct->aet * 2500000.0 / 86400.0;
+}
+
+/*********************************************************************/
+void output_ansis_mon(
+	short mode,
+    long year,
+	long month,
+	double ansis_mon[N_ANSIS],
+	FILE *fp
+){
+    double length = 1.0;
+    double monday[12] = {31.0, 28.0, 31.0, 30.0, 31.0, 30.0, 31.0, 31.0, 30.0, 31.0, 30.0, 31.0};
+    
+    if(LEAPYEAR == 1 && month==1){
+        monday[1] = 29.0;
+    }
+    
+    if(mode == 2){
+        length = monday[month];
+    }
+
+    /* fprintf(fp, "%lf ", ansis_mon[0] / length);
+    fprintf(fp, "%lf ", ansis_mon[1] / length);
+    fprintf(fp, "%lf ", ansis_mon[2] / length); */
+
+    fprintf(fp, "%ld,", year);
+    fprintf(fp, "%ld,", month);
+    
+    fprintf(fp, "%lf,", ansis_mon[0] / length);
+    fprintf(fp, "%lf,", ansis_mon[1] / length);
+    fprintf(fp, "%lf,", ansis_mon[2] / length);
+    fprintf(fp, "%lf,", ansis_mon[3] / length);
+    fprintf(fp, "%lf,", ansis_mon[4] / length);
+    fprintf(fp, "%lf,", ansis_mon[5] / length);
+    fprintf(fp, "%lf,", ansis_mon[6] / length);
+    fprintf(fp, "%lf,", ansis_mon[7] / length);
+    fprintf(fp, "%lf,", ansis_mon[8] / length);
+    fprintf(fp, "%lf,", ansis_mon[9] / length);
+
+    fprintf(fp, "%lf,", ansis_mon[10] / monday[month]);
+    fprintf(fp, "%lf,", ansis_mon[11] / monday[month]);
+    fprintf(fp, "%lf,", ansis_mon[12] / monday[month]);
+    fprintf(fp, "%lf,", ansis_mon[13] / monday[month]);
+    fprintf(fp, "%lf,", ansis_mon[14] / monday[month]);
+    fprintf(fp, "%lf,", ansis_mon[15] / length);
+    fprintf(fp, "%lf,", ansis_mon[16] / length);
+    fprintf(fp, "%lf,", ansis_mon[17] / length);
+    fprintf(fp, "%lf,", ansis_mon[18] / length);
+    fprintf(fp, "%lf,", ansis_mon[19] / length);
+
+    fprintf(fp, "%lf,", ansis_mon[20] / length);
+    fprintf(fp, "%lf,", ansis_mon[21] / length);
+    fprintf(fp, "%lf,", ansis_mon[22] / length);
+    fprintf(fp, "%lf,", ansis_mon[23] / monday[month]);
+    fprintf(fp, "%lf,", ansis_mon[24] / monday[month]);
+    fprintf(fp, "%lf,", ansis_mon[25] / monday[month]); /* */
+    
+    
+    fprintf(fp, "\n");
+}
+
+/****************************************************************************************/
 void f_ansis_ann(
 	struct Grid	*grid, 
 	struct Loct	*loct, 
-	struct Echar	*echar, 
+	struct Echar *echar,
 	struct Mass	*mass, 
 	struct Flux	*flux, 
 	double ansis_ann[N_ANSIS]
@@ -623,10 +772,21 @@ void output_ansis_ann(
 	fprintf(fp, "%ld ", year);
 	fprintf(fp, "%ld ", year-BYR+1);
 	
+	fprintf(fp, "%lf ", ansis_ann[112]);
+	fprintf(fp, "%lf ", ansis_ann[113]);
+	fprintf(fp, "%lf ", ansis_ann[114]);
+	fprintf(fp, "%lf ", ansis_ann[115]);
+	fprintf(fp, "%lf ", ansis_ann[116]);
+    fprintf(fp, "%lf ", ansis_ann[117]);
+    fprintf(fp, "%lf ", ansis_ann[118]);
+    fprintf(fp, "%lf ", ansis_ann[119]);
+
+
+
 	/* fprintf(fp, "%lf,", ansis_ann[6]+ansis_ann[7]+ansis_ann[8] + ansis_ann[10]+ansis_ann[11]+ansis_ann[12]);
 	fprintf(fp, "%lf,", c_litter + c_humus); */
 
-    fprintf(fp, "%le ", ansis_ann[5]+ansis_ann[9]+ansis_ann[13]);
+    /* fprintf(fp, "%le ", ansis_ann[5]+ansis_ann[9]+ansis_ann[13]);
 
 	fprintf(fp, "%le ", ansis_ann[1]*0.1/365.0/24.0/3600.0);
 	fprintf(fp, "%le ", ansis_ann[122]*0.1/365.0/24.0/3600.0);
@@ -635,7 +795,7 @@ void output_ansis_ann(
 	fprintf(fp, "%le ", (ansis_ann[7]+ansis_ann[11]+ansis_ann[15])*0.1);
 	fprintf(fp, "%le ", (ansis_ann[8]+ansis_ann[12]+ansis_ann[16])*0.1);
 	fprintf(fp, "%le ", c_litter*0.1);
-	fprintf(fp, "%le ", c_humus*0.1);
+	fprintf(fp, "%le ", c_humus*0.1); */
     
 	
 	/* fprintf(fp, "%lf,", c_litter);
@@ -652,11 +812,6 @@ void output_ansis_ann(
 
 	/* fprintf(fp, "%ld ", year);
 	
-	fprintf(fp, "%lf ", ansis_ann[112]);
-	fprintf(fp, "%lf ", ansis_ann[113]);
-	fprintf(fp, "%lf ", ansis_ann[114]);
-	fprintf(fp, "%lf ", ansis_ann[115]);
-	fprintf(fp, "%lf ", ansis_ann[116]);
 	
 	fprintf(fp, "%lf ", ansis_ann[0]);
 	fprintf(fp, "%lf ", ansis_ann[1]);
@@ -672,10 +827,6 @@ void output_ansis_ann(
                         + ansis_ann[103]/1000.0*25.0
                         - ansis_ann[80]/1000.0*298.0);
 
-    fprintf(fp, "%lf ", ansis_ann[117]);
-	
-    fprintf(fp, "%lf ", ansis_ann[118]);
-    fprintf(fp, "%lf ", ansis_ann[119]);
     fprintf(fp, "%lf ", ansis_ann[120]);
     fprintf(fp, "%lf ", ansis_ann[121]); */
 		

@@ -80,6 +80,13 @@ void f_pc_sat(
 	aa1 = (loct->tmp_sfc - pchar->tmax)*(loct->tmp_sfc - pchar->tmin);
 	aa2 = (loct->tmp_sfc - pchar->topt)*(loct->tmp_sfc - pchar->topt);
 	ftem = aa1/(aa1 - aa2);
+    
+    /* frozen-soil constraint: 2016/01/27 by A.Ito */
+    if(loct->tmp10_soil < 2.0){
+        //ftem *= 0.1;
+        ftem = 0.0;
+    } /**/
+    
 	ftem = (ftem <= 1.0)?ftem:1.0; 
 	ftem = (ftem >= 0.0)?ftem:0.0;
 	

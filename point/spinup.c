@@ -19,7 +19,7 @@ void f_spinup(
 	struct Grid grid[DROW][DCOL], 
 	struct Loct *loct, 
 	struct Echar *echar, 
-	struct Echar echar_type[NFILE], 
+	struct Echar echar_type[NBIOME],
 	struct Mass mass[DROW][DCOL], 
 	struct Flux *flux, 
 	FILE *fp_spinup
@@ -67,13 +67,13 @@ void f_spinup(
 						loct->time++;
 						
                         /**/
-                        if(SPINUP == 0){
+                        if(EX_SPINUP == 0){
                             loct->climy = e;
-                        }else if(SPINUP == 1){
+                        }else if(EX_SPINUP == 1){
                             loct->climy = BYR;
-                        }else if(SPINUP == 3){
+                        }else if(EX_SPINUP == 3){
                             loct->climy = BYR + (long)(PERIOD * (double)rand() / (double)RAND_MAX);
-                        }else if(SPINUP == 5){
+                        }else if(EX_SPINUP == 5){
                             if(g%2 == 0){
                                 loct->climy = e;
                             }else{
@@ -98,6 +98,12 @@ void f_spinup(
                             loct->CO2y = 2005;
                         }
                         
+                        /* ASIAMIP: 2015/12/08 by A.Ito */
+                        if(EX_ASIAMIP == 1){
+                            loct->climy = BYR + loct->time % 100;
+                            loct->CO2y = 1801;
+                        }
+                        
 						/* stand age, year */
 						loct->age_stand += 1.0;
 				
@@ -105,6 +111,10 @@ void f_spinup(
 						
 						/* ndy = (e%4==0)?366:365; */
 						ndy = 365;
+                        if(EX_ASIAMIP == 1){
+                            ndy = 365;
+                        }
+
 						/** initialize climate conditions **/
 						gpp_a = npp_a = nep_a = lai_a = plant_a = soil_a = 0.0;
 						for(f=0;f<20;f++){
@@ -135,7 +145,7 @@ void f_spinup(
                         for(f=0;f<ndy;f++){
                             
 							loct->doy = f;
-							if(FIX_CLIM==1){
+							if(FIX_CLIM == 1){
 								loct->climy = 2001;
 								loct->CO2y = BYR;
 								loct->doy = 120;
@@ -147,7 +157,7 @@ void f_spinup(
 							
 							/***** disturbance *****/
 							/* loct->climy = e; */
-							if(SENSANS_DIST==1){
+							if(SENSANS_DIST == 1){
 								;
 							}else{
 								disturbance_regime(loct->adyear, &grid[h][i], loct, echar, &mass[h][i], flux); /* */
@@ -276,41 +286,41 @@ void f_spinup(
 						fprintf(fp_spinup, "%8.4lf ", aaa[13]);
 						fprintf(fp_spinup, "%8.4lf ", aaa[14]); */
                         
-						fprintf(fp_spinup,"%ld ", loct->adyear);
+						fprintf(fp_spinup,"%ld,", loct->adyear);
 						if(WMODE==2){
 							fprintf(fp_spinup,"%4d %4d ", grid[h][i].dg_row, grid[h][i].dg_col); 
 						}
-						fprintf(fp_spinup,"%4ld %4ld ", g, e);
-						fprintf(fp_spinup,"%6.2lf ", gpp_a);
-						fprintf(fp_spinup,"%6.2lf ", npp_a);
-						fprintf(fp_spinup,"%6.2lf ", nep_a);
-						fprintf(fp_spinup,"%6.2lf ", lai_a);
-						fprintf(fp_spinup,"%6.2lf ", plant_a);
-						fprintf(fp_spinup,"%6.2lf ", soil_a);
+						fprintf(fp_spinup,"%4ld,%4ld,", g, e);
+						fprintf(fp_spinup,"%6.2lf,", gpp_a);
+						fprintf(fp_spinup,"%6.2lf,", npp_a);
+						fprintf(fp_spinup,"%6.2lf,", nep_a);
+						fprintf(fp_spinup,"%6.2lf,", lai_a);
+						fprintf(fp_spinup,"%6.2lf,", plant_a);
+						fprintf(fp_spinup,"%6.2lf,", soil_a);
                         
-                        fprintf(fp_spinup,"%7.3lf ", (mass[h][i].tree).fol);
-                        fprintf(fp_spinup,"%7.3lf ", (mass[h][i].tree).stm);
-                        fprintf(fp_spinup,"%7.3lf ", (mass[h][i].tree).rot);
+                        fprintf(fp_spinup,"%7.3lf,", (mass[h][i].tree).fol);
+                        fprintf(fp_spinup,"%7.3lf,", (mass[h][i].tree).stm);
+                        fprintf(fp_spinup,"%7.3lf,", (mass[h][i].tree).rot);
 
-                        fprintf(fp_spinup,"%7.3lf ", (mass[h][i].c3).fol);
-                        fprintf(fp_spinup,"%7.3lf ", (mass[h][i].c3).stm);
-                        fprintf(fp_spinup,"%7.3lf ", (mass[h][i].c3).rot);
+                        fprintf(fp_spinup,"%7.3lf,", (mass[h][i].c3).fol);
+                        fprintf(fp_spinup,"%7.3lf,", (mass[h][i].c3).stm);
+                        fprintf(fp_spinup,"%7.3lf,", (mass[h][i].c3).rot);
 
-                        fprintf(fp_spinup,"%7.3lf ", (mass[h][i].c4).fol);
-                        fprintf(fp_spinup,"%7.3lf ", (mass[h][i].c4).stm);
-                        fprintf(fp_spinup,"%7.3lf ", (mass[h][i].c4).rot);
+                        fprintf(fp_spinup,"%7.3lf,", (mass[h][i].c4).fol);
+                        fprintf(fp_spinup,"%7.3lf,", (mass[h][i].c4).stm);
+                        fprintf(fp_spinup,"%7.3lf,", (mass[h][i].c4).rot);
                         
-                        fprintf(fp_spinup,"%7.3lf ", (mass[h][i].soil).ltr_gf);
-                        fprintf(fp_spinup,"%7.3lf ", (mass[h][i].soil).ltr_gc);
-                        fprintf(fp_spinup,"%7.3lf ", (mass[h][i].soil).ltr_gr);
+                        fprintf(fp_spinup,"%7.3lf,", (mass[h][i].soil).ltr_gf);
+                        fprintf(fp_spinup,"%7.3lf,", (mass[h][i].soil).ltr_gc);
+                        fprintf(fp_spinup,"%7.3lf,", (mass[h][i].soil).ltr_gr);
 
-                        fprintf(fp_spinup,"%7.3lf ", (mass[h][i].soil).ltr_tf);
-                        fprintf(fp_spinup,"%7.3lf ", (mass[h][i].soil).ltr_tc);
-                        fprintf(fp_spinup,"%7.3lf ", (mass[h][i].soil).ltr_tr);
+                        fprintf(fp_spinup,"%7.3lf,", (mass[h][i].soil).ltr_tf);
+                        fprintf(fp_spinup,"%7.3lf,", (mass[h][i].soil).ltr_tc);
+                        fprintf(fp_spinup,"%7.3lf,", (mass[h][i].soil).ltr_tr);
 
-                        fprintf(fp_spinup,"%7.3lf ", (mass[h][i].soil).msl_a);
-                        fprintf(fp_spinup,"%7.3lf ", (mass[h][i].soil).msl_i);
-                        fprintf(fp_spinup,"%7.3lf ", (mass[h][i].soil).msl_p);
+                        fprintf(fp_spinup,"%7.3lf,", (mass[h][i].soil).msl_a);
+                        fprintf(fp_spinup,"%7.3lf,", (mass[h][i].soil).msl_i);
+                        fprintf(fp_spinup,"%7.3lf,", (mass[h][i].soil).msl_p);
                         
                         //fprintf(fp_spinup,"%7.5lf ", xx);
                         

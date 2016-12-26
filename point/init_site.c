@@ -22,9 +22,9 @@ void f_init_site(
 	long e, f, g, year, day, ndy;
 	double bbb, uwnd, vwnd, apres;
 	double tair, vsat, vpres, cloudiness;
-	char filename[100];
-	char verid[100];
-	char dateid[100];
+	char filename[128];
+	char verid[128];
+	char dateid[128];
 	FILE *fp_site, *fp_clim;
 		
 	/* input data is available */
@@ -249,6 +249,51 @@ void f_init_site(
             }
         }
     
+    }else if(EX_ASIAMIP == 1){
+        
+        for(f=BYR;f<=EYR;f++){
+			for(e=0;e<365;e++){
+				/* year and day */
+				fscanf(fp_clim,"%ld %ld",&year,&day);  
+				/* air temperature at 2m: degC => degK */
+				fscanf(fp_clim,"%lf",&bbb);  tmp_2m_d[f-BYR][e] = bbb + ZAT;
+				/* maximum temperature */
+				fscanf(fp_clim,"%lf",&bbb);  
+				/* minimum temperature */
+				fscanf(fp_clim,"%lf",&bbb);  
+				/* precipitation */
+				fscanf(fp_clim,"%lf",&bbb);  prate_sfc_d[f-BYR][e] = bbb;
+				
+				/* relative humidity at 2m */
+				fscanf(fp_clim,"%lf",&bbb);  spfh_2m_d[f-BYR][e] = bbb;
+				/* VPD at 2m */
+				fscanf(fp_clim,"%lf",&bbb);  vpd_d[f-BYR][e] = bbb/100.0;
+				
+				/* downward shortwave radiation, W/m2 */
+				fscanf(fp_clim,"%lf",&bbb);  dswrf_sfc_d[f-BYR][e] = bbb;
+				/* downward longwave radiation, W/m2 */
+				fscanf(fp_clim,"%lf",&bbb);
+				
+				/* wind.¥,  */
+				fscanf(fp_clim,"%lf",&bbb);  wind_10m_d[f-BYR][e] = bbb;
+								
+				tcdc_clm_d[f-BYR][e] = 50.0;
+				tmp_sfc_d[f-BYR][e] = tmp_2m_d[f-BYR][e];
+				tmp10_soil_d[f-BYR][e] = tmp_2m_d[f-BYR][e];
+				tmp200_soil_d[f-BYR][e] = tmp_2m_d[f-BYR][e];
+			}
+			tmp_2m_d[f-BYR][365] = tmp_2m_d[f-BYR][364];
+			prate_sfc_d[f-BYR][365] = prate_sfc_d[f-BYR][364];
+			spfh_2m_d[f-BYR][365] = spfh_2m_d[f-BYR][364];
+			vpd_d[f-BYR][365] = vpd_d[f-BYR][364];
+			dswrf_sfc_d[f-BYR][365] = dswrf_sfc_d[f-BYR][364];
+			wind_10m_d[f-BYR][365] = wind_10m_d[f-BYR][364];
+			tcdc_clm_d[f-BYR][365] = tcdc_clm_d[f-BYR][364];
+			tmp_sfc_d[f-BYR][365] = tmp_sfc_d[f-BYR][364];
+			tmp10_soil_d[f-BYR][365] = tmp10_soil_d[f-BYR][364];
+			tmp200_soil_d[f-BYR][365] = tmp200_soil_d[f-BYR][364];
+        }
+    
     }else{
 		/* NCEP/NCAR reanalysis file */
 		for(f=BYR;f<=EYR;f++){
@@ -298,6 +343,13 @@ void f_init_site(
 				/* air pressure (Pa) */
 				fscanf(fp_clim,"%lf",&bbb);  apres = bbb;
 				
+                if(strcmp(grid->site_id, "GSM")==0){
+                    tmp_2m_d[f-BYR][e] -= 300.0 *0.006;
+                    tmp_sfc_d[f-BYR][e] -= 300.0 *0.006;
+                    tmp10_soil_d[f-BYR][e] -= 300.0 *0.006;
+                    tmp200_soil_d[f-BYR][e] -= 300.0 *0.006;
+                }
+
 				/* vapor pressure deficit */
 				tair = tmp_2m_d[f-BYR][e] -ZAT;  /* deg C */
 				apres *= 0.01;	/* hPa */
@@ -309,6 +361,7 @@ void f_init_site(
 				vpres = apres*spfh_2m_d[f-BYR][e]/(0.622+0.378*spfh_2m_d[f-BYR][e]);
 				
 				vpd_d[f-BYR][e] = vsat - vpres;
+                
 			}
             /* if(strcmp(grid->site_id, "KBU")==0){ 
                 tmp_2m_d[f-BYR][365] = tmp_2m_d[f-BYR][364];

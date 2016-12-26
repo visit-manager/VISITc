@@ -120,7 +120,7 @@ void phenology_colddeciduous(
 	double crit_gdd_b, crit_cdd_b;
 	double crit_gdd_e, crit_cdd_e;
 	
-	if((strcmp(grid->site_id, "TKY")==0)){
+	if(strcmp(grid->site_id, "TKY")==0 || strcmp(grid->site_id, "ASIAMIP_TKY")==0){
 	/* Takayama */
 		/* critical GDD for the beginning of leaf flush */
 		crit_gdd_b = 260.0; 
@@ -169,7 +169,7 @@ void phenology_colddeciduous(
 		crit_cdd_b = -30.0; 
 		/* critical GDD for the end of leaf shedding */
 		crit_cdd_e = -200.0;
-	}else if((strcmp(grid->site_id, "KBU")==0)){
+	}else if((strcmp(grid->site_id, "KBU")==0) || (strcmp(grid->site_id, "ASIAMIP_KBU")==0)){
 		/* critical GDD for the beginning of leaf flush */
 		crit_gdd_b = 120.0; 
 		/* critical GDD for the end of leaf flush */
@@ -196,11 +196,11 @@ void phenology_colddeciduous(
 		crit_cdd_b = -30.0; 
 		/* critical GDD for the end of leaf shedding */
 		crit_cdd_e = -300.0;
-	}else if((strcmp(grid->site_id, "CEAMIP_TUR")==0)){
+	}else if((strcmp(grid->site_id, "CEAMIP_TUR")==0) || (strcmp(grid->site_id, "ASIAMIP_TUR")==0)){
 		/* critical GDD for the beginning of leaf flush */
 		crit_gdd_b = 100.0; 
 		/* critical GDD for the end of leaf flush */
-		crit_gdd_e = 300.0; 
+		crit_gdd_e = 450.0;
 		/* critical GDD for the beginning of leaf shedding */
 		crit_cdd_b = -30.0; 
 		/* critical GDD for the end of leaf shedding */
@@ -273,6 +273,42 @@ void phenology_colddeciduous(
 		crit_gdd_b = 160.0; 
 		/* critical GDD for the end of leaf flush */
 		crit_gdd_e = 380.0; 
+		/* critical GDD for the beginning of leaf shedding */
+		crit_cdd_b = -20.0; 
+		/* critical GDD for the end of leaf shedding */
+		crit_cdd_e = -190.0;
+	}else if((strcmp(grid->site_id, "ASIAMIP_NEL")==0)){
+		/* critical GDD for the beginning of leaf flush */
+		crit_gdd_b = 100.0;
+		/* critical GDD for the end of leaf flush */
+		crit_gdd_e = 450.0;
+		/* critical GDD for the beginning of leaf shedding */
+		crit_cdd_b = -20.0; 
+		/* critical GDD for the end of leaf shedding */
+		crit_cdd_e = -190.0;
+	}else if((strcmp(grid->site_id, "ASIAMIP_YLF")==0)){
+		/* critical GDD for the beginning of leaf flush */
+		crit_gdd_b = 100.0;
+		/* critical GDD for the end of leaf flush */
+		crit_gdd_e = 450.0;
+		/* critical GDD for the beginning of leaf shedding */
+		crit_cdd_b = -20.0; 
+		/* critical GDD for the end of leaf shedding */
+		crit_cdd_e = -190.0;
+	}else if((strcmp(grid->site_id, "ASIAMIP_TUR")==0)){
+		/* critical GDD for the beginning of leaf flush */
+		crit_gdd_b = 100.0;
+		/* critical GDD for the end of leaf flush */
+		crit_gdd_e = 450.0;
+		/* critical GDD for the beginning of leaf shedding */
+		crit_cdd_b = -20.0; 
+		/* critical GDD for the end of leaf shedding */
+		crit_cdd_e = -190.0;
+	}else if((strcmp(grid->site_id, "ASIAMIP_MSE")==0)){
+		/* critical GDD for the beginning of leaf flush */
+		crit_gdd_b = 100.0;
+		/* critical GDD for the end of leaf flush */
+		crit_gdd_e = 450.0;
 		/* critical GDD for the beginning of leaf shedding */
 		crit_cdd_b = -20.0; 
 		/* critical GDD for the end of leaf shedding */

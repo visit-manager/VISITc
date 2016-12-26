@@ -19,7 +19,7 @@ void f_initialize(
 	struct Grid grid[DROW][DCOL], 
 	struct Loct *loct, 
 	struct Echar *echar, 
-	struct Echar echar_type[17], 
+	struct Echar echar_type[NBIOME],
 	struct Mass mass[DROW][DCOL], 
 	struct Flux *flux, 
 	FILE *fp_r[17]
@@ -107,7 +107,7 @@ void f_initialize(
 	}
 	
 	/* initialization */
-	for(i=0;i<366;i++){
+	for(i=0;i<YSTEP;i++){
 		loct->depo_nh4_model_av[i] = 0.0;
 		loct->depo_no3_model_av[i] = 0.0;
 	}
@@ -177,14 +177,14 @@ void f_initialize(
 		}
 		
 		for(h=1980;h<=2050;h++){
-			for(i=0;i<366;i++){
+			for(i=0;i<YSTEP;i++){
 				gcm_temp[h-1980][i] = 0.0;
 				gcm_prec[h-1980][i] = 0.0;
 				gcm_ahmd[h-1980][i] = 0.0;
 				gcm_dswrf[h-1980][i] = 0.0;
 			}
 		}
-		for(i=0;i<366;i++){
+		for(i=0;i<YSTEP;i++){
 			gcm_temp_av[i] = 0.0;
 			gcm_prec_av[i] = 0.0;
 			gcm_ahmd_av[i] = 0.0;
@@ -526,7 +526,7 @@ void f_initialize(
 		}
 	}
     
-    if(SPINUP==4){
+    if(EX_SPINUP==4){
         fp_dmw = fopen("TakayamaWG_10000y.txt","rt");
         
         for(h=0;h<N_SU_LARS;h++){

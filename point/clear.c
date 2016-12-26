@@ -219,6 +219,8 @@ void delete_soil(
 	mass->msl_i = 0.0;
 	mass->msl_p = 0.0;
 	mass->soil = 0.0;
+    
+    mass->sdw = 0.0; /* added: 2016/05/12 by A.Ito */
 	
 	/* N */
 	mass->n_lttr = 0.0;
@@ -316,6 +318,8 @@ void sflux_zero(
 	flux->mr_a = 0.0;
 	flux->mr_i = 0.0;
 	flux->mr_p = 0.0;
+    
+    flux->fd_sdw = 0.0; /* added: 2016/05/12 by A.Ito */
 	
 	flux->hr = 0.0;
 	flux->ch4oxy_ridg = 0.0;

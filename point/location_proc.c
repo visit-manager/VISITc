@@ -185,7 +185,7 @@ void f_loct_proc(
 	}
     
     /* use average climate data in spin-up phase */
-    if(loct->adyear < BYR && SPINUP==2){
+    if(loct->adyear < BYR && EX_SPINUP==2){
 		loct->dswrf_sfc = dswrf_sfc_dav[loct->doy];
 		loct->tcdc_clm = tcdc_clm_dav[loct->doy]/100.0;
 		loct->tmp_2m = tmp_2m_dav[loct->doy]-ZAT;
@@ -198,7 +198,7 @@ void f_loct_proc(
     }
     
     /* LARS-weathergenerator data in spin-up phase */
-    if(loct->adyear < BYR && SPINUP==4){
+    if(loct->adyear < BYR && EX_SPINUP==4){
 		loct->tmp_2m = (su_lars_tmin[loct->time][loct->doy] + su_lars_tmax[loct->time][loct->doy])/2.0;
 		loct->tmp_sfc = loct->tmp_2m + (tmp_sfc_d[loct->climy-BYR][loct->doy] - tmp_2m_d[loct->climy-BYR][loct->doy]);
 		loct->tmp10_soil = loct->tmp_2m + (tmp10_soil_d[loct->climy-BYR][loct->doy] - tmp_2m_d[loct->climy-BYR][loct->doy]);

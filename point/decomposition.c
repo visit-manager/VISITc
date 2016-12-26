@@ -126,9 +126,9 @@ double frh(
 	}
 
 	/* soil moisture effect, saturating */
-	fwh = 0.8*loct->soilwtr_h/(schar->kmh*sasw_var*grid->fieldcap + loct->soilwtr_h)+0.2;
+	fwh = 0.8 * loct->soilwtr_h / (schar->kmh * sasw_var*grid->fieldcap + loct->soilwtr_h)+0.2;
 	/* soil apparence effect */
-	fah = 0.4*loct->soilappr_w*(1.0*schar->kmsh)/(schar->kmsh + loct->soilappr_w)+0.6;
+	fah = 0.4 * loct->soilappr_w * (1.0*schar->kmsh)/(schar->kmsh + loct->soilappr_w)+0.6;
 	
 	fsm = (fwh>fah)?fah:fwh;
 		
