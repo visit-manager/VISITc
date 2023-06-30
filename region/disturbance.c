@@ -67,7 +67,7 @@ void disturbance_regime(
 		}
 	}
 	
-	if(WMODE==2||WMODE==3){
+	if(WMODE == 2 || WMODE == 3){
 		if(dyear==YLDIST && loct->doy==354){
 			logging_event(grid, mass); 
 		}

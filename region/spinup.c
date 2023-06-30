@@ -30,6 +30,7 @@ extern long WGRIDS;
 extern long SPUPT;
 extern float fdat[NROW * NCOL];
 extern int idat[NROW * NCOL];
+extern long    month_day[12];
 
 extern struct Loct loct2[NROW*NCOL];
 extern struct Echar echar2[NROW*NCOL];
@@ -161,7 +162,11 @@ void f_spinup(
                 || strcmp(grid[0].site_id, "JAPANk")==0){
             climyr = 2020;
         }
-        
+
+        if(strcmp(grid[0].site_id, "PAWCs")==0){
+            climyr = 2003;
+        }
+
         loct->climy = climyr;
         
         /* open regional climate data ****/
@@ -321,6 +326,9 @@ void f_spinup(
                 if(strcmp(grid->site_id, "JAPANk")==0){
                     f_open_japank_clim(loct->phase, (short)climyr, (short)(loct->month)+1, (short)(loct->mday)+1, (short)(loct->hour)+1, fp_clim);
                 }
+                if(strcmp(grid->site_id, "PAWCs")==0){
+                    f_open_pawcs_clim(loct->phase, (short)climyr, (short)(loct->month)+1, (short)(loct->mday)+1, (short)(loct->hour)+1, fp_clim);
+                }
 
                 /* read regional climate data ***********/
                 if(strcmp(grid[0].site_id, "GLOBAL")==0){
@@ -431,7 +439,7 @@ void f_spinup(
                     }
                 }else if(strcmp(grid[0].site_id, "JAPAN")==0 || strcmp(grid[0].site_id, "BB")==0
                         || strcmp(grid[0].site_id, "JAPANc")==0 || strcmp(grid[0].site_id, "JAPANh")==0
-                        || strcmp(grid[0].site_id, "JAPANk")==0){
+                        || strcmp(grid[0].site_id, "JAPANk")==0 || strcmp(grid[0].site_id, "PAWCs")==0){
                     fread(fdat, 4, NROW * NCOL, fp_clim[0]);
                     for(i=pstart; i<=pend; i++){
                         if(fdat[i] < 0.0){
@@ -777,7 +785,14 @@ void f_spinup(
                     fclose(fp_clim[4]);
                 }
             }
-            
+            if(strcmp(grid[0].site_id, "PAWCs")==0 && loct->mday==month_day[loct->month+1] && loct->hour==(DSTEP-1)){
+                fclose(fp_clim[0]);
+                fclose(fp_clim[1]);
+                fclose(fp_clim[2]);
+                fclose(fp_clim[3]);
+                fclose(fp_clim[4]);
+            }
+
             j = 0;
             switch(loct->month){
                 case 0: if(loct->mday==30){ j = 1; } break;

@@ -308,8 +308,8 @@ void f_init_cond(
     }else if(strcmp(grid[0].site_id, "BAMIYAN")==0){
         loct->vp = loct->slope_vps * grid->humd_region;
     }else if(strcmp(grid[0].site_id, "JAPAN")==0 || strcmp(grid[0].site_id, "BB")==0
-            || strcmp(grid[0].site_id, "JAPANc")==0|| strcmp(grid[0].site_id, "JAPANh")==0
-            || strcmp(grid[0].site_id, "JAPANk")==0){
+            || strcmp(grid[0].site_id, "JAPANc")==0 || strcmp(grid[0].site_id, "JAPANh")==0
+            || strcmp(grid[0].site_id, "JAPANk")==0 || strcmp(grid[0].site_id, "PAWCs")==0){
         loct->vp = grid->humd_region;
     }
     loct->vpd = loct->vps - loct->vp;

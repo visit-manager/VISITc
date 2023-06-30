@@ -923,3 +923,94 @@ void f_open_japank_clim(
         exit (1);
     }
 }
+
+void f_open_pawcs_clim(
+    short stage,
+    short yr,
+    short mon,
+    short day,
+    short hour,
+    FILE *fp_clim[6]
+){
+    char syear[8],smon[8],sday[8],shour[8];
+    char filename[128];
+    short yrc;
+    
+    yrc = yr;
+    
+    if(day==1 && hour==1){
+        
+        /* ***********/
+        snprintf(syear, 8, "%04d", yr);
+        snprintf(smon, 8, "%02d", mon);
+        snprintf(sday, 8, "%02d", day);
+        snprintf(shour, 8, "%02d", hour-1);
+        
+        /* prec */
+        strcpy(filename, "./data/TP/");
+        strcat(filename, syear);
+        strcat(filename, "/");
+        strcat(filename, "PAWCs_TP_");
+        strcat(filename, syear);
+        strcat(filename, smon);
+        strcat(filename, ".flt");
+        if((fp_clim[0] = fopen(filename,"rb")) == NULL){
+            printf("!! %s data\n", filename);
+            exit (1);
+        }
+        
+        /* srad */
+        strcpy(filename, "./data/SSRD/");
+        strcat(filename, syear);
+        strcat(filename, "/");
+        strcat(filename, "PAWCs_SSRD_");
+        strcat(filename, syear);
+        strcat(filename, smon);
+        strcat(filename, ".flt");
+        if((fp_clim[1] = fopen(filename,"rb")) == NULL){
+            printf("!! %s data\n", filename);
+            exit (1);
+        }
+        
+        /* temp */
+        strcpy(filename, "./data/2T/");
+        strcat(filename, syear);
+        strcat(filename, "/");
+        strcat(filename, "PAWCs_2T_");
+        strcat(filename, syear);
+        strcat(filename, smon);
+        strcat(filename, ".flt");
+        if((fp_clim[2] = fopen(filename,"rb")) == NULL){
+            printf("!! %s data\n", filename);
+            exit (1);
+        }
+        
+        /* humidity */
+        strcpy(filename, "./data/2D/");
+        strcat(filename, syear);
+        strcat(filename, "/");
+        strcat(filename, "PAWCs_2D_");
+        strcat(filename, syear);
+        strcat(filename, smon);
+        strcat(filename, ".flt");
+        if((fp_clim[3] = fopen(filename,"rb")) == NULL){
+            printf("!! %s data\n", filename);
+            exit (1);
+        }
+        
+        /* wind */
+        strcpy(filename, "./data/10U/");
+        strcat(filename, syear);
+        strcat(filename, "/");
+        strcat(filename, "PAWCs_10U_");
+        strcat(filename, syear);
+        strcat(filename, smon);
+        strcat(filename, ".flt");
+        if((fp_clim[4] = fopen(filename,"rb")) == NULL){
+            printf("!! %s data\n", filename);
+            exit (1);
+        }
+    }else{
+        ;
+    }
+}

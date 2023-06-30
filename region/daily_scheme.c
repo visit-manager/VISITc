@@ -158,7 +158,7 @@ void f_daily_scheme(
 				loct->funder_c4 * (flux->c4).rp + (flux->soil).hr;
 	
 	/* stable carbon isotope */
-	if(SCI_SCHEME==1){
+	if(SCI_SCHEME == 1){
 		d13c_efflux(grid, loct, flux);
 	}
 	

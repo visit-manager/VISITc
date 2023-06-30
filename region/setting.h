@@ -42,6 +42,10 @@
 //#define NCOL 1200
 
 /* JAPAN center: 2022/09/22 by A.Ito */
+//#define NROW 300
+//#define NCOL 300
+
+/* PAWCs center: 2023/06/13 by A.Ito */
 #define NROW 300
 #define NCOL 300
 
@@ -69,8 +73,12 @@
 //#define EYR 2015
 
 /* ERA5: 2021/03/30 by A.Ito */
-#define BYR 2020
-#define EYR 2020
+//#define BYR 2020
+//#define EYR 2020
+
+/* PAWCs: 2023/06/13 by A.Ito */
+#define BYR 2003
+#define EYR 2003
 
 #define PERIOD (EYR-BYR+1)
 

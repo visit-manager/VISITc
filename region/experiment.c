@@ -277,6 +277,9 @@ void f_experiment(
                     //f_open_japank_clim(loct->phase, (short)e, (short)(loct->month)+1, (short)(loct->mday), (short)(loct->hour), fp_clim);
                     f_open_japank_clim(loct->phase, (short)e, (short)(loct->month)+1, (short)(loct->mday)+1, (short)(loct->hour)+1, fp_clim);
                 }
+                if(strcmp(grid[0].site_id, "PAWCs") == 0){
+                    f_open_pawcs_clim(loct->phase, (short)e, (short)(loct->month)+1, (short)(loct->mday)+1, (short)(loct->hour)+1, fp_clim);
+                }
 
                 printf("%4ld %3ld %2ld: ", e, h, f);
                 fprintf(fp_log,"%ld %ld %ld ", e, h, f);
@@ -403,7 +406,7 @@ void f_experiment(
                     }
                 }else if(strcmp(grid[0].site_id, "JAPAN")==0 || strcmp(grid[0].site_id, "BB")==0
                         || strcmp(grid[0].site_id, "JAPANc")==0|| strcmp(grid[0].site_id, "JAPANh")==0
-                        || strcmp(grid[0].site_id, "JAPANk")==0){
+                        || strcmp(grid[0].site_id, "JAPANk")==0|| strcmp(grid[0].site_id, "PAWCs")==0){
                     /* read regional climate data ****/
                     /* precipitation */
                     fread(fdat, 4, NROW*NCOL, fp_clim[0]);
@@ -687,7 +690,7 @@ void f_experiment(
                 #endif
                 
                 if(strcmp(grid[0].site_id, "JAPAN")==0 || strcmp(grid[0].site_id, "BB")==0
-                    || strcmp(grid[0].site_id, "JAPANc")==0|| strcmp(grid[0].site_id, "JAPANh")==0
+                    || strcmp(grid[0].site_id, "JAPANc")==0 || strcmp(grid[0].site_id, "JAPANh")==0
                     || strcmp(grid[0].site_id, "JAPANk")==0){
                     fclose(fp_clim[0]);
                     fclose(fp_clim[1]);
@@ -695,7 +698,13 @@ void f_experiment(
                     fclose(fp_clim[3]);
                     fclose(fp_clim[4]);
                 }
-
+                if(strcmp(grid[0].site_id, "PAWCs")==0 && loct->mday==month_day[loct->month+1] && loct->hour==(DSTEP-1)){
+                    fclose(fp_clim[0]);
+                    fclose(fp_clim[1]);
+                    fclose(fp_clim[2]);
+                    fclose(fp_clim[3]);
+                    fclose(fp_clim[4]);
+                }
             }
             
             /* close climate files */

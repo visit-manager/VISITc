@@ -90,20 +90,20 @@ void f_initialize(
 	}
 	
 	/** clear all parameters **********/
-	if(NOTICE==1){
+	if(NOTICE == 1){
 		printf("Clearing variables...");
 	}
 	for(i=0; i<WGRIDS; i++){
 		clear_a(&(grid[i]), &(mass[i]));
 	}
 	clear_b(loct, echar, flux);	
-	if(NOTICE==1){
+	if(NOTICE == 1){
 		printf("done\n");
 	}
 
 	/******************************************************************/	
 	/** initialize grid condition **/
-	if(NOTICE==1){
+	if(NOTICE == 1){
 		printf("Initializing site...\n");
 	}
 	switch(WMODE){
@@ -129,6 +129,8 @@ void f_initialize(
                 f_init_japanh_run(grid);
             }else if(strcmp(grid->site_id, "JAPANk")==0){
                 f_init_japank_run(grid);
+            }else if(strcmp(grid->site_id, "PAWCs")==0){
+                f_init_pawcs_run(grid);
             }
 			break;
 		default:

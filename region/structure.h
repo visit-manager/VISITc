@@ -43,11 +43,11 @@ struct Grid{
 		char		file_site[128];		/* site file name */
 		char		file_para[128];		/* parameter file name */
 		
-		float	lat;				/* latitude, degree */
-		float	lon;				/* longitude, degree */
+		float	    lat;				/* latitude, degree */
+		float	    lon;				/* longitude, degree */
 		long		calc_flag;			/* column number in the area */
 		
-		short	veg_type;			/* vegetation type */
+		short	    veg_type;			/* vegetation type */
 		long		veg_glc;			/* vegetation type by GLC2000 */
 		long		veg_nlc;			/* vegetation type by new land cover */
 		long		veg_mod12;			/* vegetation type by MOD12 */

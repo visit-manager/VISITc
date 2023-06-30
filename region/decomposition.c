@@ -38,7 +38,7 @@ float frl(
 		ftl = 0.01;
 	} 
 	
-	if(NOTICE==1 && ftl<0.0){
+	if(NOTICE == 1 && ftl<0.0){
 		printf("FARTAL ERROR: negative ftl (soil_proc.c): %f\n", ftl);
 	}
 
@@ -49,7 +49,7 @@ float frl(
 	
 	fsm = (fwl>fal)?fal:fwl;
 	
-	if(NOTICE==1 && fwl<0.0){
+	if(NOTICE == 1 && fwl<0.0){
 		printf("FARTAL ERROR: negative fsm (soil_proc.c): %f\n", fwl);
 	}
 

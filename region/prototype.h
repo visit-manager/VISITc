@@ -37,24 +37,26 @@ void f_init_loct(					struct Grid *grid, struct Loct *loct, struct Echar *echar,
 void atmco2_trend(			struct Grid *grid,	struct Loct* loct);
 void set_parameter(			long mode, char [], struct Echar echar[]);
 void f_init_global_run(		struct Grid grid[]);
-void f_init_bamiyan_run(		struct Grid grid[]);
-void f_init_easia_run(          struct Grid grid[]);
-void f_init_japan_run(          struct Grid grid[]);
-void f_init_bb_run(          struct Grid grid[]);
-void f_init_japanc_run(          struct Grid grid[]);
-void f_init_japanh_run(          struct Grid grid[]);
-void f_init_japank_run(          struct Grid grid[]);
-void f_open_global_clim(      short stage, short yr, short mon, FILE *fp_clim[6]);
-void f_open_bamiyan_clim(      short stage, short yr, FILE *fp_clim[6]);
-void f_open_easia_clim(      short stage, short yr, short mon, FILE *fp_clim[6]);
-void f_open_japan_clim(      short stage, short yr, short mon, short day, short hour, FILE *fp_clim[6]);
+void f_init_bamiyan_run(	struct Grid grid[]);
+void f_init_easia_run(      struct Grid grid[]);
+void f_init_japan_run(      struct Grid grid[]);
+void f_init_bb_run(         struct Grid grid[]);
+void f_init_japanc_run(     struct Grid grid[]);
+void f_init_japanh_run(     struct Grid grid[]);
+void f_init_japank_run(     struct Grid grid[]);
+void f_init_pawcs_run(      struct Grid grid[]);
+void f_open_global_clim(    short stage, short yr, short mon, FILE *fp_clim[6]);
+void f_open_bamiyan_clim(   short stage, short yr, FILE *fp_clim[6]);
+void f_open_easia_clim(     short stage, short yr, short mon, FILE *fp_clim[6]);
+void f_open_japan_clim(     short stage, short yr, short mon, short day, short hour, FILE *fp_clim[6]);
 void f_open_bb_clim(        short stage, short yr, short mon, short day, short hour, FILE *fp_clim[6]);
-void f_open_japanc_clim(      short stage, short yr, short mon, short day, short hour, FILE *fp_clim[6]);
-void f_open_japanh_clim(      short stage, short yr, short mon, short day, short hour, FILE *fp_clim[6]);
-void f_open_japank_clim(      short stage, short yr, short mon, short day, short hour, FILE *fp_clim[6]);
-void f_create_dfile_global(     short phase, short year, struct Grid *grid,
+void f_open_japanc_clim(    short stage, short yr, short mon, short day, short hour, FILE *fp_clim[6]);
+void f_open_japanh_clim(    short stage, short yr, short mon, short day, short hour, FILE *fp_clim[6]);
+void f_open_japank_clim(    short stage, short yr, short mon, short day, short hour, FILE *fp_clim[6]);
+void f_open_pawcs_clim(     short stage, short yr, short mon, short day, short hour, FILE *fp_clim[6]);
+void f_create_dfile_global( short phase, short year, struct Grid *grid,
                             char filename[128], FILE *fp[N_OFILE]);
-float grid_area(			    float lat1, float lat2, float lon1, float lon2);
+float grid_area(			float lat1, float lat2, float lon1, float lon2);
 
 /* **** MASS & PARAMETERS INITIALIZATION *****/
 void initTree(				struct Mass *mass);
