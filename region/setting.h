@@ -46,8 +46,8 @@
 //#define NCOL 300
 
 /* PAWCs center: 2023/06/13 by A.Ito */
-#define NROW 300
-#define NCOL 300
+#define NROW 200
+#define NCOL 1490
 
 
 

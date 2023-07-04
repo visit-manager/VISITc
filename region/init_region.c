@@ -2341,7 +2341,6 @@ void f_init_japanh_run(
          45       Barren              -                 -                      11.7
          46       Urban               -                 -                      0.2
          47       Snow & Ice          -                 -                      5.2
-         
          */
         
         switch( (short)fdat[i] ){
@@ -2725,7 +2724,6 @@ void f_init_japank_run(
          45       Barren              -                 -                      11.7
          46       Urban               -                 -                      0.2
          47       Snow & Ice          -                 -                      5.2
-         
          */
         
         switch( (short)fdat[i] ){
@@ -3109,7 +3107,6 @@ void f_init_pawcs_run(
          45       Barren              -                 -                      11.7
          46       Urban               -                 -                      0.2
          47       Snow & Ice          -                 -                      5.2
-         
          */
         
         switch( (short)fdat[i] ){
@@ -3258,13 +3255,13 @@ void f_init_pawcs_run(
      } */
     
     /* clay fraction */
-    if((fp_dat = fopen("./data/hwsd_soilmap_tclay_pawcs_01d.flt","rb")) == NULL){
-        printf("!! NO ./data/japank_hwsd_soilmap_tclay_hm.flt data\n");
+    if((fp_dat = fopen("./data/hwsd_soilmap_pawcs_01d_tclay.flt","rb")) == NULL){
+        printf("!! NO ./data/hwsd_soilmap_pawcs_01d_tclay.flt data\n");
         exit (1);
     }
     fread(fdat, sizeof(float), WGRIDS, fp_dat);
     if(NOTICE==1){
-        printf(" Reading ./data/hwsd_soilmap_tclay_pawcs_01d.flt...");
+        printf(" Reading ./data/hwsd_soilmap_pawcs_01d_tclay.flt...");
     }
     for(i=0; i<WGRIDS; i++){
         grid[i].clay_frac = fdat[i]/100.0;
@@ -3275,13 +3272,13 @@ void f_init_pawcs_run(
     }
     
     /* sand fraction */
-    if((fp_dat = fopen("./data/hwsd_soilmap_tsand_pawcs_01d.flt","rb")) == NULL){
-        printf("!! NO ./data/hwsd_soilmap_tsand_pawcs_01d.flt data\n");
+    if((fp_dat = fopen("./data/hwsd_soilmap_pawcs_01d_tsand.flt","rb")) == NULL){
+        printf("!! NO ./data/hwsd_soilmap_pawcs_01d_tsand.flt data\n");
         exit (1);
     }
     fread(fdat, sizeof(float), WGRIDS, fp_dat);
     if(NOTICE==1){
-        printf(" Reading ./data/hwsd_soilmap_tsand_pawcs_01d.flt...");
+        printf(" Reading ./data/hwsd_soilmap_pawcs_01d_tsand.flt...");
     }
     for(i=0; i<WGRIDS; i++){
         grid[i].sand_frac = fdat[i]/100.0;

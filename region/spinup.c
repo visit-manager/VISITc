@@ -785,7 +785,7 @@ void f_spinup(
                     fclose(fp_clim[4]);
                 }
             }
-            if(strcmp(grid[0].site_id, "PAWCs")==0 && loct->mday==month_day[loct->month+1] && loct->hour==(DSTEP-1)){
+            if(strcmp(grid[0].site_id, "PAWCs")==0 && loct->mday==(month_day[loct->month]-1) && loct->hour==(DSTEP-1)){
                 fclose(fp_clim[0]);
                 fclose(fp_clim[1]);
                 fclose(fp_clim[2]);
