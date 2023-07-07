@@ -566,8 +566,10 @@ void f_experiment(
                         outdat02[i] = flux2[i].npp;
                         outdat03[i] = ((mass[i].tree).plant + loct2[i].funder_c3 * (mass[i].c3).plant
                                         + loct2[i].funder_c4 * (mass[i].c4).plant);
-                        outdat04[i] = loct2[i].lai;
-
+                        //outdat04[i] = loct2[i].lai;
+                        
+                        outdat04[i] = (flux2[i].soil).ch4_wh;
+                        
                         /* //outdat01[i] = (mass[i].tree).gdd;
                         //outdat02[i] = (mass[i].tree).lai;
                         //outdat03[i] = (float)(mass[i].tree).season;

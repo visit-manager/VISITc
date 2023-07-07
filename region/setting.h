@@ -151,7 +151,7 @@
 #define AG_RD 1			/* Rd */
 
 /* CH4 emission with a multi-layer model */
-#define WH_CH4 0
+#define WH_CH4 1
 /* 0: off */
 /* 1: on */
 

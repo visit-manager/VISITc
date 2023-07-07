@@ -198,6 +198,7 @@ void f_daily_scheme(
 			f_ch4emit_walter(grid, loct, flux);
 		}else{
 			loct->water_table_depth = -2.0;
+            (flux->soil).ch4_wh = 0.0;
 			(flux->soil).ch4_wh_plant = 0.0;
 			(flux->soil).ch4_wh_ebull = 0.0;
 			(flux->soil).ch4_wh_diff = 0.0;

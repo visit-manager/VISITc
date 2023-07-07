@@ -186,7 +186,7 @@ void f_initialize(
 	}
 	
 	/* water-table depth of paddy field: MASE ***************************/
-	if(WH_CH4 == 1){
+	if(WH_CH4 == 1 && strcmp(grid->site_id, "MSE")==0){
 		if((fp_wtd = fopen("paddy_wtd.dat","rt"))==NULL){
 			printf("No water-table depth data!\n");
 			exit(1);
