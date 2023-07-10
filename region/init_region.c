@@ -2494,14 +2494,14 @@ void f_init_japanh_run(
         exit (1);
     }
     fread(fdat, sizeof(float), WGRIDS, fp_dat);
-    if(NOTICE==1){
+    if(NOTICE == 1){
         printf(" Reading ./data/japanh_hwsd_soilmap_tclay_hm.flt...");
     }
     for(i=0; i<WGRIDS; i++){
         grid[i].clay_frac = fdat[i]/100.0;
     }
     fclose(fp_dat);
-    if(NOTICE==1){
+    if(NOTICE == 1){
         printf("done\n");
     }
     
@@ -2511,14 +2511,14 @@ void f_init_japanh_run(
         exit (1);
     }
     fread(fdat, sizeof(float), WGRIDS, fp_dat);
-    if(NOTICE==1){
+    if(NOTICE == 1){
         printf(" Reading ./data/japanh_hwsd_soilmap_tsand_hm.flt...");
     }
     for(i=0; i<WGRIDS; i++){
         grid[i].sand_frac = fdat[i]/100.0;
     }
     fclose(fp_dat);
-    if(NOTICE==1){
+    if(NOTICE == 1){
         printf("done\n  ");
     }
     

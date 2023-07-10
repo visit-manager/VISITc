@@ -193,7 +193,8 @@ void f_daily_scheme(
 			if(strcmp(grid->site_id, "MSE")==0){
 				loct->water_table_depth = -paddy_wtd[loct->doy]/100.0;
 			}else{
-				loct->water_table_depth = 0.2;
+				/* loct->water_table_depth = 0.2; */
+                loct->water_table_depth = 0.0;
 			}
 			f_ch4emit_walter(grid, loct, flux);
 		}else{
