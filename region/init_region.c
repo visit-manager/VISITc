@@ -2963,7 +2963,7 @@ void f_init_pawcs_run(
     /* region data ***************************************************/
     /* latitude */
     if((fp_dat = fopen("./data/lat_pawcs_01d.flt","rb")) == NULL){
-        printf("!! NO japank_lat_hm.flt data\n");
+        printf("!! NO lat_pawcs_01d.flt data\n");
         exit (1);
     }
     fread(fdat, sizeof(float), WGRIDS, fp_dat);
@@ -2980,7 +2980,7 @@ void f_init_pawcs_run(
     
     /* longitude */
     if((fp_dat = fopen("./data/lon_pawcs_01d.flt","rb")) == NULL){
-        printf("!! NO japank_lon_hm.flt data\n");
+        printf("!! NO lon_pawcs_01d.flt data\n");
         exit (1);
     }
     fread(fdat, sizeof(float), WGRIDS, fp_dat);
@@ -3007,7 +3007,7 @@ void f_init_pawcs_run(
     
     /* elevation */
     if((fp_dat = fopen("./data/srtm_pawcs_01d.flt","rb")) == NULL){
-        printf("!! NO japank_srtm_hm.flt file\n");
+        printf("!! NO srtm_pawcs_01d.flt file\n");
         exit (1);
     }
     fread(fdat, sizeof(float), WGRIDS, fp_dat);
@@ -3024,7 +3024,7 @@ void f_init_pawcs_run(
     
     /* land cover */
     if((fp_dat = fopen("./data/synmap_pawcs_01d.flt","rb")) == NULL){
-        printf("!! NO japank_synmap_hm.flt data\n");
+        printf("!! NO synmap_pawcs_01d.flt data\n");
         exit (1);
     }
     fread(fdat, sizeof(float), WGRIDS, fp_dat);

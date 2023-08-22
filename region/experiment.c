@@ -63,7 +63,7 @@ void f_experiment(
 	long e, f, h, i, j;
 	char num[8], filename[128];
 	long ndy, end_year, calc_flag, pstart, pend;
-	float gpp_a, npp_a, nep_a, lai_a, plant_a, soil_a, xx1_a, xx2_a, xx3_a, nn;
+	float gpp_a, npp_a, nep_a, lai_a, plant_a, soil_a, xx1_a, xx2_a, xx3_a, ch4_a, nn;
     float gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga, prec_ga, rdata, vps;
 	/* FILE *fp_o; */
 	FILE *fp_restart;
@@ -178,7 +178,7 @@ void f_experiment(
     
     /* number of pararelization threds with OpenMP */
 	#ifdef _OPENMP
-	omp_set_num_threads(24); /* cores */
+	omp_set_num_threads(20); /* cores */
 	#endif
     
 	/* roop for experimental stage ************************************************/
@@ -564,10 +564,10 @@ void f_experiment(
                         /* BAMIYAN */
                         outdat01[i] = flux2[i].gpp;
                         outdat02[i] = flux2[i].npp;
-                        outdat03[i] = ((mass[i].tree).plant + loct2[i].funder_c3 * (mass[i].c3).plant
-                                        + loct2[i].funder_c4 * (mass[i].c4).plant);
+                        //outdat03[i] = ((mass[i].tree).plant + loct2[i].funder_c3 * (mass[i].c3).plant + loct2[i].funder_c4 * (mass[i].c4).plant);
                         //outdat04[i] = loct2[i].lai;
                         
+                        outdat03[i] = flux2[i].nep;
                         outdat04[i] = (flux2[i].soil).ch4_wh;
                         
                         /* //outdat01[i] = (mass[i].tree).gdd;
@@ -580,8 +580,9 @@ void f_experiment(
                         out_a[0][i] += flux2[i].gpp;
                         out_a[1][i] += flux2[i].npp;
                         out_a[2][i] += flux2[i].nep;
-                        out_a[3][i] += flux2[i].nep;
-                        
+                        //out_a[3][i] += flux2[i].nep;
+                        out_a[3][i] += (flux2[i].soil).ch4_wh;
+
                         out_a[4][i] += loct2[i].lai/(double)ndy/(double)DSTEP;
                         out_a[5][i] += ((mass[i].tree).plant + loct2[i].funder_c3 * (mass[i].c3).plant
                                         + loct2[i].funder_c4 * (mass[i].c4).plant)/(double)ndy/(double)DSTEP;
@@ -609,7 +610,7 @@ void f_experiment(
                
                 /* monitoring on console ******************/
                 gpp_a = npp_a = nep_a = lai_a = plant_a = soil_a = 0.0;
-                xx1_a = xx2_a = xx3_a = nn = 0.0;
+                xx1_a = xx2_a = xx3_a = ch4_a = nn = 0.0;
                 for(i=pstart; i<=pend; i++){ 
                     if(grid[i].calc_flag == 1){
                         nn += 1.0;
@@ -631,6 +632,8 @@ void f_experiment(
                         xx1_a += loct2[i].tmp_2m;
                         xx2_a += loct2[i].prate_sfc;
                         xx3_a += loct2[i].ppfd_h;
+                        
+                        ch4_a += (flux2[i].soil).ch4_wh;
                         
                         gpp_ga += grid[i].area * ((flux2[i].tree).gpp + loct2[i].funder_c3 * (flux2[i].c3).gpp
                             + loct2[i].funder_c4 * (flux2[i].c4).gpp) / 1000000.0;
@@ -656,16 +659,16 @@ void f_experiment(
                         + loct2[i].funder_c4 * (mass[i].c4).plant) / 24.0 / (double)ndy);
                     mean_veg[grid[i].veg_type][6] += (double)(grid[i].area * (mass[i].soil).soil / 24.0 / (double)ndy);
                 }
-                printf("%8.4f %8.4f %8.4f : %12.2f %12.2f %12.2f : %12.2f %12.2f %12.2f: ", 
+                printf("%8.4f %8.4f %8.4f : %12.2f %12.2f %12.2f : %12.2f %12.2f %12.2f: %12.2f",
                        100.0*gpp_a/nn, 100.0*npp_a/nn, 100.0*nep_a/nn, 
-                       lai_a/nn, plant_a/nn, soil_a/nn, xx1_a/nn, xx2_a/nn, xx3_a/nn);
+                       lai_a/nn, plant_a/nn, soil_a/nn, xx1_a/nn, xx2_a/nn, xx3_a/nn, ch4_a/nn);
                 printf("\n");
 
                 fprintf(fp_log,"%.0f %f %f %f %f %f %f %f %f %f ",
                        nn, gpp_a, npp_a, nep_a, lai_a, plant_a, soil_a, xx1_a, xx2_a, xx3_a);
-                fprintf(fp_log,"%12.2f %12.2f %12.2f %12.2f %12.2f %12.2f\n",
+                fprintf(fp_log,"%12.2f %12.2f %12.2f %12.2f %12.2f %12.2f %12.2f\n",
                        100.0*gpp_a/nn, 100.0*npp_a/nn, 100.0*nep_a/nn, 
-                       lai_a/nn, plant_a/nn, soil_a/nn);
+                       lai_a/nn, plant_a/nn, soil_a/nn, ch4_a/nn);
                 
                 /******************/
                 fprintf(fp_monitor,"%ld %ld %ld ",loct2[P_MONI].adyear,loct2[P_MONI].doy,loct2[P_MONI].hour);

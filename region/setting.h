@@ -78,7 +78,7 @@
 
 /* PAWCs: 2023/06/13 by A.Ito */
 #define BYR 2003
-#define EYR 2003
+#define EYR 2020
 
 #define PERIOD (EYR-BYR+1)
 

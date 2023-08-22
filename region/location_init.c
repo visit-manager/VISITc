@@ -79,7 +79,7 @@ void f_init_loct(
     
     loct->phase = 0;
 	
-	loct->npp_max = 1.0;
+	loct->npp_max = 0.001;
 	
 	/* initial atmospheric CO2 level at Year *******************/
 	loct->CO2y = BYR - 1; 

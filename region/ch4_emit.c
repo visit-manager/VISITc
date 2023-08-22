@@ -119,26 +119,32 @@ void f_ch4emit_walter(
 	float f_in, f_org[SOILWET_LAYER+2], f_t[SOILWET_LAYER+2], f_grow, t_gr, t_mat;
 	float t_veg, flux_ebull, flux_plant;
 	float hh, rr, kk;
+    float coeff_prod, q10_ch4prod;
 	
-	/************************************************************************/
+	/* ***********************************************************************/
 	sdepth = 2.0;		/* soil depth, m */
 	kk = 0.01;			/* time step, hour */
 	hh = sdepth/SOILWET_LAYER;	/* layer thickness, m */
+    
+    coeff_prod = 0.3;
+    q10_ch4prod = 2.0;
 	
 	t_veg = 4.0;
 	b_thresh = 500.0;	/* bubbling threshold, micro mol / liter */	
 	rdepth = 0.3;		/* rooting depth, m */
 	poro = 0.45*grid->sand_frac + 0.20*(1.0 - grid->sand_frac - grid->clay_frac)
 			+0.14*grid->clay_frac + 0.45*0.03;		/* porosity */
+    
 	wtdepth = loct->water_table_depth;	/* water-table depth, m from surface */
 	
 	/* depth from the soil surface, m */
 	dpth[0] = -0.04;
 	for(f=1;f<=SOILWET_LAYER;f++){
-		dpth[f] = 0.0 + ((float)f-0.5)*hh;
+		dpth[f] = 0.0 + ((float)f-0.5) * hh;
 	}
 	
 	/* diffusion coefficient, m2 s-1 */
+    df[0] = 0.2;
 	for(f=1;f<=SOILWET_LAYER;f++){
 		if(dpth[f]<wtdepth){
 			df[f] = 0.2 * 0.66 * poro;  /* pow(poro, 2.3) */		
@@ -155,12 +161,14 @@ void f_ch4emit_walter(
 		t_gr = 7.0;
 	}
 	t_mat = t_gr + 10.0;
+    
+    tmp[0] = loct->tmp_sfc;
 	for(f=1;f<=SOILWET_LAYER;f++){
 		tmp[f] = loct->tmp10_soil*(float)(SOILWET_LAYER - f)/(float)SOILWET_LAYER 
 					+ (float)f/(float)SOILWET_LAYER*loct->tmp200_soil;
 	}
 	/* fgow: Eq. 20 */
-    f_grow = 0.0;
+    f_grow = 2.0;
 	if(tmp[5] < t_gr){
 		f_grow = 0.0;
 	}else if(tmp[5] >= t_gr && tmp[5] <= t_mat){
@@ -178,12 +186,12 @@ void f_ch4emit_walter(
 		if(dpth[f]<rdepth){
 			f_org[f] = 1.0;
 		}else{
-			f_org[f] = exp(-fabs(dpth[f]*100.0 - rdepth*100.0)/10.0);
+			f_org[f] = exp( -fabs(dpth[f]*100.0 - rdepth*100.0) / 10.0 );
 		}
 	}
 	
 	/* soil temperature profile *******************/
-	tmp[0] = loct->tmp_sfc;
+    f_t[0] = 0.0;
 	for(f=1;f<=SOILWET_LAYER;f++){		
 		if(tmp[f] > 0.0){
 			f_t[f] = 1.0;
@@ -199,7 +207,7 @@ void f_ch4emit_walter(
 		f_in = 0.0;
 	}
 	
-	/******************************************************************************/
+	/* *****************************************************************************/
 	/* stability index, should be < 0.5 */
 	rr = kk/hh/hh;
 	if(rr*df[1] > 0.5){
@@ -237,7 +245,7 @@ void f_ch4emit_walter(
 			/* CH4 production and oxidation */
 			if(dpth[f]>=wtdepth){
 				/* below water table */
-				q_prod[f] = 0.30 * f_org[f] * f_in * f_t[f] * pow(6.0, (tmp[f]-t_mean)/10.0);
+				q_prod[f] = coeff_prod * f_org[f] * f_in * f_t[f] * pow(q10_ch4prod, (tmp[f]-t_mean)/10.0);
 				q_oxid[f] = 0.0;
 			}else{
 				/* above water table */
@@ -274,9 +282,9 @@ void f_ch4emit_walter(
 	}
 	
 	/* flux: mg CH4 m-2 day-1 */
-	(flux->soil).ch4_wh_plant =  flux_plant *24.0*16.0/1000.0;
-	(flux->soil).ch4_wh_ebull =  flux_ebull *24.0*16.0/1000.0;
-	(flux->soil).ch4_wh_diff =  df[1]/(dpth[1]-dpth[0])*(loct->prof_ch4[1]-loct->prof_ch4[0]) *24.0*16.0/1000.0;
+	(flux->soil).ch4_wh_plant =  flux_plant *(24.0/(float)DSTEP)*16.0/1000.0;
+	(flux->soil).ch4_wh_ebull =  flux_ebull *(24.0/(float)DSTEP)*16.0/1000.0;
+	(flux->soil).ch4_wh_diff =  df[1]/(dpth[1] - dpth[0])*(loct->prof_ch4[1] - loct->prof_ch4[0]) *(24.0/(float)DSTEP)*16.0/1000.0;
     
     (flux->soil).ch4_wh = (flux->soil).ch4_wh_plant + (flux->soil).ch4_wh_ebull + (flux->soil).ch4_wh_diff;
 }

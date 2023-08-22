@@ -57,7 +57,7 @@ void f_spinup(
 	char filename[128];
 	char num[8];
 	long ndy, pstart, pend;
-	float gpp_a, npp_a, nep_a, lai_a, plant_a, soil_a, xx[20], nn;
+	float gpp_a, npp_a, nep_a, lai_a, plant_a, soil_a, xx[20], ch4_a, nn;
     float gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga;
     float wi, ti, ll, rdata, vps;
 	FILE *fp_clim[6], *fp_error;
@@ -135,7 +135,7 @@ void f_spinup(
 	
     /* number of pararelization threds with OpenMP */
 	#ifdef _OPENMP
-	omp_set_num_threads(24); /* cores */
+	omp_set_num_threads(20); /* cores */
 	#endif
 	
 	/* repetition *******************************************************/
@@ -495,6 +495,7 @@ void f_spinup(
                     for(i=pstart; i<=pend; i++){
                         grid[i].tmp2m_ann += (grid[i].tmax_region + grid[i].tmin_region)/2.0/(float)ndy/(float)DSTEP;
                         grid[i].prec_ann += grid[i].prec_region;
+                        loct->tsoil_annav += (grid[i].tmax_region + grid[i].tmin_region)/2.0;
                     }
                 }
                 
@@ -613,7 +614,7 @@ void f_spinup(
                             (mass[i].soil).sasu_mr_hp += (echar2[i].soil).sr_hp/1000.0 / (double)DSTEP * (echar2[i].soil).f_tm_h;
                         }
 
-                        /* if(flux->npp > loct->npp_max){
+                        if(flux->npp > loct->npp_max){
                             loct->npp_max = flux->npp;
                         }
                         if(loct->npp_max < 1.0){
@@ -621,7 +622,7 @@ void f_spinup(
                         }
                         
                         loct->m_casa_pre = loct->m_casa;
-                        loct->vmc_pre = loct->vmc; */
+                        loct->vmc_pre = loct->vmc; /* */
                     }else{
                         grid[i].calc_flag = 0;
                         loct2[i].ppfd_h = 0.0;
@@ -638,7 +639,7 @@ void f_spinup(
                 //printf("%6.1f %6.1f %6.1f: ", (mass[P_MONI].tree).lai, (mass[P_MONI].c3).lai, (mass[P_MONI].c4).lai);
                 //printf("%6.1f %6.1f: ", loct2[P_MONI].tair_dayav, loct2[P_MONI].tair_dayav_c);
                 
-                gpp_a = npp_a = nep_a = lai_a = plant_a = soil_a = 0.0;
+                gpp_a = npp_a = nep_a = lai_a = plant_a = soil_a = ch4_a = 0.0;
                 nn = 0.0;
                 for(i=0; i<20; i++){
                     xx[i] = 0.0;
@@ -663,6 +664,8 @@ void f_spinup(
                                     loct2[i].funder_c4 * (mass[i].c4).plant); /* */
                         //plant_a += ((mass[i].tree).plant);
                         soil_a += (mass[i].soil).soil;
+                        
+                        ch4_a += (flux2[i].soil).ch4_wh;
                         
                         /* for debugging: 2011/05/18 by A.Ito */
                         if((mass[i].soil).soil>=0.0 && (mass[i].soil).soil<=1000.0){
@@ -751,17 +754,17 @@ void f_spinup(
                     outdat04[i] = loct2[i].ppfd_h;
                     #endif
                 }
-                printf("%8.4f %8.4f %8.4f : %10.2f %10.2f %10.2f: ", 
+                printf("%8.4f %8.4f %8.4f : %10.2f %10.2f %10.2f: %10.3f: ",
                        100.0*gpp_a/nn, 100.0*npp_a/nn, 100.0*nep_a/nn, 
-                       lai_a/nn, plant_a/nn, soil_a/nn);
+                       lai_a/nn, plant_a/nn, soil_a/nn, ch4_a/nn);
                 /* printf("%10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %10.4f: ",
                        xx[0]/nn, xx[1]/nn, xx[2]/nn, xx[3]/nn, xx[4]/nn, xx[5]/nn, xx[6]/nn, xx[7]/nn, xx[8]/nn, xx[9]/nn);
                 printf("%10.2f %10.2f %10.2f %10.2f %10.2f %10.2f:  ",
                        xx[10]/nn, xx[11]/nn, xx[12]/nn, xx[13]/nn, xx[14]/nn, xx[15]/nn); */
                 printf("%.0f\n", nn);
 
-                fprintf(fp_log,"%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f ",
-                       nn, gpp_a, npp_a, nep_a, lai_a, plant_a, soil_a,
+                fprintf(fp_log,"%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f ",
+                       nn, gpp_a, npp_a, nep_a, lai_a, plant_a, soil_a, ch4_a,
                        xx[0], xx[1], xx[2], xx[3], xx[4], xx[5], xx[6], xx[7], xx[8], xx[9]);
                 /* fprintf(fp_log,"%12.2f %12.2f %12.2f %12.2f %12.2f %12.2f\n",
                        100.0*gpp_a/nn, 100.0*npp_a/nn, 100.0*nep_a/nn, 
