@@ -64,7 +64,9 @@ struct Grid{
 		float		gp_tem;				/* average temperature during the growing period, degree C */
 		float		gp_pre;				/* precipitation during the prowing period, mm */
 		float		prec_ann;		/* precipitation, mm year-1 */
-		
+        float        tsoil_annav;    /* annual mean temperature */
+        float        npp_max;        /* maximum daily NPP, g C m-2 day-1 */
+
 		/* climate data for regional simulstions */
 		float		prec_region;        /* precipitation */
 		float		srad_region;        /* short-wave radiation */
@@ -375,8 +377,6 @@ struct Loct{
 		/* greenhouse gas */
 		float		water_table_depth;		/* water table depth, m */
 		float		prof_ch4[SOILWET_LAYER+2];		/* soil CH4 concentration, micro M */
-		float		npp_max;	/* maximum daily NPP, g C m-2 day-1 */
-		float		tsoil_annav;	/* annual mean temperature */
 
         /* land-use change *******/
         float       deforest;

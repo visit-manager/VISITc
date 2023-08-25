@@ -178,7 +178,7 @@ void f_experiment(
     
     /* number of pararelization threds with OpenMP */
 	#ifdef _OPENMP
-	omp_set_num_threads(20); /* cores */
+	omp_set_num_threads(48); /* cores */
 	#endif
     
 	/* roop for experimental stage ************************************************/
@@ -659,7 +659,7 @@ void f_experiment(
                         + loct2[i].funder_c4 * (mass[i].c4).plant) / 24.0 / (double)ndy);
                     mean_veg[grid[i].veg_type][6] += (double)(grid[i].area * (mass[i].soil).soil / 24.0 / (double)ndy);
                 }
-                printf("%8.4f %8.4f %8.4f : %12.2f %12.2f %12.2f : %12.2f %12.2f %12.2f: %12.2f",
+                printf("%8.4f %8.4f %8.4f : %12.2f %12.2f %12.2f : %12.2f %12.2f %12.2f: %12.3f",
                        100.0*gpp_a/nn, 100.0*npp_a/nn, 100.0*nep_a/nn, 
                        lai_a/nn, plant_a/nn, soil_a/nn, xx1_a/nn, xx2_a/nn, xx3_a/nn, ch4_a/nn);
                 printf("\n");

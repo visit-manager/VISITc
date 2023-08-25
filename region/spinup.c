@@ -57,7 +57,7 @@ void f_spinup(
 	char filename[128];
 	char num[8];
 	long ndy, pstart, pend;
-	float gpp_a, npp_a, nep_a, lai_a, plant_a, soil_a, xx[20], ch4_a, nn;
+	float gpp_a, npp_a, nep_a, lai_a, plant_a, soil_a, xx[20], ch4_a, nn, mm;
     float gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga;
     float wi, ti, ll, rdata, vps;
 	FILE *fp_clim[6], *fp_error;
@@ -135,8 +135,10 @@ void f_spinup(
 	
     /* number of pararelization threds with OpenMP */
 	#ifdef _OPENMP
-	omp_set_num_threads(20); /* cores */
+	omp_set_num_threads(48); /* cores */
 	#endif
+    
+    mm = 0.0;
 	
 	/* repetition *******************************************************/
     for(e=0 ; e<SPUPT ; e++){
@@ -495,7 +497,7 @@ void f_spinup(
                     for(i=pstart; i<=pend; i++){
                         grid[i].tmp2m_ann += (grid[i].tmax_region + grid[i].tmin_region)/2.0/(float)ndy/(float)DSTEP;
                         grid[i].prec_ann += grid[i].prec_region;
-                        loct->tsoil_annav += (grid[i].tmax_region + grid[i].tmin_region)/2.0;
+                        grid[i].tsoil_annav += (grid[i].tmax_region + grid[i].tmin_region)/2.0/mm;
                     }
                 }
                 
@@ -614,11 +616,11 @@ void f_spinup(
                             (mass[i].soil).sasu_mr_hp += (echar2[i].soil).sr_hp/1000.0 / (double)DSTEP * (echar2[i].soil).f_tm_h;
                         }
 
-                        if(flux->npp > loct->npp_max){
-                            loct->npp_max = flux->npp;
+                        if(flux->npp > grid->npp_max){
+                            grid->npp_max = flux->npp;
                         }
-                        if(loct->npp_max < 1.0){
-                            loct->npp_max = 1.0;
+                        if(grid->npp_max < 1.0){
+                            grid->npp_max = 1.0;
                         }
                         
                         loct->m_casa_pre = loct->m_casa;
@@ -831,6 +833,8 @@ void f_spinup(
             fclose(fp_clim[3]);
             fclose(fp_clim[4]);
         }
+        
+        mm += 1.0;
     }
 
     fclose(fp_out[0]);

@@ -79,7 +79,7 @@ void f_init_loct(
     
     loct->phase = 0;
 	
-	loct->npp_max = 0.001;
+	grid->npp_max = 0.001;
 	
 	/* initial atmospheric CO2 level at Year *******************/
 	loct->CO2y = BYR - 1; 
@@ -96,7 +96,8 @@ void f_init_loct(
     grid->tmp2m_max = 0.0;
     grid->tmp2m_min = 0.0;
     grid->gp_atem = grid->prec_ann = 0.0;
-    loct->tsoil_annav = 0.0;
+    grid->tsoil_annav = 0.0;
+    grid->npp_max = 0.0;
     loct->tair_dayav = loct->tair_dayav_c = 0.0;
     grid->n_clim = grid->tmp_clim = grid->prec_clim = grid->aet_clim = grid->pet_clim = 0.0;
 

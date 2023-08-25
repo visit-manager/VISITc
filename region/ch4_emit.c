@@ -135,7 +135,7 @@ void f_ch4emit_walter(
 	poro = 0.45*grid->sand_frac + 0.20*(1.0 - grid->sand_frac - grid->clay_frac)
 			+0.14*grid->clay_frac + 0.45*0.03;		/* porosity */
     
-	wtdepth = loct->water_table_depth;	/* water-table depth, m from surface */
+	wtdepth = loct->water_table_depth;      /* water-table depth, m from surface */
 	
 	/* depth from the soil surface, m */
 	dpth[0] = -0.04;
@@ -155,7 +155,7 @@ void f_ch4emit_walter(
 	
 	/* plant growth state parameters **************/
 	/* W&H2000 pp.763 */
-	if(loct->tsoil_annav < 5.0){
+	if(grid->tsoil_annav < 5.0){
 		t_gr = 2.0;
 	}else{
 		t_gr = 7.0;
@@ -177,7 +177,7 @@ void f_ch4emit_walter(
 		f_grow = 4.0;
 	}
 	
-	t_mean = loct->tsoil_annav;
+	t_mean = grid->tsoil_annav;
 	
 	/* organic matter factor **************************/
 	f_org[0] = 1.0;
@@ -201,8 +201,8 @@ void f_ch4emit_walter(
 	}
 
 	/* carbon input factor: Eq.2 */
-	if(loct->npp_max > 0.0){
-		f_in = 1.0 + flux->npp/loct->npp_max;
+	if(grid->npp_max > 0.0){
+		f_in = 1.0 + flux->npp/grid->npp_max;
 	}else{
 		f_in = 0.0;
 	}
@@ -286,5 +286,7 @@ void f_ch4emit_walter(
 	(flux->soil).ch4_wh_ebull =  flux_ebull *(24.0/(float)DSTEP)*16.0/1000.0;
 	(flux->soil).ch4_wh_diff =  df[1]/(dpth[1] - dpth[0])*(loct->prof_ch4[1] - loct->prof_ch4[0]) *(24.0/(float)DSTEP)*16.0/1000.0;
     
-    (flux->soil).ch4_wh = (flux->soil).ch4_wh_plant + (flux->soil).ch4_wh_ebull + (flux->soil).ch4_wh_diff;
+    //(flux->soil).ch4_wh = (flux->soil).ch4_wh_plant + (flux->soil).ch4_wh_ebull + (flux->soil).ch4_wh_diff;
+    
+    (flux->soil).ch4_wh = t_mean;
 }
