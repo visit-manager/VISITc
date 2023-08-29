@@ -164,7 +164,7 @@ void f_initialize(
 		fscanf(fp_ghg,"%f", &atm_n2o_b2[h]);
 	}
 	fclose(fp_ghg);
-	if(NOTICE==1){
+	if(NOTICE == 1){
 		printf("done\n");
 	}	
 

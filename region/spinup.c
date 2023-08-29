@@ -138,7 +138,7 @@ void f_spinup(
 	omp_set_num_threads(48); /* cores */
 	#endif
     
-    mm = 0.0;
+    mm = 1.0;
 	
 	/* repetition *******************************************************/
     for(e=0 ; e<SPUPT ; e++){
@@ -497,7 +497,7 @@ void f_spinup(
                     for(i=pstart; i<=pend; i++){
                         grid[i].tmp2m_ann += (grid[i].tmax_region + grid[i].tmin_region)/2.0/(float)ndy/(float)DSTEP;
                         grid[i].prec_ann += grid[i].prec_region;
-                        grid[i].tsoil_annav += (grid[i].tmax_region + grid[i].tmin_region)/2.0/mm;
+                        grid[i].tsoil_annav = (grid[i].tsoil_annav*(mm-1.0) + (grid[i].tmax_region + grid[i].tmin_region)/2.0)/mm;
                     }
                 }
                 
@@ -821,7 +821,8 @@ void f_spinup(
                 fclose(fp_clim[3]);
                 fclose(fp_clim[4]);
             }
-
+            
+            mm += 1.0;
         }
         
         printf("ANNUAL %ld %f %f %f %f %f\n",loct->adyear, gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga);
@@ -833,8 +834,6 @@ void f_spinup(
             fclose(fp_clim[3]);
             fclose(fp_clim[4]);
         }
-        
-        mm += 1.0;
     }
 
     fclose(fp_out[0]);

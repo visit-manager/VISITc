@@ -45,6 +45,26 @@ extern float spfh_2m_dav[366];
 extern float tcdc_clm_dav[366];
 extern long	WMODE;
 
+extern long    WMODE;
+/* GHG scenario ***************************************/
+/* source: http://crga.atmos.uiuc.edu/research/post-sres.html
+ M.E.Schlesinger and S.Malyshev            */
+/* atmospheric CO2, ppmv */
+extern float        atm_co2_a1[553];    /* SRES A1 */
+extern float        atm_co2_a2[553];    /* SRES A2 */
+extern float        atm_co2_b1[553];    /* SRES B1 */
+extern float        atm_co2_b2[553];    /* SRES B2 */
+/* atmospheric CH4, pptv*/
+extern float        atm_ch4_a1[553];    /* SRES A1 */
+extern float        atm_ch4_a2[553];    /* SRES A2 */
+extern float        atm_ch4_b1[553];    /* SRES B1 */
+extern float        atm_ch4_b2[553];    /* SRES B2 */
+/* atmospheric N2O, pptv*/
+extern float        atm_n2o_a1[553];    /* SRES A1 */
+extern float        atm_n2o_a2[553];    /* SRES A2 */
+extern float        atm_n2o_b1[553];    /* SRES B1 */
+extern float        atm_n2o_b2[553];    /* SRES B2 */
+
 /** initialization of climatic conditions (Primary data) *************************/
 void f_init_cond(
 	struct Grid *grid, 
@@ -53,6 +73,7 @@ void f_init_cond(
 	struct Mass *mass, 
 	struct Flux *flux
 ){
+    long f;
 	float  aaa, bbb, ccc, alt;
 	float temp_factor, prec_factor;
 	
@@ -440,6 +461,11 @@ void f_init_cond(
 		}
 	}
 	loct->pot_total_h = loct->pot_grav_h + loct->pot_matric_h;
+    
+    for(f=0;f<SOILWET_LAYER;f++){
+        loct->prof_ch4[f] = atm_ch4_a1[loct->CO2y - 1750]/1000.0
+                            * loct->air_prsr / (UGC*(loct->tmp10_soil + ZAT));
+    }
 
 	/* deleted 2009/05/25 by A.Ito **/
 }

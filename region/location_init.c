@@ -120,6 +120,6 @@ void f_init_loct(
 	/* initialize soil CH4 concentration */
 	for(h=0;h<=SOILWET_LAYER;h++){
 		loct->prof_ch4[h] = atm_ch4_a1[loct->CO2y - 1750]/1000.0 
-			* loct->air_prsr / (UGC*(loct->tmp10_soil + ZAT));
+                            * loct->air_prsr / (UGC*(loct->tmp10_soil + ZAT));
 	}
 }
