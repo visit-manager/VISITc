@@ -503,7 +503,7 @@ void f_spinup(
                 
                 /* ****************************************************/
                 /* OpenMP */
-                  #pragma omp parallel for schedule(dynamic, 4) private(calc_flag)
+                #pragma omp parallel for schedule(dynamic, 4) private(calc_flag)
                 
                 for(i=pstart; i<=pend; i++){
                     /* printf("%ld\n", i); */

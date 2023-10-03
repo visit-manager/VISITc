@@ -286,7 +286,6 @@ void f_ch4emit_walter(
 	(flux->soil).ch4_wh_ebull =  flux_ebull *(24.0/(float)DSTEP)*16.0/1000.0;
 	(flux->soil).ch4_wh_diff =  df[1]/(dpth[1] - dpth[0])*(loct->prof_ch4[1] - loct->prof_ch4[0]) *(24.0/(float)DSTEP)*16.0/1000.0;
     
-    //(flux->soil).ch4_wh = (flux->soil).ch4_wh_plant + (flux->soil).ch4_wh_ebull + (flux->soil).ch4_wh_diff;
-    
-    (flux->soil).ch4_wh = t_mean;
+    (flux->soil).ch4_wh = (flux->soil).ch4_wh_plant + (flux->soil).ch4_wh_ebull + (flux->soil).ch4_wh_diff;
+    //(flux->soil).ch4_wh = t_mean;
 }

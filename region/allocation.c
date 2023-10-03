@@ -116,7 +116,7 @@ void reallocation_survival(
 	ral_cap_rtf = 0.1;	
 		
 	/* to fliage: critical reallocation for survival */
-	aaa = crit_lai*100.0*2.0/2.2/pchar->sla;
+	aaa = crit_lai * 100.0*2.0/2.2/pchar->sla;
 	if(mass->fol < aaa){
 		bbb = mass->stm * ral_cap_stf;
 		ccc = mass->rot * ral_cap_rtf;
@@ -157,7 +157,7 @@ void reallocation_survival(
 	/* to root */
 	if(mass->rot <= 0.0){
 		if(mass->stm > 0.0){
-			aaa = mass->stm*(1.0 - pchar->alloc_abg);
+			aaa = mass->stm * (1.0 - pchar->alloc_abg);
 			mass->rot += aaa;
 			mass->stm -= aaa;
 		}

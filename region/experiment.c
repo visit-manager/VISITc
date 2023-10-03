@@ -241,7 +241,7 @@ void f_experiment(
 		/* ************************************************/
         gpp_ga = npp_ga = nep_ga = plant_ga = soil_ga = prec_ga = 0.0;
         
-        for(h=0; h<ndy; h++){		
+        for(h=0; h<ndy; h++){
             loct->doy = h;
             doyTmody(e, h, &(loct->month), &(loct->mday));
             /* doyTmody(1979, h, &(loct->month), &(loct->mday)); */  /* no leap year */

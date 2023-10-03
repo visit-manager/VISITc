@@ -136,7 +136,7 @@ void f_apar_sunshade(
 			(1.0-exp(-(pchar->ke_b1 + pchar->ke_b2)*pchar->lai))*pchar->ke_b2/(pchar->ke_b1+pchar->ke_b2))-
 			(1.0-pchar->scttr)*(1.0-exp(-pchar->ke_b1*pchar->lai)-(1.0-exp(-2.0*pchar->ke_b1*pchar->lai))/2.0));
 		/* absorbed PPFD by shaded leaves: Eq.A26a of DF97 */
-		pchar->appfd_sd = appfd_sd1+appfd_sd2;
+		pchar->appfd_sd = appfd_sd1 + appfd_sd2;
 		/* absorbed PPFD by shaded leaves PS II */
 		pchar->apar_sd = pchar->appfd_sd*(1.0-pchar->spect)/2.0; /* Eq.6 of DF97 */
 		
@@ -254,8 +254,8 @@ void f_gpp_sunshade(
 	/* stabilization */
 	if(pchar->apar_sn>0.0 && loct->sinb_h>0.0 && phenol_stage !=0){
 		/* electron transport rate: Eq.5 in DF97 */
-		pchar->j_sn = ((pchar->apar_sn+pchar->jmx_sn)-sqrt((pchar->apar_sn + pchar->jmx_sn)*
-			(pchar->apar_sn+pchar->jmx_sn)-4.0*pchar->cv_j*pchar->apar_sn*pchar->jmx_sn))/(2.0*pchar->cv_j);
+		pchar->j_sn = ((pchar->apar_sn + pchar->jmx_sn)-sqrt((pchar->apar_sn + pchar->jmx_sn)*
+			(pchar->apar_sn+pchar->jmx_sn) - 4.0*pchar->cv_j*pchar->apar_sn*pchar->jmx_sn))/(2.0*pchar->cv_j);
 		
         if(pchar->j_sn >= 0.0 && pchar->j_sn <= 10000.0){
             ;

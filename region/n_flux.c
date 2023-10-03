@@ -122,7 +122,7 @@ void f_n_leaching(
 	}
 	
 	/* g NO3-N m-2 month-1 */
-	flux->n_leach = aa*10000.0;
+	flux->n_leach = aa * 10000.0;
 	/* g NO3-N ha-1 month-1 */
 }
 
@@ -282,7 +282,7 @@ void f_n_abandon_salvage(
 	flux->n_abdn_strg = (flux->lc + flux->lr)
 				* 1000000.0 / pchar->cn0_strg;
 	if(flux->n_abdn_strg > mass->n_strg*0.9){
-		flux->n_abdn_strg = mass->n_strg*0.9;
+		flux->n_abdn_strg = mass->n_strg * 0.9;
 	}
 }
 
@@ -427,7 +427,7 @@ void f_n_realloc(
 	}
 }
 
-/*************************************************/
+/* ************************************************/
 void f_n_mineralz(
 	struct Grid *grid, 
 	struct Loct *loct, 

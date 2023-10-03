@@ -56,7 +56,7 @@ extern float		atm_n2o_a2[553];	/* SRES A2 */
 extern float		atm_n2o_b1[553];	/* SRES B1 */
 extern float		atm_n2o_b2[553];	/* SRES B2 */
 
-/******************************************************************************/
+/* *****************************************************************************/
 void f_initialize(
 	struct Grid grid[], 
 	struct Loct *loct, 
