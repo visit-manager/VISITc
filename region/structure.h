@@ -70,6 +70,7 @@ struct Grid{
 		/* climate data for regional simulstions */
 		float		prec_region;        /* precipitation */
 		float		srad_region;        /* short-wave radiation */
+        float       trad_region;        /* long-wave radiation */
 		float		tmax_region;        /* max. temperature */
 		float		tmin_region;        /* min. temperature */
 		float		humd_region;        /* air humidity */

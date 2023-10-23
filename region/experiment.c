@@ -67,7 +67,7 @@ void f_experiment(
     float gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga, prec_ga, rdata, vps;
 	/* FILE *fp_o; */
 	FILE *fp_restart;
-	FILE *fp_clim[6];
+	FILE *fp_clim[N_CLIMD];
 	FILE *fp_out[1+24], *fp_log;
     FILE *fp_monitor, *fp_veg;
     FILE *fp_lai;
@@ -287,40 +287,66 @@ void f_experiment(
                 /*********************************************************/
                 if(strcmp(grid[0].site_id, "GLOBAL")==0){
                     /* read regional climate data ****/
+                    
                     /* precipitation */
                     fread(fdat, 4, WGRIDS, fp_clim[0]);
-                    for(i=pstart; i<=pend; i++){ 
+                    for(i=pstart; i<=pend; i++){
                         if(fdat[i] < 0.0){
                             fdat[i] = 0.0;
                         }
-                        /* grid[i].prec_region = 3600.0*fdat[i]; */ /* precipitation, mm/h */
-                        grid[i].prec_region = fdat[i]; /* precipitation, mm/h */
+                        grid[i].prec_region = fdat[i] * 3600.0; /* precipitation, mm/h */
                     }
                     
-                    /* solar radiation */
+                    /* shortwave radiation */
                     fread(fdat, 4, WGRIDS, fp_clim[1]);
                     for(i=pstart; i<=pend; i++){
                         if(fdat[i] < 0.0){
                             fdat[i] = 0.0;
                         }
-                        grid[i].srad_region = fdat[i];      /* dsw rad, W/m2 */
+                        grid[i].srad_region = fdat[i] / 3600.0;      /* ssrd, W/m2 */
                     }
-                    
-                    /* temperature */
+
+                    /* longwave radiation */
                     fread(fdat, 4, WGRIDS, fp_clim[2]);
-                    for(i=pstart; i<=pend; i++){ 
+                    for(i=pstart; i<=pend; i++){
+                        if(fdat[i] < 0.0){
+                            fdat[i] = 0.0;
+                        }
+                        grid[i].trad_region = fdat[i] / 3600.0;      /* strd, W/m2 */
+                    }
+
+                    /* temperature */
+                    fread(fdat, 4, WGRIDS, fp_clim[3]);
+                    for(i=pstart; i<=pend; i++){
                         grid[i].tmax_region = fdat[i] - ZAT; /* temp max, K */
                         grid[i].tmin_region = fdat[i] - ZAT; /* temp min, K */
                     }
-                    fread(fdat, 4, WGRIDS, fp_clim[3]);
-                    for(i=pstart; i<=pend; i++){ 
-                        grid[i].humd_region = fdat[i];	/* specific humidity, g/g */
-                    }
+
+                    /* humidity */
                     fread(fdat, 4, WGRIDS, fp_clim[4]);
-                    for(i=pstart; i<=pend; i++){ 
-                        grid[i].wind_region = fdat[i]; /* wind at 10m, m/s */
+                    for(i=pstart; i<=pend; i++){
+                        fdat[i] -= ZAT;
+                        /* dew point, K => vapor pressure */
+                        if(fdat[i] > 0.0){ /* at water surface */
+                            vps = 6.1078 * pow(10.0,(7.5*fdat[i])/(237.3 + fdat[i]));
+                        }else{ /* at ice surface */
+                            vps = 6.1078 * pow(10.0,(9.5*fdat[i])/(265.3 + fdat[i]));
+                        }
+                        vps = (vps>=0.0)?vps:0.0;
+
+                        grid[i].humd_region = vps;
                     }
-                    
+
+                    /* wind */
+                   fread(fdat, 4, WGRIDS, fp_clim[5]);
+                    for(i=pstart; i<=pend; i++){
+                        grid[i].wind_region = fdat[i];  /* u-wind at 10m, m/s */
+                    }
+                    fread(fdat, 4, WGRIDS, fp_clim[6]);
+                    for(i=pstart; i<=pend; i++){
+                        grid[i].wind_region = sqrt(fdat[i]*fdat[i] + grid[i].wind_region*grid[i].wind_region);  /* v-wind at 10m, m/s */
+                    }
+
                     if(FIX_LAI == 2 || FIX_LAI == 3){
                         fread(fdat, 4, WGRIDS, fp_lai);
                         for(i=pstart; i<=pend; i++){
@@ -709,6 +735,15 @@ void f_experiment(
                     fclose(fp_clim[2]);
                     fclose(fp_clim[3]);
                     fclose(fp_clim[4]);
+                }
+                if(strcmp(grid[0].site_id, "GLOBAL")==0 && loct->mday==(month_day[loct->month]-1) && loct->hour==(DSTEP-1)){
+                    fclose(fp_clim[0]);
+                    fclose(fp_clim[1]);
+                    fclose(fp_clim[2]);
+                    fclose(fp_clim[3]);
+                    fclose(fp_clim[4]);
+                    fclose(fp_clim[5]);
+                    fclose(fp_clim[6]);
                 }
             }
             

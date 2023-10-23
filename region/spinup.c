@@ -60,7 +60,7 @@ void f_spinup(
 	float gpp_a, npp_a, nep_a, lai_a, plant_a, soil_a, xx[20], ch4_a, nn, mm;
     float gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga;
     float wi, ti, ll, rdata, vps;
-	FILE *fp_clim[6], *fp_error;
+	FILE *fp_clim[N_CLIMD], *fp_error;
 	FILE *fp_out[1+4], *fp_log;
     FILE *fp_ss_grid, *fp_ss_loct, *fp_ss_mass, *fp_ss_flux, *fp_ss_echar;
 	struct Grid grid0;
@@ -152,19 +152,19 @@ void f_spinup(
         loct->adyear = BYR - SPUPT + e;
         
         /* randomized climate-data-year to remove trends and periodicity *******/
-        if(EYR>=2011){
-            end_climyr = 2010; /* use data before 2011 */
-        }else{
+        //if(EYR>=2011){
+        //    end_climyr = 2010; /* use data before 2011 */
+        //}else{
             end_climyr = EYR;
-        }
+        //}
         climyr = (long)(((double)rand()/(double)RAND_MAX)*(double)(end_climyr - BYR+1) + (double)BYR);
         
+        /* for test */
         if(strcmp(grid[0].site_id, "JAPAN")==0 || strcmp(grid[0].site_id, "BB")==0
                 || strcmp(grid[0].site_id, "JAPANc")==0|| strcmp(grid[0].site_id, "JAPANh")==0
                 || strcmp(grid[0].site_id, "JAPANk")==0){
             climyr = 2020;
         }
-
         if(strcmp(grid[0].site_id, "PAWCs")==0){
             climyr = 2003;
         }
@@ -334,33 +334,64 @@ void f_spinup(
 
                 /* read regional climate data ***********/
                 if(strcmp(grid[0].site_id, "GLOBAL")==0){
+                    
+                    /* precipitation */
                     fread(fdat, 4, WGRIDS, fp_clim[0]);
                     for(i=pstart; i<=pend; i++){ 
                         if(fdat[i] < 0.0){
                             fdat[i] = 0.0;
                         }
-                        /* grid[i].prec_region = 3600.0*fdat[i]; */ /* precipitation, mm/h */
-                        grid[i].prec_region = fdat[i]; /* precipitation, mm/h */
+                        grid[i].prec_region = fdat[i] * 3600.0; /* precipitation, mm/h */
                     }
+                    
+                    /* shortwave radiation */
                     fread(fdat, 4, WGRIDS, fp_clim[1]);
-                    for(i=pstart; i<=pend; i++){ 
+                    for(i=pstart; i<=pend; i++){
                         if(fdat[i] < 0.0){
                             fdat[i] = 0.0;
                         }
-                        grid[i].srad_region = fdat[i];      /* dsw rad, W/m2 */
+                        grid[i].srad_region = fdat[i] / 3600.0;      /* ssrd, W/m2 */
                     }
+
+                    /* longwave radiation */
                     fread(fdat, 4, WGRIDS, fp_clim[2]);
-                    for(i=pstart; i<=pend; i++){ 
+                    for(i=pstart; i<=pend; i++){
+                        if(fdat[i] < 0.0){
+                            fdat[i] = 0.0;
+                        }
+                        grid[i].trad_region = fdat[i] / 3600.0;      /* strd, W/m2 */
+                    }
+
+                    /* temperature */
+                    fread(fdat, 4, WGRIDS, fp_clim[3]);
+                    for(i=pstart; i<=pend; i++){
                         grid[i].tmax_region = fdat[i] - ZAT; /* temp max, K */
                         grid[i].tmin_region = fdat[i] - ZAT; /* temp min, K */
                     }
-                    fread(fdat, 4, WGRIDS, fp_clim[3]);
-                    for(i=pstart; i<=pend; i++){ 
-                        grid[i].humd_region = fdat[i];  /* specific humidity, g/g */
-                    }
+
+                    /* humidity */
                     fread(fdat, 4, WGRIDS, fp_clim[4]);
-                    for(i=pstart; i<=pend; i++){ 
+                    for(i=pstart; i<=pend; i++){
+                        fdat[i] -= ZAT;
+                        /* dew point, K => vapor pressure */
+                        if(fdat[i] > 0.0){ /* at water surface */
+                            vps = 6.1078 * pow(10.0,(7.5*fdat[i])/(237.3 + fdat[i]));
+                        }else{ /* at ice surface */
+                            vps = 6.1078 * pow(10.0,(9.5*fdat[i])/(265.3 + fdat[i]));
+                        }
+                        vps = (vps>=0.0)?vps:0.0;
+
+                        grid[i].humd_region = vps;
+                    }
+
+                    /* wind */
+                   fread(fdat, 4, WGRIDS, fp_clim[5]);
+                    for(i=pstart; i<=pend; i++){
                         grid[i].wind_region = fdat[i];  /* u-wind at 10m, m/s */
+                    }
+                    fread(fdat, 4, WGRIDS, fp_clim[6]);
+                    for(i=pstart; i<=pend; i++){
+                        grid[i].wind_region = sqrt(fdat[i]*fdat[i] + grid[i].wind_region*grid[i].wind_region);  /* v-wind at 10m, m/s */
                     }
                 }else if(strcmp(grid[0].site_id, "BAMIYAN")==0){
                     /* BAMIYAN: 2017/08/01 by A.Ito */
@@ -796,6 +827,15 @@ void f_spinup(
                 fclose(fp_clim[2]);
                 fclose(fp_clim[3]);
                 fclose(fp_clim[4]);
+            }
+            if(strcmp(grid[0].site_id, "GLOBAL")==0 && loct->mday==(month_day[loct->month]-1) && loct->hour==(DSTEP-1)){
+                fclose(fp_clim[0]);
+                fclose(fp_clim[1]);
+                fclose(fp_clim[2]);
+                fclose(fp_clim[3]);
+                fclose(fp_clim[4]);
+                fclose(fp_clim[5]);
+                fclose(fp_clim[6]);
             }
 
             j = 0;

@@ -21,12 +21,12 @@
 #include"structure.h"
 #include"prototype.h"
 
-/***********************************************/
+/* **********************************************/
 void f_open_global_clim(
     short stage,
     short yr, 
     short mon,
-    FILE *fp_clim[6]
+    FILE *fp_clim[N_CLIMD]
 ){
 	char syear[8];
 	char smon[8];
@@ -35,134 +35,92 @@ void f_open_global_clim(
     
     yrc = yr;
     
-    /************/
+    /* ***********/
 	snprintf(syear, 8, "%04d", yr);
 	snprintf(smon, 8, "%02d", mon);
     
-    /* replace CFSR2 ***********/
-    if(yr>=2011){
-        yr = 2006 + yr%5;
-        snprintf(syear, 8, "%04d", yr);
-    }
-    
-    /****************/
-    yr = yrc;
-    snprintf(syear, 8, "%04d", yr);
-
-    /* humidity */
-    strcpy(filename, "./input/2D/");
-    
-    
-    
-    if((yr==2011 && mon>=4) || yr>=2012){
-        strcat(filename, ".cdas1.");
-    }else{
-        strcat(filename, ".gdas.");
-    }
-    strcat(filename, syear);
-    //strcat(filename, "2010");
-    strcat(filename, smon);
-    //strcat(filename, ".flt2");
-    /* if(yr<=2014){
-        strcat(filename, ".flt3c");
-    }else{
-        strcat(filename, ".flt2");
-    } */
-    //strcat(filename, ".flt4c");
-    strcat(filename, ".flt5c");
-    if((fp_clim[3] = fopen(filename,"rb")) == NULL){
-        printf("!! %s data\n", filename);
-        exit (1);
-    }
-    
     /* prec */
-    strcpy(filename, "./data/prate");
-    if((yr==2011 && mon>=4) || yr>=2012){
-        strcat(filename, ".cdas1.");
-    }else{
-        strcat(filename, ".gdas.");
-    }
+    strcpy(filename, "./data/TP/");
+    strcat(filename, syear);
+    strcat(filename, "/ERA5_");
     strcat(filename, syear);
     strcat(filename, smon);
-    /* if(yr<=2014){
-        strcat(filename, ".flt3c");
-    }else{
-        strcat(filename, ".flt2");
-    } */
-    //strcat(filename, ".flt4c");
-    strcat(filename, ".flt5c");
+    strcat(filename, "_TP.flt");
     if((fp_clim[0] = fopen(filename,"rb")) == NULL){
         printf("!! %s data\n", filename);
         exit (1);
     }
-    
+
     /* srad */
-    strcpy(filename, "./data/dswsfc");
-    if((yr==2011 && mon>=4) || yr>=2012){
-        strcat(filename, ".cdas1.");
-    }else{
-        strcat(filename, ".gdas.");
-    }
+    strcpy(filename, "./data/SSRD/");
+    strcat(filename, syear);
+    strcat(filename, "/ERA5_");
     strcat(filename, syear);
     strcat(filename, smon);
-    /* if(yr<=2014){
-        strcat(filename, ".flt3c");
-    }else{
-        strcat(filename, ".flt2");
-    } */
-    //strcat(filename, ".flt4c");
-    strcat(filename, ".flt5c");
+    strcat(filename, "_SSRD.flt");
     if((fp_clim[1] = fopen(filename,"rb")) == NULL){
         printf("!! %s data\n", filename);
         exit (1);
     }
-    
-    /* temp */
-    strcpy(filename, "./data/tmp2m");
-    if((yr==2011 && mon>=4) || yr>=2012){
-        strcat(filename, ".cdas1.");
-    }else{
-        strcat(filename, ".gdas.");
-    }
+
+    /* trad */
+    strcpy(filename, "./data/STRD/");
+    strcat(filename, syear);
+    strcat(filename, "/ERA5_");
     strcat(filename, syear);
     strcat(filename, smon);
-    /* if(yr<=2014){
-        strcat(filename, ".flt3c");
-    }else{
-        strcat(filename, ".flt2");
-    } */
-    //strcat(filename, ".flt4c");
-    strcat(filename, ".flt5cc");
+    strcat(filename, "_STRD.flt");
     if((fp_clim[2] = fopen(filename,"rb")) == NULL){
         printf("!! %s data\n", filename);
         exit (1);
     }
-    
-    /* wind */
-    strcpy(filename, "./data/wnd10m");
-    if((yr==2011 && mon>=4) || yr>=2012){
-        strcat(filename, ".cdas1.");
-    }else{
-        strcat(filename, ".gdas.");
-    }
+
+    /* temp */
+    strcpy(filename, "./data/2T/");
+    strcat(filename, syear);
+    strcat(filename, "/ERA5_");
     strcat(filename, syear);
     strcat(filename, smon);
-    strcat(filename, ".flt2");
+    strcat(filename, "_2T.flt");
+    if((fp_clim[3] = fopen(filename,"rb")) == NULL){
+        printf("!! %s data\n", filename);
+        exit (1);
+    }
+
+    /* humidity */
+    strcpy(filename, "./data/2D/");
+    strcat(filename, syear);
+    strcat(filename, "/ERA5_");
+    strcat(filename, syear);
+    strcat(filename, smon);
+    strcat(filename, "_2D.flt");
     if((fp_clim[4] = fopen(filename,"rb")) == NULL){
         printf("!! %s data\n", filename);
         exit (1);
     }
-    
-    /* replace CFSR2 ***********/
-    /* if(yr>=2011){
-        yr = 2006 + yr%5;
+
+    /* wind */
+    strcpy(filename, "./data/10U/");
+    strcat(filename, syear);
+    strcat(filename, "/ERA5_");
+    strcat(filename, syear);
+    strcat(filename, smon);
+    strcat(filename, "_10U.flt");
+    if((fp_clim[5] = fopen(filename,"rb")) == NULL){
+        printf("!! %s data\n", filename);
+        exit (1);
     }
-	
-	snprintf(syear, 8, "%04d", yr);
-	snprintf(smon, 8, "%02d", mon); */
-    
-	/* printf("!! %s data\n", filename); */
-	
+
+    strcpy(filename, "./data/10V/");
+    strcat(filename, syear);
+    strcat(filename, "/ERA5_");
+    strcat(filename, syear);
+    strcat(filename, smon);
+    strcat(filename, "_10V.flt");
+    if((fp_clim[6] = fopen(filename,"rb")) == NULL){
+        printf("!! %s data\n", filename);
+        exit (1);
+    }
 }
 
 /***********************************************/
