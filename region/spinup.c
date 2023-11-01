@@ -307,7 +307,6 @@ void f_spinup(
 
             /* hourly roop ********************************************************/
             for(h=0;h<DSTEP;h++){
-            
 
                 loct->hour = h;
                 printf("%4ld %4ld %3ld %3ld: ", loct->adyear, loct->climy, f, h);
@@ -550,21 +549,27 @@ void f_spinup(
                     }else{ 	; }
                     if(grid[i].prec_region<-0.1 || grid[i].prec_region>1500.0){
                         calc_flag = 0;
+                        printf("P %d\n", grid[i].flag_datavl);
                     }else{ ; }
                     if(grid[i].srad_region<-1.0 || grid[i].srad_region>2000.0){
                         calc_flag = 0;
+                        printf("R %d\n", grid[i].flag_datavl);
                     }else{ ; }
                     if(grid[i].tmax_region<-90.0 || grid[i].tmax_region>90.0){
                         calc_flag = 0;
+                        printf("TX %d\n", grid[i].flag_datavl);
                     }else{ ; }
                     if(grid[i].tmin_region<-90.0 || grid[i].tmin_region>90.0){
                         calc_flag = 0;
+                        printf("TN %d\n", grid[i].flag_datavl);
                     }else{ ; }
                     if(grid[i].humd_region<-1.0 || grid[i].humd_region>100.0){
                         calc_flag = 0;
+                        printf("H %d\n", grid[i].flag_datavl);
                     }else{ ; }
                     if(grid[i].wind_region<-120.0 || grid[i].wind_region>120.0){
                         calc_flag = 0;
+                        printf("W %d\n", grid[i].flag_datavl);
                     }else{ ; } /* */
                     /*
                      if(calc_flag == 0) insufficient land data and no simulation 

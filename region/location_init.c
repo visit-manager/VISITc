@@ -107,6 +107,8 @@ void f_init_loct(
 	(mass->c4).lai = lai_mass(&(mass->c4), &(echar->c4));
     
     loct->laimax_meta = 3.0;
+    loct->funder_c3 = 1.0;
+    loct->funder_c4 = 1.0 - loct->funder_c3;
 
 	/* initialization of water condition *************************************/
 	mass->sww = 0.5 * grid->fieldcap;     

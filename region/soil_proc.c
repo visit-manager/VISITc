@@ -162,9 +162,9 @@ void f_cycle_soil(
 	}  
 	
 	/*  total microbial respiration  */
-	flux->hr = flux->mr_tf+flux->mr_tc+flux->mr_tr  +  
-			flux->mr_gf+flux->mr_gc+flux->mr_gr  +  
-			flux->mr_a+flux->mr_i+flux->mr_p;
+	flux->hr = flux->mr_tf + flux->mr_tc + flux->mr_tr  +
+			flux->mr_gf + flux->mr_gc + flux->mr_gr  +
+			flux->mr_a + flux->mr_i + flux->mr_p;
 	
 	/* stable carbon isotope ******************************************************************/	
 	if(SCI_SCHEME == 1){

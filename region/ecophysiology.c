@@ -59,7 +59,7 @@ void f_ecophysiology(
 		f_incelco2(loct, pchar); 
 	}
 	/** photosynthetic 13C discrimination, permille **/
-	if(SCI_SCHEME==1){
+	if(SCI_SCHEME == 1){
 		photo_13c_frac(grid, loct, pchar);
 	}
 	
@@ -101,7 +101,7 @@ float lai_mass(
 	/** specific leaf area as a function of... what? **/
 	sla = pchar->sla;
 	
-	lai_est = sla*mass->fol*dmTc/100.0/2.0;
+	lai_est = sla*mass->fol * dmTc /100.0 /2.0;
 	lai_est = (lai_est>=0.0)?lai_est:0.0;
 	
 	/* dmTc: dry-matter to carbon */

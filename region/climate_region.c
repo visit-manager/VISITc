@@ -45,7 +45,7 @@ void f_open_global_clim(
     strcat(filename, "/ERA5_");
     strcat(filename, syear);
     strcat(filename, smon);
-    strcat(filename, "_TP.flt");
+    strcat(filename, "_TP_visit.flt");
     if((fp_clim[0] = fopen(filename,"rb")) == NULL){
         printf("!! %s data\n", filename);
         exit (1);
@@ -57,7 +57,7 @@ void f_open_global_clim(
     strcat(filename, "/ERA5_");
     strcat(filename, syear);
     strcat(filename, smon);
-    strcat(filename, "_SSRD.flt");
+    strcat(filename, "_SSRD_visit.flt");
     if((fp_clim[1] = fopen(filename,"rb")) == NULL){
         printf("!! %s data\n", filename);
         exit (1);
@@ -69,7 +69,7 @@ void f_open_global_clim(
     strcat(filename, "/ERA5_");
     strcat(filename, syear);
     strcat(filename, smon);
-    strcat(filename, "_STRD.flt");
+    strcat(filename, "_STRD_visit.flt");
     if((fp_clim[2] = fopen(filename,"rb")) == NULL){
         printf("!! %s data\n", filename);
         exit (1);
@@ -81,7 +81,7 @@ void f_open_global_clim(
     strcat(filename, "/ERA5_");
     strcat(filename, syear);
     strcat(filename, smon);
-    strcat(filename, "_2T.flt");
+    strcat(filename, "_2T_visit.flt");
     if((fp_clim[3] = fopen(filename,"rb")) == NULL){
         printf("!! %s data\n", filename);
         exit (1);
@@ -93,7 +93,7 @@ void f_open_global_clim(
     strcat(filename, "/ERA5_");
     strcat(filename, syear);
     strcat(filename, smon);
-    strcat(filename, "_2D.flt");
+    strcat(filename, "_2D_visit.flt");
     if((fp_clim[4] = fopen(filename,"rb")) == NULL){
         printf("!! %s data\n", filename);
         exit (1);
@@ -105,7 +105,7 @@ void f_open_global_clim(
     strcat(filename, "/ERA5_");
     strcat(filename, syear);
     strcat(filename, smon);
-    strcat(filename, "_10U.flt");
+    strcat(filename, "_10U_visit.flt");
     if((fp_clim[5] = fopen(filename,"rb")) == NULL){
         printf("!! %s data\n", filename);
         exit (1);
@@ -116,14 +116,14 @@ void f_open_global_clim(
     strcat(filename, "/ERA5_");
     strcat(filename, syear);
     strcat(filename, smon);
-    strcat(filename, "_10V.flt");
+    strcat(filename, "_10V_visit.flt");
     if((fp_clim[6] = fopen(filename,"rb")) == NULL){
         printf("!! %s data\n", filename);
         exit (1);
     }
 }
 
-/***********************************************/
+/* **********************************************/
 void f_open_bamiyan_clim(
     short stage,
     short yr, 

@@ -58,7 +58,7 @@ void set_parameter(
 	}
 	
 	/* check biome number */
-	if(mode==2){
+	if(mode == 2){
 		for(f=0;f<NBIOME;f++){
 			fscanf(fp_parameter, "%f", &in_dat);
 			if((long)in_dat!=f){
