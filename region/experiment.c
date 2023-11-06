@@ -696,7 +696,7 @@ void f_experiment(
                        100.0*gpp_a/nn, 100.0*npp_a/nn, 100.0*nep_a/nn, 
                        lai_a/nn, plant_a/nn, soil_a/nn, ch4_a/nn);
                 
-                /******************/
+                /* *****************/
                 fprintf(fp_monitor,"%ld %ld %ld ",loct2[P_MONI].adyear,loct2[P_MONI].doy,loct2[P_MONI].hour);
                 
                 /* fprintf(fp_monitor,"%f %f %f ",loct2[P_MONI].tmp_2m,loct2[P_MONI].dswrf_sfc,loct2[P_MONI].prate_sfc);
@@ -736,15 +736,6 @@ void f_experiment(
                     fclose(fp_clim[3]);
                     fclose(fp_clim[4]);
                 }
-                if(strcmp(grid[0].site_id, "GLOBAL")==0 && loct->mday==(month_day[loct->month]-1) && loct->hour==(DSTEP-1)){
-                    fclose(fp_clim[0]);
-                    fclose(fp_clim[1]);
-                    fclose(fp_clim[2]);
-                    fclose(fp_clim[3]);
-                    fclose(fp_clim[4]);
-                    fclose(fp_clim[5]);
-                    fclose(fp_clim[6]);
-                }
             }
             
             /* close climate files */
@@ -765,12 +756,22 @@ void f_experiment(
                 case 11: if(loct->mday==30){ j = 1; } break;
             }
             
-            if(j == 1 && (strcmp(grid[0].site_id, "GLOBAL")==0 || strcmp(grid[0].site_id, "EASIA")==0)){
+            if(j == 1 && strcmp(grid[0].site_id, "EASIA")==0 ){
                 fclose(fp_clim[0]);
                 fclose(fp_clim[1]);
                 fclose(fp_clim[2]);
                 fclose(fp_clim[3]);
                 fclose(fp_clim[4]);
+            }
+
+            if(j == 1 && strcmp(grid[0].site_id, "GLOBAL")==0 ){
+                fclose(fp_clim[0]);
+                fclose(fp_clim[1]);
+                fclose(fp_clim[2]);
+                fclose(fp_clim[3]);
+                fclose(fp_clim[4]);
+                fclose(fp_clim[5]);
+                fclose(fp_clim[6]);
             }
 
             /* if(loct->climy == 2015 && loct->month==3 && loct->mday==29){

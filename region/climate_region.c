@@ -127,7 +127,7 @@ void f_open_global_clim(
 void f_open_bamiyan_clim(
     short stage,
     short yr, 
-    FILE *fp_clim[6]
+    FILE *fp_clim[N_CLIMD]
 ){
 	char syear[8], syear_r[8];
 	char filename[128];
@@ -338,7 +338,7 @@ void f_open_easia_clim(
     short stage,
     short yr,
     short mon,
-    FILE *fp_clim[6]
+    FILE *fp_clim[N_CLIMD]
 ){
     char syear[8];
     char smon[8];
@@ -408,7 +408,7 @@ void f_open_japan_clim(
     short mon,
     short day,
     short hour,
-    FILE *fp_clim[6]
+    FILE *fp_clim[N_CLIMD]
 ){
     char syear[8],smon[8],sday[8],shour[8];
     char filename[128];
@@ -504,7 +504,7 @@ void f_open_bb_clim(
     short mon,
     short day,
     short hour,
-    FILE *fp_clim[6]
+    FILE *fp_clim[N_CLIMD]
 ){
     char syear[8],smon[8],sday[8],shour[8];
     char filename[128];
@@ -600,7 +600,7 @@ void f_open_japanc_clim(
     short mon,
     short day,
     short hour,
-    FILE *fp_clim[6]
+    FILE *fp_clim[N_CLIMD]
 ){
     char syear[8],smon[8],sday[8],shour[8];
     char filename[128];
@@ -792,7 +792,7 @@ void f_open_japank_clim(
     short mon,
     short day,
     short hour,
-    FILE *fp_clim[6]
+    FILE *fp_clim[N_CLIMD]
 ){
     char syear[8],smon[8],sday[8],shour[8];
     char filename[128];
@@ -888,7 +888,7 @@ void f_open_pawcs_clim(
     short mon,
     short day,
     short hour,
-    FILE *fp_clim[6]
+    FILE *fp_clim[N_CLIMD]
 ){
     char syear[8],smon[8],sday[8],shour[8];
     char filename[128];

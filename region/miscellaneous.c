@@ -26,7 +26,7 @@ void doyTmody(
 	long *month, 
 	long *day
 ){
-	if(year%4==0){
+	if(year%4 == 0){
 		if(doy>=0 && doy<31){
 			*month = 0;
 			*day = doy-0;

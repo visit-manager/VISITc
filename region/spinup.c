@@ -833,20 +833,11 @@ void f_spinup(
                 fclose(fp_clim[3]);
                 fclose(fp_clim[4]);
             }
-            if(strcmp(grid[0].site_id, "GLOBAL")==0 && loct->mday==(month_day[loct->month]-1) && loct->hour==(DSTEP-1)){
-                fclose(fp_clim[0]);
-                fclose(fp_clim[1]);
-                fclose(fp_clim[2]);
-                fclose(fp_clim[3]);
-                fclose(fp_clim[4]);
-                fclose(fp_clim[5]);
-                fclose(fp_clim[6]);
-            }
 
             j = 0;
             switch(loct->month){
                 case 0: if(loct->mday==30){ j = 1; } break;
-                case 1: if((climyr%4 == 0 && loct->mday==28) || (climyr%4 != 0 && loct->mday==27)){ j = 1; } break;
+                case 1: if( (climyr%4 != 0 && loct->mday==27) || (climyr%4 == 0 && loct->mday==28) ){ j = 1; } break;
                 case 2: if(loct->mday==30){ j = 1; } break;
                 case 3: if(loct->mday==29){ j = 1; } break;
                 case 4: if(loct->mday==30){ j = 1; } break;
@@ -859,7 +850,7 @@ void f_spinup(
                 case 11: if(loct->mday==30){ j = 1; } break;
             }
             
-            if(j == 1 && (strcmp(grid[0].site_id, "GLOBAL")==0 || strcmp(grid[0].site_id, "EASIA")==0)){
+            if(j == 1 && (strcmp(grid[0].site_id, "EASIA")==0)){
                 fclose(fp_clim[0]);
                 fclose(fp_clim[1]);
                 fclose(fp_clim[2]);
@@ -867,6 +858,16 @@ void f_spinup(
                 fclose(fp_clim[4]);
             }
             
+            if(j == 1 && (strcmp(grid[0].site_id, "GLOBAL")==0)){
+                fclose(fp_clim[0]);
+                fclose(fp_clim[1]);
+                fclose(fp_clim[2]);
+                fclose(fp_clim[3]);
+                fclose(fp_clim[4]);
+                fclose(fp_clim[5]);
+                fclose(fp_clim[6]);
+            }
+
             mm += 1.0;
         }
         
