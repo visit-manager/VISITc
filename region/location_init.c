@@ -23,16 +23,6 @@
 #define TERM_HYD  0.1
 
 /* climatology: *_d[] means the time-series during 1948 to 2004- */	
-extern float tmp_sfc_d[PERIOD][366];		/* ground surface temperature, degree Celcius */
-extern float tmp_2m_d[PERIOD][366];		/* 2m air temperature, degree Celcius */
-extern float tmp10_soil_d[PERIOD][366];	/* soil temperature at 10 cm depth, degree Celcius */
-extern float tmp200_soil_d[PERIOD][366];	/* soil temperature at 200 cm depth, degree Celcius */
-extern float dswrf_sfc_d[PERIOD][366];		/* downward shortwave radiation at the surface, W m-2 */
-extern float tcdc_clm_d[PERIOD][366];		/* total cloudiness, fraction */
-extern float prate_sfc_d[PERIOD][366];		/* precipitation, mm mon-1 */
-extern float spfh_2m_d[PERIOD][366];		/* specific humidity, kg kg-1 */
-extern float wind_10m_d[PERIOD][366];		/* u-wind velocity, m s-1 */
-extern float vpd_d[PERIOD][366];   		/* VPD, hPa */
 extern float tmp_2m_ncep_dav[366];			/* 2m air temperature, degree Celcius */
 extern float prate_sfc_ncep_mav[12];		/* precipitation, mm mon-1 */
 extern float tmp_sfc_dav[366];	

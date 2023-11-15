@@ -29,7 +29,7 @@ void disturbance_regime(
 	struct Mass *mass, 
 	struct Flux *flux
 ){
-	if(strcmp(grid->site_id, "TKY")==0){
+	if(strcmp(grid->area_id, "TKY")==0){
 		/*******  disturbance  *******/
 		if(dyear==YLDIST && loct->doy==354){
 			logging_event(grid, mass);  	   /*   */
@@ -54,7 +54,7 @@ void disturbance_regime(
 		}
 	}
 	
-	if((strcmp(grid->site_id, "TMK")==0) || (strcmp(grid->site_id, "FJY")==0)){
+	if((strcmp(grid->area_id, "TMK")==0) || (strcmp(grid->area_id, "FJY")==0)){
 		if(dyear==YLDIST && loct->doy==354){
 			logging_event(grid, mass);  	   /*   */
 			
@@ -92,7 +92,7 @@ void logging_event(
 	brn_rot=(mass->tree).rot*0.60;  */
 	
 	/* emission */
-	if(strcmp(grid->site_id, "TKY")==0){
+	if(strcmp(grid->area_id, "TKY")==0){
 		ems_fol = (mass->tree).fol*0.45;
 		ems_stm = (mass->tree).stm*0.55;
 		ems_rot = (mass->tree).rot*0.45;
@@ -114,7 +114,7 @@ void logging_event(
 	/*	brn_fol = (mass->tree).fol*0.30;
 		brn_stm = (mass->tree).stm*0.10;
 		brn_rot = (mass->tree).rot*0.20;  */
-	}else if((strcmp(grid->site_id, "TMK")==0) || (strcmp(grid->site_id, "FJY")==0)){
+	}else if((strcmp(grid->area_id, "TMK")==0) || (strcmp(grid->area_id, "FJY")==0)){
 		ems_fol = (mass->tree).fol*0.65;
 		ems_stm = (mass->tree).stm*0.85;
 		ems_rot = (mass->tree).rot*0.85;

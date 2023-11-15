@@ -30,11 +30,8 @@ extern long WGRIDS;
 extern long SPUPT;
 extern float fdat[NROW * NCOL];
 extern int idat[NROW * NCOL];
-extern long    month_day[12];
-
-extern struct Loct loct2[NROW*NCOL];
-extern struct Echar echar2[NROW*NCOL];
-extern struct Flux flux2[NROW*NCOL];
+extern long month_day[12];
+extern struct Echar echar_type[MAX_BIOME];
 
 #if OUT_DAY==1
 extern float outdat01[NROW*NCOL];
@@ -45,12 +42,11 @@ extern float outdat04[NROW*NCOL];
 
 /* spin-up ************************************************************************/
 void f_spinup(
-	struct Grid grid[], 
-	struct Loct *loct, 
-	struct Echar *echar, 
-	struct Echar echar_type[MAX_BIOME], 
-	struct Mass mass[], 
-	struct Flux *flux, 
+  struct Grid grid[],
+  struct Loct loct[],
+  struct Echar echar[],
+  struct Mass mass[],
+  struct Flux flux[],
 	FILE *fp_spinup
 ){
 	long e, f, h, i, j, calc_flag, sasu_flag, climyr, end_climyr;
@@ -69,8 +65,6 @@ void f_spinup(
 	struct Mass mass0;
 	struct Flux flux0;
     
-    loct->phase = 1;
-	
 	/* roop to stable stage ***********/
     if(P_MONI == 0){
         pstart = 0;
@@ -80,27 +74,31 @@ void f_spinup(
         pend = P_MONI;
     }
     
-	/* strcpy(filename, grid[0].site_id);
+    for(i=pstart; i<=pend; i++){
+        loct[i].phase = 1;
+    }
+    
+	/* strcpy(filename, grid[0].area_id);
 	strcat(filename, "_restart.txt");
 	fp_restart = fopen(filename,"wt"); */
     
-	strcpy(filename, grid[0].site_id);
+	strcpy(filename, grid[0].area_id);
 	strcat(filename, "_restart_grid.flt");
 	fp_ss_grid = fopen(filename,"wb");
     
-	strcpy(filename, grid[0].site_id);
+	strcpy(filename, grid[0].area_id);
 	strcat(filename, "_restart_loct.flt");
 	fp_ss_loct = fopen(filename,"wb");
     
-	strcpy(filename, grid[0].site_id);
+	strcpy(filename, grid[0].area_id);
 	strcat(filename, "_restart_mass.flt");
 	fp_ss_mass = fopen(filename,"wb");
     
-	strcpy(filename, grid[0].site_id);
+	strcpy(filename, grid[0].area_id);
 	strcat(filename, "_restart_flux.flt");
 	fp_ss_flux = fopen(filename,"wb");
     
-	strcpy(filename, grid[0].site_id);
+	strcpy(filename, grid[0].area_id);
 	strcat(filename, "_restart_echar.flt");
 	fp_ss_echar = fopen(filename,"wb");
 
@@ -111,17 +109,17 @@ void f_spinup(
     /* log file */
 	fp_log = fopen("log_spinup.txt","wt");
     
-	strcpy(filename, grid[0].site_id);
+	strcpy(filename, grid[0].area_id);
     strcat(filename, grid[0].file_name);
 	strcat(filename, "_watch.flt");
 	fp_out[0] = fopen(filename,"wb");
 
-	if(NOTICE==1){
+	if(NOTICE == 1){
 		printf("Start spin-up phase\n");
 	}
 	
 	if(WMODE == 1){
-		fprintf(fp_spinup,"%s %s\n", echar->para_ver_id, echar->para_date_id);
+		fprintf(fp_spinup,"%s %s\n", echar[0].para_ver_id, echar[0].para_date_id);
 	}else if(WMODE == 2){
 		fprintf(fp_spinup,"%s %s\n", echar_type[0].para_ver_id, echar_type[0].para_date_id);
 	}
@@ -148,8 +146,10 @@ void f_spinup(
                 /* stand age, year */
                 grid[i].age_stand += 1.0;
             }
+            
+            loct[i].adyear = BYR - SPUPT + e;
         }
-        loct->adyear = BYR - SPUPT + e;
+        
         
         /* randomized climate-data-year to remove trends and periodicity *******/
         //if(EYR>=2011){
@@ -160,16 +160,18 @@ void f_spinup(
         climyr = (long)(((double)rand()/(double)RAND_MAX)*(double)(end_climyr - BYR+1) + (double)BYR);
         
         /* for test */
-        if(strcmp(grid[0].site_id, "JAPAN")==0 || strcmp(grid[0].site_id, "BB")==0
-                || strcmp(grid[0].site_id, "JAPANc")==0|| strcmp(grid[0].site_id, "JAPANh")==0
-                || strcmp(grid[0].site_id, "JAPANk")==0){
+        if(strcmp(grid[0].area_id, "JAPAN")==0 || strcmp(grid[0].area_id, "BB")==0
+                || strcmp(grid[0].area_id, "JAPANc")==0|| strcmp(grid[0].area_id, "JAPANh")==0
+                || strcmp(grid[0].area_id, "JAPANk")==0){
             climyr = 2020;
         }
-        if(strcmp(grid[0].site_id, "PAWCs")==0){
+        /* if(strcmp(grid[0].area_id, "PAWCs")==0){
             climyr = 2003;
+        } */
+        
+        for(i=pstart; i<=pend; i++){
+            loct[i].climy = climyr;
         }
-
-        loct->climy = climyr;
         
         /* open regional climate data ****/
         
@@ -279,8 +281,8 @@ void f_spinup(
         }
 
         /* open meteorological data */
-        if(strcmp(grid[0].site_id, "BAMIYAN")==0){
-            f_open_bamiyan_clim(loct->phase, (short)climyr, fp_clim);
+        if(strcmp(grid[0].area_id, "BAMIYAN")==0){
+            f_open_bamiyan_clim(loct[0].phase, (short)climyr, fp_clim);
         }
 
         /*********************************************************/
@@ -293,46 +295,55 @@ void f_spinup(
         }
 
         for(f=0;f<ndy;f++){
-        
-            loct->doy = f;
-            doyTmody(climyr, f, &(loct->month), &(loct->mday));
+            
+            doyTmody(climyr, f, &(loct[0].month), &(loct[0].mday));
+            
+            for(i=pstart; i<=pend; i++){
+                loct[i].doy = f;
+                loct[i].hour = 0;
+                loct[i].month = loct[0].month;
+                loct[i].mday = loct[0].mday;
+            }
             
             /* open meteorological data */
-            if(loct->mday == 0 && strcmp(grid->site_id, "GLOBAL")==0){
-                f_open_global_clim(loct->phase, (short)climyr, (short)(loct->month)+1, fp_clim);
+            if(loct[0].mday == 0 && strcmp(grid[0].area_id, "GLOBAL")==0){
+                f_open_global_clim(loct[0].phase, (short)climyr, (short)(loct[0].month)+1, fp_clim);
             }
-            if(loct->mday == 0 && strcmp(grid->site_id, "EASIA")==0){
-                f_open_easia_clim(loct->phase, (short)climyr, (short)(loct->month)+1, fp_clim);
+            if(loct[0].mday == 0 && strcmp(grid[0].area_id, "EASIA")==0){
+                f_open_easia_clim(loct[0].phase, (short)climyr, (short)(loct[0].month)+1, fp_clim);
+            }
+            if(loct[0].mday == 0 && strcmp(grid[0].area_id, "PAWCs")==0){
+                f_open_pawcs_clim(loct[0].phase, (short)climyr, (short)(loct[0].month)+1, (short)(loct[0].mday)+1, (short)(loct[0].hour)+1, fp_clim);
             }
 
             /* hourly roop ********************************************************/
             for(h=0;h<DSTEP;h++){
 
-                loct->hour = h;
-                printf("%4ld %4ld %3ld %3ld: ", loct->adyear, loct->climy, f, h);
-                fprintf(fp_log,"%ld %ld %ld %ld ", loct->adyear, loct->climy, f, h);
+                for(i=pstart; i<=pend; i++){
+                    loct[i].hour = h;
+                }
+                
+                printf("%4ld %4ld %3ld %3ld: ", loct[0].adyear, loct[0].climy, f, h);
+                fprintf(fp_log,"%ld %ld %ld %ld ", loct[0].adyear, loct[0].climy, f, h);
 
-                if(strcmp(grid->site_id, "JAPAN")==0){
-                    f_open_japan_clim(loct->phase, (short)climyr, (short)(loct->month)+1, (short)(loct->mday)+1, (short)(loct->hour)+1, fp_clim);
+                if(strcmp(grid[0].area_id, "JAPAN")==0){
+                    f_open_japan_clim(loct[0].phase, (short)climyr, (short)(loct[0].month)+1, (short)(loct[0].mday)+1, (short)(loct[0].hour)+1, fp_clim);
                 }
-                if(strcmp(grid->site_id, "BB")==0){
-                    f_open_bb_clim(loct->phase, (short)climyr, (short)(loct->month)+1, (short)(loct->mday)+1, (short)(loct->hour)+1, fp_clim);
+                if(strcmp(grid[0].area_id, "BB")==0){
+                    f_open_bb_clim(loct[0].phase, (short)climyr, (short)(loct[0].month)+1, (short)(loct[0].mday)+1, (short)(loct[0].hour)+1, fp_clim);
                 }
-                if(strcmp(grid->site_id, "JAPANc")==0){
-                    f_open_japanc_clim(loct->phase, (short)climyr, (short)(loct->month)+1, (short)(loct->mday)+1, (short)(loct->hour)+1, fp_clim);
+                if(strcmp(grid[0].area_id, "JAPANc")==0){
+                    f_open_japanc_clim(loct[0].phase, (short)climyr, (short)(loct[0].month)+1, (short)(loct[0].mday)+1, (short)(loct[0].hour)+1, fp_clim);
                 }
-                if(strcmp(grid->site_id, "JAPANh")==0){
-                    f_open_japanh_clim(loct->phase, (short)climyr, (short)(loct->month)+1, (short)(loct->mday)+1, (short)(loct->hour)+1, fp_clim);
+                if(strcmp(grid[0].area_id, "JAPANh")==0){
+                    f_open_japanh_clim(loct[0].phase, (short)climyr, (short)(loct[0].month)+1, (short)(loct[0].mday)+1, (short)(loct[0].hour)+1, fp_clim);
                 }
-                if(strcmp(grid->site_id, "JAPANk")==0){
-                    f_open_japank_clim(loct->phase, (short)climyr, (short)(loct->month)+1, (short)(loct->mday)+1, (short)(loct->hour)+1, fp_clim);
-                }
-                if(strcmp(grid->site_id, "PAWCs")==0){
-                    f_open_pawcs_clim(loct->phase, (short)climyr, (short)(loct->month)+1, (short)(loct->mday)+1, (short)(loct->hour)+1, fp_clim);
+                if(strcmp(grid[0].area_id, "JAPANk")==0){
+                    f_open_japank_clim(loct[0].phase, (short)climyr, (short)(loct[0].month)+1, (short)(loct[0].mday)+1, (short)(loct[0].hour)+1, fp_clim);
                 }
 
                 /* read regional climate data ***********/
-                if(strcmp(grid[0].site_id, "GLOBAL")==0){
+                if(strcmp(grid[0].area_id, "GLOBAL")==0){
                     
                     /* precipitation */
                     fread(fdat, 4, WGRIDS, fp_clim[0]);
@@ -384,15 +395,15 @@ void f_spinup(
                     }
 
                     /* wind */
-                   fread(fdat, 4, WGRIDS, fp_clim[5]);
+                    fread(fdat, 4, WGRIDS, fp_clim[5]);
                     for(i=pstart; i<=pend; i++){
                         grid[i].wind_region = fdat[i];  /* u-wind at 10m, m/s */
                     }
                     fread(fdat, 4, WGRIDS, fp_clim[6]);
                     for(i=pstart; i<=pend; i++){
-                        grid[i].wind_region = sqrt(fdat[i]*fdat[i] + grid[i].wind_region*grid[i].wind_region);  /* v-wind at 10m, m/s */
+                        grid[i].wind_region = sqrt(fdat[i]*fdat[i] + grid[i].wind_region * grid[i].wind_region);  /* v-wind at 10m, m/s */
                     }
-                }else if(strcmp(grid[0].site_id, "BAMIYAN")==0){
+                }else if(strcmp(grid[0].area_id, "BAMIYAN")==0){
                     /* BAMIYAN: 2017/08/01 by A.Ito */
                     /* solar radiation */
                     fread(idat, 4, WGRIDS, fp_clim[1]);
@@ -426,7 +437,7 @@ void f_spinup(
                     }
                     
                     /* humidity */
-                    if(h==0){
+                    if(h == 0){
                         fread(fdat, 4, WGRIDS, fp_clim[3]);
                         for(i=pstart; i<=pend; i++){ 
                             grid[i].humd_region = fdat[i];	/* specific humidity, g/g */
@@ -434,7 +445,7 @@ void f_spinup(
                     }
                     
                     /* wind */
-                    if(h==0){
+                    if(h == 0){
                         /* fread(fdat, 4, WGRIDS, fp_clim[4]); */
                         fscanf(fp_clim[4],"%f", &rdata);
                         
@@ -445,7 +456,7 @@ void f_spinup(
                             grid[i].wind_region = rdata; /* wind at 10m, m/s */
                         }
                     }
-                }else if(strcmp(grid[0].site_id, "EASIA")==0){
+                }else if(strcmp(grid[0].area_id, "EASIA")==0){
                     fread(fdat, 4, WGRIDS, fp_clim[0]);
                     for(i=pstart; i<=pend; i++){
                         if(fdat[i] < 0.0){
@@ -469,9 +480,9 @@ void f_spinup(
                     for(i=pstart; i<=pend; i++){
                         grid[i].humd_region = fdat[i];  /* dew-point temperature, K */
                     }
-                }else if(strcmp(grid[0].site_id, "JAPAN")==0 || strcmp(grid[0].site_id, "BB")==0
-                        || strcmp(grid[0].site_id, "JAPANc")==0 || strcmp(grid[0].site_id, "JAPANh")==0
-                        || strcmp(grid[0].site_id, "JAPANk")==0 || strcmp(grid[0].site_id, "PAWCs")==0){
+                }else if(strcmp(grid[0].area_id, "JAPAN")==0 || strcmp(grid[0].area_id, "BB")==0
+                        || strcmp(grid[0].area_id, "JAPANc")==0 || strcmp(grid[0].area_id, "JAPANh")==0
+                        || strcmp(grid[0].area_id, "JAPANk")==0 || strcmp(grid[0].area_id, "PAWCs")==0){
                     fread(fdat, 4, NROW * NCOL, fp_clim[0]);
                     for(i=pstart; i<=pend; i++){
                         if(fdat[i] < 0.0){
@@ -514,15 +525,6 @@ void f_spinup(
                     }
                 }
                     
-                for(i=pstart; i<=pend; i++){ 
-                    loct2[i].adyear = loct->adyear;
-                    loct2[i].climy = loct->climy;
-                    loct2[i].doy = loct->doy;
-                    loct2[i].month = loct->month;
-                    loct2[i].mday = loct->mday;
-                    loct2[i].hour = loct->hour;
-                }
-                
                 if(e == 0){
                     for(i=pstart; i<=pend; i++){
                         grid[i].tmp2m_ann += (grid[i].tmax_region + grid[i].tmin_region)/2.0/(float)ndy/(float)DSTEP;
@@ -538,66 +540,64 @@ void f_spinup(
                 for(i=pstart; i<=pend; i++){
                     /* printf("%ld\n", i); */
                     
-                    /* ecophysiological parameter */
-                    if(WMODE == 2){
-                        echar2[i] = echar_type[grid[i].veg_type];
-                    }
-                    
-                    calc_flag = 1; 
+                    calc_flag = 1;
                     if(grid[i].flag_datavl!=1){
                         calc_flag = 0;
                     }else{ 	; }
                     if(grid[i].prec_region<-0.1 || grid[i].prec_region>1500.0){
                         calc_flag = 0;
-                        printf("P %d\n", grid[i].flag_datavl);
+                        printf("P %d %f\n", grid[i].flag_datavl, grid[i].prec_region);
                     }else{ ; }
                     if(grid[i].srad_region<-1.0 || grid[i].srad_region>2000.0){
                         calc_flag = 0;
-                        printf("R %d\n", grid[i].flag_datavl);
+                        printf("R %d %f\n", grid[i].flag_datavl, grid[i].srad_region);
                     }else{ ; }
                     if(grid[i].tmax_region<-90.0 || grid[i].tmax_region>90.0){
                         calc_flag = 0;
-                        printf("TX %d\n", grid[i].flag_datavl);
+                        printf("TX %d %f\n", grid[i].flag_datavl, grid[i].tmax_region);
                     }else{ ; }
                     if(grid[i].tmin_region<-90.0 || grid[i].tmin_region>90.0){
                         calc_flag = 0;
-                        printf("TN %d\n", grid[i].flag_datavl);
+                        printf("TN %d %f\n", grid[i].flag_datavl, grid[i].tmin_region);
                     }else{ ; }
                     if(grid[i].humd_region<-1.0 || grid[i].humd_region>100.0){
                         calc_flag = 0;
-                        printf("H %d\n", grid[i].flag_datavl);
+                        printf("H %d %f\n", grid[i].flag_datavl, grid[i].humd_region);
                     }else{ ; }
                     if(grid[i].wind_region<-120.0 || grid[i].wind_region>120.0){
                         calc_flag = 0;
-                        printf("W %d\n", grid[i].flag_datavl);
+                        printf("W %d %f\n", grid[i].flag_datavl, grid[i].wind_region);
                     }else{ ; } /* */
                     /*
                      if(calc_flag == 0) insufficient land data and no simulation 
                      */
 
                     grid[i].calc_flag = calc_flag;
+                    loct[i].CO2y = BYR; /* initial fixed */
 
                     if(calc_flag == 1 && (i+0)%RUNFAST==0){
                     //if(calc_flag == 1 && (i+0)%RUNFAST==0 && grid[i].veg_type ==2){
-                        
-                        loct2[i].CO2y = BYR; /* initial fixed */
                         grid[i].time++;
                                                         
+                        /* ecophysiological parameter */
+                        /* echar = &echar_type[grid[i].veg_type]; */
+
                         /*** set environmental condition ***/
-                        f_init_cond(&grid[i], &loct2[i], &echar2[i], &mass[i], &flux2[i]);
+                        f_init_cond(&grid[i], &loct[i], &echar[i], &mass[i], &flux[i]);
                         
                         /* if(nn==nn){
                             printf("Temp: %f %f %f\n", grid[i].tmax_region, grid[i].tmin_region, loct2[i].tmp_sfc);
                         } */
                         // printf("Q10: %d %f\n", grid[i].veg_type, (echar2[i].tree).qTf);
                         
-                        if(loct->adyear && f==0){
-                            flux->lue_conv = 0.0; 
-                            flux->lue_detr_1 = 0.0; 
-                            flux->lue_detr_10 = 0.0; 
-                            flux->lue_detr_100 = 0.0; 
-                            f_conv_landuse(&(grid[i]),loct);
-                            f_emit_landuse(&(grid[i]), loct, &(mass[i]), flux);
+                        /* land use */
+                        if(loct[i].adyear >=BYR && f==0){
+                            flux[i].lue_conv = 0.0;
+                            flux[i].lue_detr_1 = 0.0;
+                            flux[i].lue_detr_10 = 0.0;
+                            flux[i].lue_detr_100 = 0.0;
+                            f_conv_landuse(&(grid[i]), &(loct[i]));
+                            f_emit_landuse(&(grid[i]), &(loct[i]), &(mass[i]), &(flux[i]));
                         }
 
                         /* **** disturbance *****/
@@ -605,65 +605,65 @@ void f_spinup(
                         /* disturbance_regime(loct->adyear, &grid[i], &loct2[i], &mass[i], &flux2[i]);  */
                         
                         /* BAMIYAN grazing scenarios: 2017/09/03 by A.Ito */
-                        if(strcmp(grid[0].site_id, "BAMIYAN")==0){
-                            grazing_event(&(grid[i]), &(loct2[i]), &(mass[i]));
+                        if(strcmp(grid[0].area_id, "BAMIYAN")==0){
+                            grazing_event(&(grid[i]), &(loct[i]), &(mass[i]));
                         }
 
                         /* loct2[i].climy = BYR; */
                         
                         /* basic scheme ******************************************/
-                        f_daily_scheme(&grid[i], &loct2[i], &echar2[i], &mass[i], &flux2[i]);
+                        f_daily_scheme(&grid[i], &loct[i], &echar[i], &mass[i], &flux[i]);
                         
                         #if OUT_DAY==1		/* daily outputs */
                         /* CFSR run */
-                        outdat01[i] = flux2[i].gpp;
-                        outdat02[i] = flux2[i].er;
-                        outdat03[i] = flux2[i].nep;
-                        outdat04[i] = loct2[i].rn_eco;
+                        outdat01[i] = flux[i].gpp;
+                        outdat02[i] = flux[i].er;
+                        outdat03[i] = flux[i].nep;
+                        outdat04[i] = loct[i].rn_eco;
                         #endif
                         
                         /* cumulative parameters for SASU */
                         if(USE_SASU == 1 && sasu_flag == 1){
-                            (mass[i].soil).sasu_li_tf += (flux2[i].soil).li_tf;
-                            (mass[i].soil).sasu_li_tc += (flux2[i].soil).li_tc;
-                            (mass[i].soil).sasu_li_tr += (flux2[i].soil).li_tr;
+                            (mass[i].soil).sasu_li_tf += (flux[i].soil).li_tf;
+                            (mass[i].soil).sasu_li_tc += (flux[i].soil).li_tc;
+                            (mass[i].soil).sasu_li_tr += (flux[i].soil).li_tr;
                             
-                            (mass[i].soil).sasu_li_gf += (flux2[i].soil).li_gf;
-                            (mass[i].soil).sasu_li_gc += (flux2[i].soil).li_gc;
-                            (mass[i].soil).sasu_li_gr += (flux2[i].soil).li_gr;
+                            (mass[i].soil).sasu_li_gf += (flux[i].soil).li_gf;
+                            (mass[i].soil).sasu_li_gc += (flux[i].soil).li_gc;
+                            (mass[i].soil).sasu_li_gr += (flux[i].soil).li_gr;
                             
-                            (mass[i].soil).sasu_mr_tf += (echar2[i].soil).sr_lf/1000.0 / (double)DSTEP * (echar2[i].soil).f_tm_l;
-                            (mass[i].soil).sasu_mr_tc += (echar2[i].soil).sr_lc/1000.0 / (double)DSTEP * (echar2[i].soil).f_tm_l;
-                            (mass[i].soil).sasu_mr_tr += (echar2[i].soil).sr_lr/1000.0 / (double)DSTEP * (echar2[i].soil).f_tm_l;
+                            (mass[i].soil).sasu_mr_tf += (echar[0].soil).sr_lf/1000.0 / (double)DSTEP * (echar[0].soil).f_tm_l;
+                            (mass[i].soil).sasu_mr_tc += (echar[0].soil).sr_lc/1000.0 / (double)DSTEP * (echar[0].soil).f_tm_l;
+                            (mass[i].soil).sasu_mr_tr += (echar->soil).sr_lr/1000.0 / (double)DSTEP * (echar[0].soil).f_tm_l;
                             
-                            (mass[i].soil).sasu_mr_gf += (echar2[i].soil).sr_lf/1000.0 / (double)DSTEP * (echar2[i].soil).f_tm_l;
-                            (mass[i].soil).sasu_mr_gc += (echar2[i].soil).sr_lc/1000.0 / (double)DSTEP * (echar2[i].soil).f_tm_l;
-                            (mass[i].soil).sasu_mr_gr += (echar2[i].soil).sr_lr/1000.0 / (double)DSTEP * (echar2[i].soil).f_tm_l;
+                            (mass[i].soil).sasu_mr_gf += (echar[0].soil).sr_lf/1000.0 / (double)DSTEP * (echar[0].soil).f_tm_l;
+                            (mass[i].soil).sasu_mr_gc += (echar[0].soil).sr_lc/1000.0 / (double)DSTEP * (echar[0].soil).f_tm_l;
+                            (mass[i].soil).sasu_mr_gr += (echar[0].soil).sr_lr/1000.0 / (double)DSTEP * (echar[0].soil).f_tm_l;
 
-                            (mass[i].soil).sasu_hf_ha += (flux2[i].soil).hf_tfa + (flux2[i].soil).hf_tca + (flux2[i].soil).hf_tra +
-                                                        (flux2[i].soil).hf_gfa + (flux2[i].soil).hf_gca + (flux2[i].soil).hf_gra;
-                            (mass[i].soil).sasu_hf_hi += (flux2[i].soil).hf_tfi + (flux2[i].soil).hf_tci + (flux2[i].soil).hf_tri +
-                                                        (flux2[i].soil).hf_gfi + (flux2[i].soil).hf_gci + (flux2[i].soil).hf_gri;
-                            (mass[i].soil).sasu_hf_hp += (flux2[i].soil).hf_tfp + (flux2[i].soil).hf_tcp + (flux2[i].soil).hf_trp +
-                                                        (flux2[i].soil).hf_gfp + (flux2[i].soil).hf_gcp + (flux2[i].soil).hf_grp;
+                            (mass[i].soil).sasu_hf_ha += (flux[i].soil).hf_tfa + (flux[i].soil).hf_tca + (flux[i].soil).hf_tra +
+                                                        (flux[i].soil).hf_gfa + (flux[i].soil).hf_gca + (flux[i].soil).hf_gra;
+                            (mass[i].soil).sasu_hf_hi += (flux[i].soil).hf_tfi + (flux[i].soil).hf_tci + (flux[i].soil).hf_tri +
+                                                        (flux[i].soil).hf_gfi + (flux[i].soil).hf_gci + (flux[i].soil).hf_gri;
+                            (mass[i].soil).sasu_hf_hp += (flux[i].soil).hf_tfp + (flux[i].soil).hf_tcp + (flux[i].soil).hf_trp +
+                                                        (flux[i].soil).hf_gfp + (flux[i].soil).hf_gcp + (flux[i].soil).hf_grp;
 
-                            (mass[i].soil).sasu_mr_ha += (echar2[i].soil).sr_ha/1000.0 / (double)DSTEP * (echar2[i].soil).f_tm_h;
-                            (mass[i].soil).sasu_mr_hi += (echar2[i].soil).sr_hi/1000.0 / (double)DSTEP * (echar2[i].soil).f_tm_h;
-                            (mass[i].soil).sasu_mr_hp += (echar2[i].soil).sr_hp/1000.0 / (double)DSTEP * (echar2[i].soil).f_tm_h;
+                            (mass[i].soil).sasu_mr_ha += (echar[i].soil).sr_ha/1000.0 / (double)DSTEP * (echar[i].soil).f_tm_h;
+                            (mass[i].soil).sasu_mr_hi += (echar[i].soil).sr_hi/1000.0 / (double)DSTEP * (echar[i].soil).f_tm_h;
+                            (mass[i].soil).sasu_mr_hp += (echar[i].soil).sr_hp/1000.0 / (double)DSTEP * (echar[i].soil).f_tm_h;
                         }
 
-                        if(flux->npp > grid->npp_max){
-                            grid->npp_max = flux->npp;
+                        if(flux[i].npp > grid[i].npp_max){
+                            grid[i].npp_max = flux[i].npp;
                         }
-                        if(grid->npp_max < 1.0){
-                            grid->npp_max = 1.0;
+                        if(grid[i].npp_max < 1.0){
+                            grid[i].npp_max = 1.0;
                         }
                         
-                        loct->m_casa_pre = loct->m_casa;
-                        loct->vmc_pre = loct->vmc; /* */
+                        loct[i].m_casa_pre = loct[i].m_casa;
+                        loct[i].vmc_pre = loct[i].vmc; /* */
                     }else{
                         grid[i].calc_flag = 0;
-                        loct2[i].ppfd_h = 0.0;
+                        loct[i].ppfd_h = 0.0;
                     }
                     /* erosion */
                     /* f_erosion_rusle(&grid[i], &loct2[i], &mass[i], &flux2[i]); */
@@ -688,22 +688,22 @@ void f_spinup(
                     grid[i].n_clim += 1.0;
                     grid[i].tmp_clim += (grid[i].tmax_region + grid[i].tmin_region)/2.0/grid[i].n_clim;
                     grid[i].prec_clim += 365.0 * grid[i].prec_region/grid[i].n_clim;
-                    grid[i].aet_clim += 365.0 * loct2[i].aet/grid[i].n_clim;
-                    grid[i].pet_clim += 365.0 * loct2[i].pet/grid[i].n_clim;
+                    grid[i].aet_clim += 365.0 * loct[i].aet / grid[i].n_clim;
+                    grid[i].pet_clim += 365.0 * loct[i].pet / grid[i].n_clim;
                
                     if(grid[i].calc_flag == 1){
                         nn += 1.0;
-                        gpp_a += (flux2[i].tree).gpp + loct2[i].funder_c3 * (flux2[i].c3).gpp + loct2[i].funder_c4 * (flux2[i].c4).gpp;
-                        npp_a += (flux2[i].tree).npp + loct2[i].funder_c3 * (flux2[i].c3).npp + loct2[i].funder_c4 * (flux2[i].c4).npp;
-                        nep_a += flux2[i].nep;
-                        lai_a += ((mass[i].tree).lai + loct2[i].funder_c3 * (mass[i].c3).lai +
-                                  loct2[i].funder_c4 * (mass[i].c4).lai);
-                        plant_a += ((mass[i].tree).plant + loct2[i].funder_c3 * (mass[i].c3).plant +
-                                    loct2[i].funder_c4 * (mass[i].c4).plant); /* */
+                        gpp_a += (flux[i].tree).gpp + loct[i].funder_c3 * (flux[i].c3).gpp + loct[i].funder_c4 * (flux[i].c4).gpp;
+                        npp_a += (flux[i].tree).npp + loct[i].funder_c3 * (flux[i].c3).npp + loct[i].funder_c4 * (flux[i].c4).npp;
+                        nep_a += flux[i].nep;
+                        lai_a += ((mass[i].tree).lai + loct[i].funder_c3 * (mass[i].c3).lai +
+                                  loct[i].funder_c4 * (mass[i].c4).lai);
+                        plant_a += ((mass[i].tree).plant + loct[i].funder_c3 * (mass[i].c3).plant +
+                                    loct[i].funder_c4 * (mass[i].c4).plant); /* */
                         //plant_a += ((mass[i].tree).plant);
                         soil_a += (mass[i].soil).soil;
                         
-                        ch4_a += (flux2[i].soil).ch4_wh;
+                        ch4_a += (flux[i].soil).ch4_wh;
                         
                         /* for debugging: 2011/05/18 by A.Ito */
                         if((mass[i].soil).soil>=0.0 && (mass[i].soil).soil<=1000.0){
@@ -714,24 +714,24 @@ void f_spinup(
                             fprintf(fp_error,"\n");
                         }
                         
-                        xx[0] += loct2[i].tmp_2m;
-                        xx[1] += loct2[i].tmp_sfc;
+                        xx[0] += loct[i].tmp_2m;
+                        xx[1] += loct[i].tmp_sfc;
                         //xx[2] += loct2[i].vpd;
-                        xx[2] += loct2[i].dswrf_sfc;
-                        xx[3] += loct2[i].ppfd_h;
-                        xx[4] += (echar2[i].c3).psat;
+                        xx[2] += loct[i].dswrf_sfc;
+                        xx[3] += loct[i].ppfd_h;
+                        //xx[4] += (echar2[i].c3).psat;
                         xx[5] += (mass[i].c3).gdd;
-                        xx[6] += loct2[i].soilwtr_l;
-                        xx[7] += loct2[i].soilwtr_h;
-                        xx[8] += loct2[i].aet;
-                        xx[9] += loct2[i].ro2;
+                        xx[6] += loct[i].soilwtr_l;
+                        xx[7] += loct[i].soilwtr_h;
+                        xx[8] += loct[i].aet;
+                        xx[9] += loct[i].ro2;
 
-                        xx[10] += loct2[i].rn_eco;
+                        xx[10] += loct[i].rn_eco;
                         xx[11] += (mass[i].tree).lai;
                         xx[12] += (mass[i].c3).lai;
                         xx[13] += (mass[i].c4).lai;
-                        xx[14] += loct2[i].evpr;
-                        xx[15] += loct2[i].trnsp;
+                        xx[14] += loct[i].evpr;
+                        xx[15] += loct[i].trnsp;
                         
                         if(e>=1){
                            /* LAI max constrained by Iio et al. (2014): 2016/08/15 by A.Ito */
@@ -753,21 +753,21 @@ void f_spinup(
                             if(ll>1.0 && ll<12.0){
                                 ;
                             }else{
-                                if(ll<=1.0){
+                                if(ll <= 1.0){
                                     ll = 1.0;
-                                }else if(ll>=12.0){
+                                }else if(ll >= 12.0){
                                     ll = 12.0;
                                 }else{
                                     ;
                                 }
                             }
                             
-                            loct2[i].laimax_meta = ll;
+                            loct[i].laimax_meta = ll;
                         }else{
-                            loct2[i].laimax_meta = 3.0;
+                            loct[i].laimax_meta = 3.0;
                         }
                         
-                        xx[7] += loct2[i].laimax_meta;
+                        xx[7] += loct[i].laimax_meta;
                         
                         //xx[0] += loct2[i].tmp_2m;
                         //xx[0] += (echar2[i].tree).opt_lai;
@@ -781,15 +781,15 @@ void f_spinup(
                         //xx[6] += (mass[i].tree).lai;
                         //xx[7] += (mass[i].tree).plant;
                         
-                        gpp_ga += grid[i].area * ((flux2[i].tree).gpp + loct2[i].funder_c3 * (flux2[i].c3).gpp + loct2[i].funder_c4 * (flux2[i].c4).gpp) / 1000000.0;
-                        npp_ga += grid[i].area * ((flux2[i].tree).npp + loct2[i].funder_c3 * (flux2[i].c3).npp + loct2[i].funder_c4 * (flux2[i].c4).npp) / 1000000.0;
-                        nep_ga += grid[i].area * flux2[i].nep / 1000000.0;
-                        plant_ga += grid[i].area * ((mass[i].tree).plant + loct2[i].funder_c3 * (mass[i].c3).plant +
-                                    loct2[i].funder_c4 * (mass[i].c4).plant) / (float)(DSTEP*ndy) / 1000000.0;
+                        gpp_ga += grid[i].area * ((flux[i].tree).gpp + loct[i].funder_c3 * (flux[i].c3).gpp + loct[i].funder_c4 * (flux[i].c4).gpp) / 1000000.0;
+                        npp_ga += grid[i].area * ((flux[i].tree).npp + loct[i].funder_c3 * (flux[i].c3).npp + loct[i].funder_c4 * (flux[i].c4).npp) / 1000000.0;
+                        nep_ga += grid[i].area * flux[i].nep / 1000000.0;
+                        plant_ga += grid[i].area * ((mass[i].tree).plant + loct[i].funder_c3 * (mass[i].c3).plant +
+                                    loct[i].funder_c4 * (mass[i].c4).plant) / (float)(DSTEP*ndy) / 1000000.0;
                         soil_ga += grid[i].area * (mass[i].soil).soil / (float)(DSTEP*ndy) / 1000000.0;
                     }
                     #if OUT_DAY==1
-                    outdat04[i] = loct2[i].ppfd_h;
+                    outdat04[i] = loct[i].ppfd_h;
                     #endif
                 }
                 printf("%8.4f %8.4f %8.4f : %10.2f %10.2f %10.2f: %10.3f: ",
@@ -816,9 +816,9 @@ void f_spinup(
                 }
                 #endif
 
-                if(strcmp(grid[0].site_id, "JAPAN")==0 || strcmp(grid[0].site_id, "BB")==0
-                        || strcmp(grid[0].site_id, "JAPANc")==0 || strcmp(grid[0].site_id, "JAPANh")==0
-                        || strcmp(grid[0].site_id, "JAPANk")==0){
+                if(strcmp(grid[0].area_id, "JAPAN")==0 || strcmp(grid[0].area_id, "BB")==0
+                        || strcmp(grid[0].area_id, "JAPANc")==0 || strcmp(grid[0].area_id, "JAPANh")==0
+                        || strcmp(grid[0].area_id, "JAPANk")==0){
                     fclose(fp_clim[0]);
                     fclose(fp_clim[1]);
                     fclose(fp_clim[2]);
@@ -826,31 +826,24 @@ void f_spinup(
                     fclose(fp_clim[4]);
                 }
             }
-            if(strcmp(grid[0].site_id, "PAWCs")==0 && loct->mday==(month_day[loct->month]-1) && loct->hour==(DSTEP-1)){
-                fclose(fp_clim[0]);
-                fclose(fp_clim[1]);
-                fclose(fp_clim[2]);
-                fclose(fp_clim[3]);
-                fclose(fp_clim[4]);
-            }
 
             j = 0;
-            switch(loct->month){
-                case 0: if(loct->mday==30){ j = 1; } break;
-                case 1: if( (climyr%4 != 0 && loct->mday==27) || (climyr%4 == 0 && loct->mday==28) ){ j = 1; } break;
-                case 2: if(loct->mday==30){ j = 1; } break;
-                case 3: if(loct->mday==29){ j = 1; } break;
-                case 4: if(loct->mday==30){ j = 1; } break;
-                case 5: if(loct->mday==29){ j = 1; } break;
-                case 6: if(loct->mday==30){ j = 1; } break;
-                case 7: if(loct->mday==30){ j = 1; } break;
-                case 8: if(loct->mday==29){ j = 1; } break;
-                case 9: if(loct->mday==30){ j = 1; } break;
-                case 10: if(loct->mday==29){ j = 1; } break;
-                case 11: if(loct->mday==30){ j = 1; } break;
+            switch(loct[0].month){
+                case 0: if(loct[0].mday==30){ j = 1; } break;
+                case 1: if( (climyr%4 != 0 && loct[0].mday==27) || (climyr%4 == 0 && loct[0].mday==28) ){ j = 1; } break;
+                case 2: if(loct[0].mday==30){ j = 1; } break;
+                case 3: if(loct[0].mday==29){ j = 1; } break;
+                case 4: if(loct[0].mday==30){ j = 1; } break;
+                case 5: if(loct[0].mday==29){ j = 1; } break;
+                case 6: if(loct[0].mday==30){ j = 1; } break;
+                case 7: if(loct[0].mday==30){ j = 1; } break;
+                case 8: if(loct[0].mday==29){ j = 1; } break;
+                case 9: if(loct[0].mday==30){ j = 1; } break;
+                case 10: if(loct[0].mday==29){ j = 1; } break;
+                case 11: if(loct[0].mday==30){ j = 1; } break;
             }
             
-            if(j == 1 && (strcmp(grid[0].site_id, "EASIA")==0)){
+            if(j == 1 && (strcmp(grid[0].area_id, "EASIA")==0 || strcmp(grid[0].area_id, "PAWCs")==0)){
                 fclose(fp_clim[0]);
                 fclose(fp_clim[1]);
                 fclose(fp_clim[2]);
@@ -858,7 +851,7 @@ void f_spinup(
                 fclose(fp_clim[4]);
             }
             
-            if(j == 1 && (strcmp(grid[0].site_id, "GLOBAL")==0)){
+            if(j == 1 && (strcmp(grid[0].area_id, "GLOBAL")==0)){
                 fclose(fp_clim[0]);
                 fclose(fp_clim[1]);
                 fclose(fp_clim[2]);
@@ -871,9 +864,9 @@ void f_spinup(
             mm += 1.0;
         }
         
-        printf("ANNUAL %ld %f %f %f %f %f\n",loct->adyear, gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga);
+        printf("ANNUAL %ld %f %f %f %f %f\n",loct[0].adyear, gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga);
         
-        if(strcmp(grid[0].site_id, "BAMIYAN")==0){
+        if(strcmp(grid[0].area_id, "BAMIYAN")==0){
             fclose(fp_clim[0]);
             fclose(fp_clim[1]);
             fclose(fp_clim[2]);
@@ -933,15 +926,10 @@ void f_spinup(
     
     for(f=0;f<NCOL*NROW;f++){
         fwrite(&grid[f], sizeof(grid0), 1, fp_ss_grid);
-        fwrite(&loct2[f], sizeof(loct0), 1, fp_ss_loct);
+        fwrite(&loct[f], sizeof(loct0), 1, fp_ss_loct);
         fwrite(&mass[f], sizeof(mass0), 1, fp_ss_mass);
-        fwrite(&flux2[f], sizeof(flux0), 1, fp_ss_flux);
-        fwrite(&echar2[f], sizeof(echar0), 1, fp_ss_echar);
-        //fwrite(&grid[f], sizeof(&grid[f]), 1, fp_ss_grid);
-        //fwrite(&loct2[f], sizeof(&loct2[f]), 1, fp_ss_loct);
-        //fwrite(&mass[f], sizeof(&mass[f]), 1, fp_ss_mass);
-        //fwrite(&flux2[f], sizeof(&flux2[f]), 1, fp_ss_flux);
-        //fwrite(&echar2[f], sizeof(&echar2[f]), 1, fp_ss_echar);
+        fwrite(&flux[f], sizeof(flux0), 1, fp_ss_flux);
+        fwrite(&echar[f], sizeof(echar0), 1, fp_ss_echar);
     }
 
 	if(NOTICE==1){

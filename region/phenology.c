@@ -26,7 +26,7 @@ void growthperiod(
 	struct Pchar *pchar,
 	struct Pmas *mass
 ){
-	/** cumulative temperature, growing degree days (GDD) *******/	
+	/* cumulative temperature, growing degree days (GDD) *******/
 	if(loct->tair_dayav > pchar->ctmp_lfdsp){
 		mass->gdd += (loct->tair_dayav - pchar->ctmp_lfdsp);
 	}
@@ -62,13 +62,13 @@ void growthperiod(
 		mass->cdd = 0.0;
 	}
 	
-	/** growing period length, days **/
+	/* growing period length, days **/
 	if(loct->doy==0) mass->grwpd = 0.0;
 	if(loct->tair_dayav > 0.0){
 		mass->grwpd += 1.0;
 	}
 
-	/** phenology scheme *********************************/
+	/* phenology scheme *********************************/
 	switch(pchar->phenoltype){
 		case 0:
 			/* no vegetation, bareland */
@@ -97,7 +97,7 @@ void phenology_bareland(
 	mass->day_frush = 0;
 }
 
-/* evergreen biomes **********************************/
+/* evergreen biomes ****************************************/
 void phenology_evergreen(
 	struct Grid *grid, 
 	struct Loct *loct, 
@@ -115,7 +115,7 @@ void phenology_evergreen(
 	}
 }
 
-/* deciduous biomes in higher latitudes *************/
+/* deciduous biomes in higher latitudes *******************/
 void phenology_colddeciduous(
 	struct Grid *grid, 
 	struct Loct *loct, 

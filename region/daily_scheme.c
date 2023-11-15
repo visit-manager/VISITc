@@ -190,7 +190,7 @@ void f_daily_scheme(
 		
 		/* CH4 emission by Walter & Heimann (2000) */
 		if(WH_CH4 == 1){	/* wetland */
-			if(strcmp(grid->site_id, "MSE")==0){
+			if(strcmp(grid->area_id, "MSE")==0){
 				loct->water_table_depth = -paddy_wtd[loct->doy]/100.0;
 			}else{
 				/* loct->water_table_depth = 0.2; */

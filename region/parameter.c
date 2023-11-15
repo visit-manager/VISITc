@@ -796,17 +796,17 @@ void set_parameter(
 	for(f=0;f<NBIOME;f++){
 		if( ((echar[f].soil).f_hm_a+(echar[f].soil).f_hm_i+(echar[f].soil).f_hm_p)<0.95 ||
 		 ((echar[f].soil).f_hm_a+(echar[f].soil).f_hm_i+(echar[f].soil).f_hm_p)>1.05){
-			printf("Warning: soil humification imbalance: %f\n", 
+			printf("Warning: soil humification imbalance: %ld %f\n", f,
 				(echar[f].soil).f_hm_a+(echar[f].soil).f_hm_i+(echar[f].soil).f_hm_p);
 		}
 	
-		(echar[f].soil).ntrcon_max=		0.0001;
+		(echar[f].soil).ntrcon_max = 0.0001;
 	}
 	
 	/* check */
 	for(f=0;f<NBIOME;f++){
 		fscanf(fp_parameter, "%f", &in_dat);
-		if((long)in_dat!=9999999){
+		if((long)in_dat != 9999999){
 			printf("!! ERROR: WRONG PARAMETER FILE !!\n");
 			exit(1);
 		}

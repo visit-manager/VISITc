@@ -26,7 +26,7 @@ extern long WGRIDS;
 extern long YLDIST;
 extern long SPUPT;
 
-/*************************************************/
+/* ************************************************/
 void f_setting(
 	struct Grid *grid
 ){
@@ -75,9 +75,9 @@ void f_setting(
 			/* site ID */
 			fscanf(fp_set,"%s", &varread);
 			if(strcmp(varread, ssite)==0){
-				fscanf(fp_set,"%s", &grid->site_id);
+				fscanf(fp_set,"%s", &grid->area_id);
 			}
-			printf("Site ID: %s\n", grid->site_id);
+			printf("Site ID: %s\n", grid->area_id);
 			
 			/* last disturbance year */
 			fscanf(fp_set,"%s", &varread);
@@ -112,10 +112,10 @@ void f_setting(
 			/* region ID */
 			fscanf(fp_set,"%s", &varread);
 			if(strcmp(varread, sregion)==0){
-				fscanf(fp_set,"%s", &grid->site_id);
+				fscanf(fp_set,"%s", &grid->area_id);
 			}
-			printf("Region ID: %s\n", grid->site_id);
-			/* strcpy(grid->site_id, "AsiaMIP"); */
+			printf("Region ID: %s\n", grid->area_id);
+			/* strcpy(grid->area_id, "AsiaMIP"); */
 
 			/* study area: number of grids */
 			fscanf(fp_set,"%s", &varread);

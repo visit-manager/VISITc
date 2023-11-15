@@ -20,8 +20,8 @@
 
 /* ERA5: 2021/03/30 by A.Ito */
 /* ERA5: 2023/10/20 by A.Ito */
-#define NROW 720
-#define NCOL 1440
+//#define NROW 720
+//#define NCOL 1440
 
 /* CFSR: 2012/01/02 by A.Ito */
 //#define NROW 576
@@ -48,17 +48,17 @@
 //#define NCOL 300
 
 /* PAWCs center: 2023/06/13 by A.Ito */
-//#define NROW 200
-//#define NCOL 1490
+#define NROW 200
+#define NCOL 1490
 
 
 
-/* experimental period ********/
+/* experimental period ***********************/
 
 /* ERA5: 2021/03/30 by A.Ito */
 /* ERA5: 2023/10/20 by A.Ito */
-#define BYR 2019
-#define EYR 2021
+//#define BYR 2019
+//#define EYR 2021
 
 /* CFSR: 2012/01/02 by A.Ito */
 //#define BYR 1979
@@ -80,11 +80,12 @@
 //#define EYR 2020
 
 /* PAWCs: 2023/06/13 by A.Ito */
-//#define BYR 2003
-//#define EYR 2020
+#define BYR 2003
+#define EYR 2020
 
 #define PERIOD (EYR-BYR+1)
 
+/* ******************************************/
 /* cauculate only every Nth grids */
 #define RUNFAST 1
 /* 1: every grid */
@@ -97,7 +98,7 @@
 /* leap-year: 2017/08/15 by A.Ito */
 #define LEAP_YR 0
 
-/**********************************************************/
+/* **********************************************/
 /* number of MAX biomes */
 #define MAX_BIOME 128
 /* number of analysis variables */
@@ -119,7 +120,7 @@
 /* 0: no */
 /* 1: on */
 
-/* output daily results **********************************/
+/* output daily results **************************/
 #define OUT_DAY 1
 
 /* nitrogen cycle scheme */
@@ -137,7 +138,7 @@
 /* 0: no use */
 /* 1: use */
 
-/***************************************************/
+/* *********************************************/
 /* solve equilibrium leaf gas exchange */
 #define SOLV_LEAF 0
 /* 0: Discrete Newton */
@@ -227,7 +228,7 @@
 /* 4: -3% grazing */
 /* 5: -4% grazing */
 
-/********************************************************/
+/* **********************************************/
 /** initial mass, Mg C ha-1 **/
 #define INIT_C 1.0
 #define INIT_N 0.1

@@ -31,28 +31,28 @@ void f_create_dfile_global(
     snprintf(num, 8, "%04d", year);
 
     if(phase==1){
-        strcpy(filename, grid->site_id);
+        strcpy(filename, grid->area_id);
         strcat(filename, "_su_V01_");
         strcat(filename, num);
         strcat(filename, grid->file_name);
         strcat(filename, ".flt");
         fp_out[1] = fopen(filename,"wb");
         
-        strcpy(filename, grid->site_id);
+        strcpy(filename, grid->area_id);
         strcat(filename, "_su_V02_");
         strcat(filename, num);
         strcat(filename, grid->file_name);
         strcat(filename, ".flt");
         fp_out[2] = fopen(filename,"wb");
         
-        strcpy(filename, grid->site_id);
+        strcpy(filename, grid->area_id);
         strcat(filename, "_su_V03_");
         strcat(filename, num);
         strcat(filename, grid->file_name);
         strcat(filename, ".flt");
         fp_out[3] = fopen(filename,"wb");
         
-        strcpy(filename, grid->site_id);
+        strcpy(filename, grid->area_id);
         strcat(filename, "_su_V04_");
         strcat(filename, num);
         strcat(filename, grid->file_name);
@@ -60,7 +60,7 @@ void f_create_dfile_global(
         fp_out[4] = fopen(filename,"wb");
 
     }else if(phase==2){
-        strcpy(filename, grid->site_id);
+        strcpy(filename, grid->area_id);
         //strcat(filename, "_gddt_");
         strcat(filename, "_V01_");
         strcat(filename, num);
@@ -68,7 +68,7 @@ void f_create_dfile_global(
         strcat(filename, ".flt");
         fp_out[1] = fopen(filename,"wb");
         
-        strcpy(filename, grid->site_id);
+        strcpy(filename, grid->area_id);
         //strcat(filename, "_lait_");
         strcat(filename, "_V02_");
         strcat(filename, num);
@@ -76,7 +76,7 @@ void f_create_dfile_global(
         strcat(filename, ".flt");
         fp_out[2] = fopen(filename,"wb");
         
-        strcpy(filename, grid->site_id);
+        strcpy(filename, grid->area_id);
         //strcat(filename, "_ssnt_");
         strcat(filename, "_V03_");
         strcat(filename, num);
@@ -84,7 +84,7 @@ void f_create_dfile_global(
         strcat(filename, ".flt");
         fp_out[3] = fopen(filename,"wb");
         
-        strcpy(filename, grid->site_id);
+        strcpy(filename, grid->area_id);
         //strcat(filename, "_tairav_");
         strcat(filename, "_V04_");
         strcat(filename, num);
@@ -107,28 +107,28 @@ void f_create_dfile_bamiyan(
     snprintf(num, 8, "%04d", year);
 
     if(phase==1){
-        strcpy(filename, grid->site_id);
+        strcpy(filename, grid->area_id);
         strcat(filename, "_su_V01_");
         strcat(filename, num);
         strcat(filename, grid->file_name);
         strcat(filename, ".flt");
         fp_out[1] = fopen(filename,"wb");
         
-        strcpy(filename, grid->site_id);
+        strcpy(filename, grid->area_id);
         strcat(filename, "_su_V02_");
         strcat(filename, num);
         strcat(filename, grid->file_name);
         strcat(filename, ".flt");
         fp_out[2] = fopen(filename,"wb");
         
-        strcpy(filename, grid->site_id);
+        strcpy(filename, grid->area_id);
         strcat(filename, "_su_V03_");
         strcat(filename, num);
         strcat(filename, grid->file_name);
         strcat(filename, ".flt");
         fp_out[3] = fopen(filename,"wb");
         
-        strcpy(filename, grid->site_id);
+        strcpy(filename, grid->area_id);
         strcat(filename, "_su_V04_");
         strcat(filename, num);
         strcat(filename, grid->file_name);
@@ -136,7 +136,7 @@ void f_create_dfile_bamiyan(
         fp_out[4] = fopen(filename,"wb");
 
     }else if(phase==2){
-        strcpy(filename, grid->site_id);
+        strcpy(filename, grid->area_id);
         //strcat(filename, "_gddt_");
         strcat(filename, "_V01_");
         strcat(filename, num);
@@ -144,7 +144,7 @@ void f_create_dfile_bamiyan(
         strcat(filename, ".flt");
         fp_out[1] = fopen(filename,"wb");
         
-        strcpy(filename, grid->site_id);
+        strcpy(filename, grid->area_id);
         //strcat(filename, "_lait_");
         strcat(filename, "_V02_");
         strcat(filename, num);
@@ -152,7 +152,7 @@ void f_create_dfile_bamiyan(
         strcat(filename, ".flt");
         fp_out[2] = fopen(filename,"wb");
         
-        strcpy(filename, grid->site_id);
+        strcpy(filename, grid->area_id);
         //strcat(filename, "_ssnt_");
         strcat(filename, "_V03_");
         strcat(filename, num);
@@ -160,7 +160,7 @@ void f_create_dfile_bamiyan(
         strcat(filename, ".flt");
         fp_out[3] = fopen(filename,"wb");
         
-        strcpy(filename, grid->site_id);
+        strcpy(filename, grid->area_id);
         //strcat(filename, "_tairav_");
         strcat(filename, "_V04_");
         strcat(filename, num);

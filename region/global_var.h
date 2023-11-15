@@ -9,9 +9,9 @@
 		create: 2009 / 06 / 15 by Akihiko Ito
 */
 
-/*********************************/
+/* ********************************/
 /* declaration of structures	*/
-/*********************************/
+/* ********************************/
 
 /* configuration */
 long WMODE;				/* working mode, site or region */
@@ -22,16 +22,6 @@ long NBIOME;            /* number of biomes */
 
 /* climatology: *_d[] means the time-series during 1948 to 2005 */	
 long	month_day[12];
-float	tmp_sfc_d[PERIOD][366];		/* ground surface temperature, degree Celcius */
-float	tmp_2m_d[PERIOD][366];		/* 2m air temperature, degree Celcius */
-float	tmp10_soil_d[PERIOD][366];	/* soil temperature at 10 cm depth, degree Celcius */
-float	tmp200_soil_d[PERIOD][366];	/* soil temperature at 200 cm depth, degree Celcius */
-float	dswrf_sfc_d[PERIOD][366];	/* downward shortwave radiation at the surface, W m-2 */
-float	tcdc_clm_d[PERIOD][366];	/* total cloudiness, fraction */
-float	prate_sfc_d[PERIOD][366];	/* precipitation, mm mon-1 */
-float	spfh_2m_d[PERIOD][366];		/* specific humidity, kg kg-1 */
-float	wind_10m_d[PERIOD][366];	/* wind velocity, m s-1 */
-float	vpd_d[PERIOD][366]; 		/* VPD, hPa */
 
 float	tmp_2m_ncep_dav[366];		/* 2m air temperature, degree Celcius */
 float	prate_sfc_ncep_mav[12];		/* precipitation, mm mon-1 */
@@ -68,16 +58,13 @@ float		atm_n2o_b2[553];	/* SRES B2 */
 
 /* global variables */
 /* structures */
-struct Grid grid[NROW * NCOL];
-struct Mass mass[NROW * NCOL];
-struct Loct loct;
-struct Echar echar;
-struct Flux flux;
+struct Grid grid2[NROW * NCOL];
+struct Mass mass2[NROW * NCOL];
+struct Loct loct2[NROW * NCOL];
+struct Echar echar2[NROW * NCOL];
+struct Flux flux2[NROW * NCOL];
 struct Echar echar_type[MAX_BIOME];		/* default parameters */
 
-struct Loct loct2[NROW*NCOL];
-struct Echar echar2[NROW*NCOL];
-struct Flux flux2[NROW*NCOL];
 
 float fdat[NROW * NCOL], fdatc[NROW * NCOL];
 unsigned char cdat[NROW * NCOL];
@@ -91,5 +78,3 @@ float outdat04[NROW*NCOL];
 #endif
 
 float out_a[N_ANNRES][NROW*NCOL];
-
-

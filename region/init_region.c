@@ -22,16 +22,6 @@
 #include"prototype.h"
 
 /* climatology: *_d[] means the time-series during 1948 to 2004- */
-extern float dswrf_sfc_d[PERIOD][366];        /* downward shortwave radiation at the surface, W m-2 */
-extern float tcdc_clm_d[PERIOD][366];        /* total cloudiness, fraction */
-extern float tmp_2m_d[PERIOD][366];         /* 2m air temperature, degree Celcius */
-extern float tmp_sfc_d[PERIOD][366];        /* ground surface temperature, degree Celcius */
-extern float tmp10_soil_d[PERIOD][366];     /* soil temperature at 10 cm depth, degree Celcius */
-extern float tmp200_soil_d[PERIOD][366];    /* soil temperature at 200 cm depth, degree Celcius */
-extern float spfh_2m_d[PERIOD][366];        /* specific humidity, kg kg-1 */
-extern float prate_sfc_d[PERIOD][366];        /* precipitation, mm mon-1 */
-extern float wind_10m_d[PERIOD][366];        /* u-wind velocity, m s-1 */
-extern float vpd_d[PERIOD][366];            /* VPD, hPa */
 extern float tmp_2m_ncep_dav[366];            /* 2m air temperature, degree Celcius */
 extern float prate_sfc_ncep_mav[12];        /* precipitation, mm mon-1 */
 extern long    month_day[12];
@@ -74,7 +64,6 @@ void f_init_global_run(
  
     /* grid area */
     for(i=0; i<NROW; i++){
-    
         garea = grid_area(90.0 - ((float)(i/NCOL)) * (180.0 / (float)NROW), 90.0 - ((float)(i/NCOL) + 1.0) * (180.0 / (float)NROW),  0.0, 360.0/(double)NCOL);
         
         for(j=0;j<NCOL;j++){
@@ -127,7 +116,6 @@ void f_init_global_run(
         printf(" Reading ./data/global_synmap_qd.flt...");
     }
     for(i=0; i<WGRIDS; i++){
-
         grid[i].veg_type = (short)fdat[i];
         
         /*  veg type by MOD12
@@ -304,7 +292,7 @@ void f_init_global_run(
         printf(" Reading global_hwsd_soilmap_tclay_qd.flt...");
     }
     for(i=0; i<WGRIDS; i++){
-        //grid[i].clay_frac = fdat[i]/100.0;
+        grid[i].clay_frac = fdat[i]/100.0;
     }
     fclose(fp_dat);
     if(NOTICE==1){
@@ -321,7 +309,7 @@ void f_init_global_run(
         printf(" Reading global_hwsd_soilmap_tsand_qd.flt...");
     }
     for(i=0; i<WGRIDS; i++){
-        //grid[i].sand_frac = fdat[i]/100.0;
+        grid[i].sand_frac = fdat[i]/100.0;
     }
     fclose(fp_dat);
     if(NOTICE==1){
@@ -336,7 +324,7 @@ void f_init_global_run(
         }
 
         if(grid[i].veg_type < 0 || grid[i].veg_type > 15){
-            printf("%ld %ld %ld\n", i,grid[i].veg_type,grid[i].flag_datavl);
+            printf("%ld %d %d\n", i,grid[i].veg_type,grid[i].flag_datavl);
         }
     }
     
@@ -2747,7 +2735,7 @@ void f_init_japank_run(
         exit (1);
     }
     fread(fdat, sizeof(float), WGRIDS, fp_dat);
-    if(NOTICE==1){
+    if(NOTICE == 1){
         printf(" Reading ./data/japank_srtm_hm.flt...");
     }
     for(i=0; i<WGRIDS; i++){
@@ -2764,7 +2752,7 @@ void f_init_japank_run(
         exit (1);
     }
     fread(fdat, sizeof(float), WGRIDS, fp_dat);
-    if(NOTICE==1){
+    if(NOTICE == 1){
         printf(" Reading ./data/japank_synmap_hm.flt...");
     }
     for(i=0; i<WGRIDS; i++){
@@ -2909,7 +2897,7 @@ void f_init_japank_run(
         } */
         
         /* ****************************************** for control: 2009/04/05 *****/
-        if(grid[i].veg_type!=0){
+        if(grid[i].veg_type != 0){
             /* grid[i].veg_type = 2;*/
         }
     }

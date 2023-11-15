@@ -21,21 +21,12 @@
 #include"prototype.h"
 
 /* climatology: *_d[] means the time-series during 1948 to 2007- */	
-extern float tmp_sfc_d[PERIOD][366];		/* ground surface temperature, degree Celcius */
-extern float tmp_2m_d[PERIOD][366];			/* 2m air temperature, degree Celcius */
-extern float tmp10_soil_d[PERIOD][366];		/* soil temperature at 10 cm depth, degree Celcius */
-extern float tmp200_soil_d[PERIOD][366];	/* soil temperature at 200 cm depth, degree Celcius */
-extern float dswrf_sfc_d[PERIOD][366];		/* downward shortwave radiation at the surface, W m-2 */
-extern float tcdc_clm_d[PERIOD][366];		/* total cloudiness, fraction */
-extern float prate_sfc_d[PERIOD][366];		/* precipitation, mm mon-1 */
-extern float spfh_2m_d[PERIOD][366];		/* specific humidity, kg kg-1 */
-extern float wind_10m_d[PERIOD][366];		/* u-wind velocity, m s-1 */
-extern float vpd_d[PERIOD][366];			/* VPD, hPa */
 extern float paddy_wtd[366];
 
 extern long	month_day[12];
 extern long	WMODE;
 extern long	WGRIDS;
+extern struct Echar echar_type[MAX_BIOME];
 
 /* GHG scenario ***************************************/
 /* source: http://crga.atmos.uiuc.edu/research/post-sres.html
@@ -59,14 +50,13 @@ extern float		atm_n2o_b2[553];	/* SRES B2 */
 /* *****************************************************************************/
 void f_initialize(
 	struct Grid grid[], 
-	struct Loct *loct, 
-	struct Echar *echar, 
-	struct Echar echar_type[MAX_BIOME], 
-	struct Mass mass[], 
-	struct Flux *flux, 
+	struct Loct loct[],
+	struct Echar echar[],
+	struct Mass mass[],
+	struct Flux flux[],
 	FILE *fp_r[N_OFILE]
 ){
-	char filename[100];
+	char filename[128];
 	long h, i, yr, day;
 	FILE *fp_ghg, *fp_wtd;
 	
@@ -84,7 +74,7 @@ void f_initialize(
 	month_day[10] = 30;	/* November */
 	month_day[11] = 31;	/* December */
 
-	/******************************************************************/	
+	/* *****************************************************************/	
 	for(i=0; i<WGRIDS; i++){
 		grid[i] = grid[0];
 	}
@@ -95,13 +85,14 @@ void f_initialize(
 	}
 	for(i=0; i<WGRIDS; i++){
 		clear_a(&(grid[i]), &(mass[i]));
+        clear_b(&(loct[i]), &(echar[i]), &(flux[i]));
 	}
-	clear_b(loct, echar, flux);	
+	
 	if(NOTICE == 1){
 		printf("done\n");
 	}
 
-	/******************************************************************/	
+	/* *****************************************************************/
 	/** initialize grid condition **/
 	if(NOTICE == 1){
 		printf("Initializing site...\n");
@@ -109,27 +100,29 @@ void f_initialize(
 	switch(WMODE){
 		case 1:
 			/* point */
-			init_site(&grid[0]); 
+			/* init_site(&grid[0]);  */
+            printf("BAD WMODE (site)\n");
+            exit(1);
 			break;
 		case 2: case 3:
 			/* region */
-            if(strcmp(grid->site_id, "GLOBAL")==0){
+            if(strcmp(grid[0].area_id, "GLOBAL")==0){
                 f_init_global_run(grid);
-            }else if(strcmp(grid->site_id, "BAMIYAN")==0){
+            }else if(strcmp(grid[0].area_id, "BAMIYAN")==0){
                 f_init_bamiyan_run(grid);
-            }else if(strcmp(grid->site_id, "EASIA")==0){
+            }else if(strcmp(grid[0].area_id, "EASIA")==0){
                 f_init_easia_run(grid);
-            }else if(strcmp(grid->site_id, "JAPAN")==0){
+            }else if(strcmp(grid[0].area_id, "JAPAN")==0){
                 f_init_japan_run(grid);
-            }else if(strcmp(grid->site_id, "BB")==0){
+            }else if(strcmp(grid[0].area_id, "BB")==0){
                 f_init_bb_run(grid);
-            }else if(strcmp(grid->site_id, "JAPANc")==0){
+            }else if(strcmp(grid[0].area_id, "JAPANc")==0){
                 f_init_japanc_run(grid);
-            }else if(strcmp(grid->site_id, "JAPANh")==0){
+            }else if(strcmp(grid[0].area_id, "JAPANh")==0){
                 f_init_japanh_run(grid);
-            }else if(strcmp(grid->site_id, "JAPANk")==0){
+            }else if(strcmp(grid[0].area_id, "JAPANk")==0){
                 f_init_japank_run(grid);
-            }else if(strcmp(grid->site_id, "PAWCs")==0){
+            }else if(strcmp(grid[0].area_id, "PAWCs")==0){
                 f_init_pawcs_run(grid);
             }
 			break;
@@ -168,16 +161,16 @@ void f_initialize(
 		printf("done\n");
 	}	
 
-	/***************************************************************/
+	/* **************************************************************/
 	if(NOTICE == 1){
 		printf("Reading N deposition scenario...");
 	}
 	
 	/* initialization */
-	for(i=0;i<366;i++){
-		loct->depo_nh4_model_av = 0.0;
-		loct->depo_no3_model_av = 0.0;
-	}
+    for(i=0; i<WGRIDS; i++){
+        loct[i].depo_nh4_model_av = 0.0;
+        loct[i].depo_no3_model_av = 0.0;
+}
 	
     /* site simulation */
     
@@ -186,7 +179,7 @@ void f_initialize(
 	}
 	
 	/* water-table depth of paddy field: MASE ***************************/
-	if(WH_CH4 == 1 && strcmp(grid->site_id, "MSE")==0){
+	if(WH_CH4 == 1 && strcmp(grid[0].area_id, "MSE")==0){
 		if((fp_wtd = fopen("paddy_wtd.dat","rt"))==NULL){
 			printf("No water-table depth data!\n");
 			exit(1);
@@ -208,7 +201,7 @@ void f_initialize(
 	/* strcpy(filename, "./data/parameter_CEAMIP.txt"); */ /* 2011/11/03 by A.Ito */
     
     /* 2012/02/07 by A.Ito */
-    strcpy(filename, grid->file_para);
+    strcpy(filename, grid[0].file_para);
     
 	switch(WMODE){
 		case 1:
@@ -236,13 +229,13 @@ void f_initialize(
 			case 1:
 				break;
 			case 2: 
-				echar = &(echar_type[grid[i].veg_type]);
+				echar[i] = echar_type[grid[i].veg_type];
 				break;
 		}
         
         /* initialize mass *************/
         if(grid[i].flag_datavl == 1){
-            if((echar->tree).phenoltype != 0){
+            if((echar[i].tree).phenoltype != 0){
                 /* forests */
                 initTree(&(mass[i]));
             }
@@ -262,9 +255,9 @@ void f_initialize(
 		
 		/* initialize location *************/
 		if(grid[i].flag_datavl == 1){
-			f_init_loct(&grid[i], loct, echar, &mass[i], flux);	
+			f_init_loct(&grid[i], &loct[i], &echar[i], &mass[i], &flux[i]);
 			if(NOTICE == 1){
-				if(i%1000==0) printf("%ld: %f %f %f\n", i, mass[i].sw30, mass[i].sww, mass[i].snwa);
+				if(i%1000 == 0) printf("%ld: %f %f %f\n", i, mass[i].sw30, mass[i].sww, mass[i].snwa);
 			}
 		}
 	}
@@ -278,11 +271,11 @@ void f_initialize(
 	}
 	switch(WMODE){
 		case 1:
-			init_d13c(&grid[0], loct, echar, &mass[0], flux);
+			init_d13c(&grid[0], &loct[0], &echar[0], &mass[0], &flux[0]);
 			break;
 		case 2: case 3: 
 			for(i=0;i<WGRIDS;i++){
-				init_d13c(&grid[i], loct, echar, &mass[i], flux);
+				init_d13c(&grid[i], &loct[i], &echar[i], &mass[i], &flux[i]);
 			}
 			break;
 		default:
@@ -292,14 +285,14 @@ void f_initialize(
 		printf("done\n");
 	}
 
-	/******************************************************************/	
+	/* *****************************************************************/
 	if(NOTICE == 1){
 		printf("Creating result files...");
 	}
 	switch(WMODE){
 		case 1: /* point */
 			for(h=0;h<N_OFILE;h++){
-				strcpy(filename, grid[0].site_id);
+				strcpy(filename, grid[0].area_id);
 				strcat(filename, grid[0].file_name);
 				
 				switch(h){
@@ -328,7 +321,7 @@ void f_initialize(
 		case 2: case 3:  /* region */
 			
             for(h=0;h<N_OFILE;h++){
-                strcpy(filename, grid[0].site_id);
+                strcpy(filename, grid[0].area_id);
                 strcat(filename, grid[0].file_name);
                 switch(h){
                     case 0:		strcat(filename, "_spinup");		break;

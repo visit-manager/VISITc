@@ -144,7 +144,7 @@ void f_n_deposit(
     f_no3 = f_nh4 = 0.0;
 	if(WMODE == 1){
 		/* kg N ha-1 yr-1 */
-		if(strcmp(grid->site_id, "TKY")==0){
+		if(strcmp(grid->area_id, "TKY")==0){
 			aa = 28.7;		
 			f_no3 = 0.7297;
 			f_nh4 = 1.0 - f_no3;
@@ -154,7 +154,7 @@ void f_n_deposit(
 			aa = 10.0;
 		}
 	
-	/*	switch(grid->site_id){
+	/*	switch(grid->area_id){
 			case TKY:		
 			case 2:		
 				f_no3 = 0.5;

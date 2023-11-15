@@ -23,16 +23,6 @@
 #define TERM_HYD  0.1
 
 /* climatology: *_d[] means the time-series during 1948 to 2004- */	
-extern float tmp_sfc_d[PERIOD][366];		/* ground surface temperature, degree Celcius */
-extern float tmp_2m_d[PERIOD][366];		/* 2m air temperature, degree Celcius */
-extern float tmp10_soil_d[PERIOD][366];	/* soil temperature at 10 cm depth, degree Celcius */
-extern float tmp200_soil_d[PERIOD][366];	/* soil temperature at 200 cm depth, degree Celcius */
-extern float dswrf_sfc_d[PERIOD][366];		/* downward shortwave radiation at the surface, W m-2 */
-extern float tcdc_clm_d[PERIOD][366];		/* total cloudiness, fraction */
-extern float prate_sfc_d[PERIOD][366];		/* precipitation, mm mon-1 */
-extern float spfh_2m_d[PERIOD][366];		/* specific humidity, kg kg-1 */
-extern float wind_10m_d[PERIOD][366];		/* u-wind velocity, m s-1 */
-extern float vpd_d[PERIOD][366];   		/* VPD, hPa */
 extern float tmp_2m_ncep_dav[366];			/* 2m air temperature, degree Celcius */
 extern float prate_sfc_ncep_mav[12];		/* precipitation, mm mon-1 */
 extern float tmp_sfc_dav[366];	
@@ -45,7 +35,6 @@ extern float spfh_2m_dav[366];
 extern float tcdc_clm_dav[366];
 extern long	WMODE;
 
-extern long    WMODE;
 /* GHG scenario ***************************************/
 /* source: http://crga.atmos.uiuc.edu/research/post-sres.html
  M.E.Schlesinger and S.Malyshev            */
@@ -65,7 +54,7 @@ extern float        atm_n2o_a2[553];    /* SRES A2 */
 extern float        atm_n2o_b1[553];    /* SRES B1 */
 extern float        atm_n2o_b2[553];    /* SRES B2 */
 
-/** initialization of climatic conditions (Primary data) *************************/
+/* initialization of climatic conditions (Primary data) *************************/
 void f_init_cond(
 	struct Grid *grid, 
 	struct Loct *loct, 
@@ -146,7 +135,7 @@ void f_init_cond(
 				loct->funder_c4 = 0.0;
 		}
     
-        if(strcmp(grid->site_id, "BAMIYAN")==0){
+        if(strcmp(grid->area_id, "BAMIYAN")==0){
             loct->funder_c4 = 0.0;
         }
         
@@ -319,20 +308,20 @@ void f_init_cond(
 	/* Future change in specific humidity by MIROC-high */
 	/* deleted 2009/05/25 by A.Ito **/
 	
-	/*******************************************************/
+	/* ******************************************************/
     /* data: specific humidity */
     if(grid->humd_region < 0.0){
         grid->humd_region = 0.0;
     }
-    if(strcmp(grid[0].site_id, "GLOBAL")==0){
-        loct->vp = loct->air_prsr * grid->humd_region/(0.622 + 0.378 * grid->humd_region);
-    }else if(strcmp(grid[0].site_id, "BAMIYAN")==0){
+    if(strcmp(grid[0].area_id, "BAMIYAN")==0){
         loct->vp = loct->slope_vps * grid->humd_region;
-    }else if(strcmp(grid[0].site_id, "JAPAN")==0 || strcmp(grid[0].site_id, "BB")==0
-            || strcmp(grid[0].site_id, "JAPANc")==0 || strcmp(grid[0].site_id, "JAPANh")==0
-            || strcmp(grid[0].site_id, "JAPANk")==0 || strcmp(grid[0].site_id, "PAWCs")==0){
+    }else if(strcmp(grid[0].area_id, "JAPAN")==0 || strcmp(grid[0].area_id, "BB")==0
+            || strcmp(grid[0].area_id, "JAPANc")==0 || strcmp(grid[0].area_id, "JAPANh")==0
+            || strcmp(grid[0].area_id, "JAPANk")==0 || strcmp(grid[0].area_id, "PAWCs")==0
+            || strcmp(grid[0].area_id, "GLOBAL")==0){
         loct->vp = grid->humd_region;
     }
+    /*  loct->vp = loct->air_prsr * grid->humd_region/(0.622 + 0.378 * grid->humd_region); */
     loct->vpd = loct->vps - loct->vp;
     loct->vpd = (loct->vpd >= 0.0)?loct->vpd:0.0;
 	
@@ -398,10 +387,10 @@ void f_init_cond(
 	f_ecophysiology(grid, loct, &(echar->c3), &(mass->c3));
 	f_ecophysiology(grid, loct, &(echar->c4), &(mass->c4));
 	
-	/**  hydrological water budget ************************************************/
+	/*  hydrological water budget ************************************************/
 	f_hydrology(grid, loct, echar, mass);
 	
-	/** UPDATED soil moisture : 2009/05/01 by A.Ito **/
+	/* UPDATED soil moisture : 2009/05/01 by A.Ito **/
 	loct->snow_acc = mass->snwa;
 	loct->soilwtr_l = mass->sw30;
 	loct->soilwtr_h = mass->sww;
@@ -425,19 +414,19 @@ void f_init_cond(
 	loct->pot_grav_l = -0.05;
 	if(mass->sw30>=0.2){
 		if(grid->stexture == 0){
-			loct->pot_matric_l = -0.121 * pow(mass->sw30/grid->fieldcap30,-4.05);
+			loct->pot_matric_l = -0.121 * pow(mass->sw30/grid->fieldcap30, -4.05);
 		}else if(grid->stexture == 1){
-			loct->pot_matric_l = -0.478 * pow(mass->sw30/grid->fieldcap30,-5.39);
+			loct->pot_matric_l = -0.478 * pow(mass->sw30/grid->fieldcap30, -5.39);
 		}else if(grid->stexture == 2){
-			loct->pot_matric_l = -0.405 * pow(mass->sw30/grid->fieldcap30,-11.4);
+			loct->pot_matric_l = -0.405 * pow(mass->sw30/grid->fieldcap30, -11.4);
 		}
 	}else{
 		if(grid->stexture == 0){
-			loct->pot_matric_l = -0.121 * pow(0.2/grid->fieldcap30,-4.05);
+			loct->pot_matric_l = -0.121 * pow(0.2/grid->fieldcap30, -4.05);
 		}else if(grid->stexture == 1){
-			loct->pot_matric_l = -0.478 * pow(0.2/grid->fieldcap30,-5.39);
+			loct->pot_matric_l = -0.478 * pow(0.2/grid->fieldcap30, -5.39);
 		}else if(grid->stexture == 2){
-			loct->pot_matric_l = -0.405 * pow(0.2/grid->fieldcap30,-11.4);
+			loct->pot_matric_l = -0.405 * pow(0.2/grid->fieldcap30, -11.4);
 		}
 	}
 	loct->pot_total_l = loct->pot_grav_l + loct->pot_matric_l;
@@ -445,19 +434,19 @@ void f_init_cond(
 	loct->pot_grav_h = -1.00;
 	if(mass->sww>=0.2){
 		if(grid->stexture == 0){
-			loct->pot_matric_h = -0.121 * pow(mass->sww/grid->fieldcap,-4.05);
+			loct->pot_matric_h = -0.121 * pow(mass->sww/grid->fieldcap, -4.05);
 		}else if(grid->stexture == 1){
-			loct->pot_matric_h = -0.478 * pow(mass->sww/grid->fieldcap,-5.39);
+			loct->pot_matric_h = -0.478 * pow(mass->sww/grid->fieldcap, -5.39);
 		}else if(grid->stexture == 2){
-			loct->pot_matric_h = -0.405 * pow(mass->sww/grid->fieldcap,-11.4);
+			loct->pot_matric_h = -0.405 * pow(mass->sww/grid->fieldcap, -11.4);
 		}
 	}else{
 		if(grid->stexture == 0){
-			loct->pot_matric_h = -0.121 * pow(0.2/grid->fieldcap,-4.05);
+			loct->pot_matric_h = -0.121 * pow(0.2/grid->fieldcap, -4.05);
 		}else if(grid->stexture == 1){
-			loct->pot_matric_h = -0.478 * pow(0.2/grid->fieldcap,-5.39);
+			loct->pot_matric_h = -0.478 * pow(0.2/grid->fieldcap, -5.39);
 		}else if(grid->stexture == 2){
-			loct->pot_matric_h = -0.405 * pow(0.2/grid->fieldcap,-11.4);
+			loct->pot_matric_h = -0.405 * pow(0.2/grid->fieldcap, -11.4);
 		}
 	}
 	loct->pot_total_h = loct->pot_grav_h + loct->pot_matric_h;

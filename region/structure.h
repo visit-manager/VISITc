@@ -37,7 +37,7 @@ struct Grid{
 		short		flag_datavl;		/* data availability, =1 if avalable */
 
 		/* site information *********************************************/
-		char		site_id[16];		/* site ID, e.g. TKY */
+		char		area_id[16];		/* site ID, e.g. TKY */
 		char		file_name[128];		/* file name identifier */
 		char		file_ncep[128];		/* NCEP file name for site simulation */
 		char		file_site[128];		/* site file name */

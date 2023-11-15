@@ -205,7 +205,7 @@ void f_hydrology(
 	gain = loct->ro1;
 	cc = pow(gain, 3.0) + pow(dry_inx, 3.0);
 	cc = (cc>=0.0)?cc:0.0;
-	loct->ro2 = (pow(cc,0.33333) - dry_inx) / (float)DSTEP;
+	loct->ro2 = (pow(cc, 0.33333) - dry_inx) / (float)DSTEP;
 	loct->ro2 = (loct->ro2>=0.0)?loct->ro2:0.0;
 	
 	//loct->ro2 += baseflow;
@@ -214,7 +214,7 @@ void f_hydrology(
 	/**  penetration capacity from SW30 to SWW  **/
 	/* aa = grid->hyd_cond*1000.0*3600.0*24.0; */
 	/* aa = grid->hyd_cond*1000.0*3600.0; */
-	aa = grid->hyd_cond*3600.0*24.0 / (float)DSTEP;
+	aa = grid->hyd_cond *3600.0 *24.0 / (float)DSTEP;
 
 	retran = (mass->sww * grid->fieldcap30/grid->fieldcap - mass->sw30)
                 /(1.0 + grid->fieldcap30/grid->fieldcap);

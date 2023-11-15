@@ -26,11 +26,9 @@ void delete_soil(			struct Smas *mass);
 void f_setting(				struct Grid *grid);
 void f_terminate(			FILE *fp_r[N_OFILE]);
 
-void f_initialize(			struct Grid grid[], struct Loct *loct, struct Echar *echar, 
-							struct Echar echar_type[MAX_BIOME], struct Mass mass[], 
-							struct Flux *flux, FILE *fp_r[N_OFILE]);
-void init_site(				struct Grid *grid); 
-void f_init_cond(					struct Grid *grid, struct Loct *loct, struct Echar *echar, 
+void f_initialize(			struct Grid grid[], struct Loct loct[], struct Echar echar[],
+							struct Mass mass[], struct Flux flux[], FILE *fp_r[N_OFILE]);
+void f_init_cond(					struct Grid *grid, struct Loct *loct, struct Echar *echar,
 							struct Mass *mass, struct Flux *flux);
 void f_init_loct(					struct Grid *grid, struct Loct *loct, struct Echar *echar, 
 							struct Mass *mass, struct Flux *flux);
@@ -154,15 +152,11 @@ void interval(				struct Grid *grid, struct Loct *loct, struct Pchar *pchar,
 							struct Pmas *mass, struct Pflx *flux);
 
 /* **** SCHEMES *****/
-void f_spinup(				struct Grid grid[], struct Loct *loct, struct Echar *echar, 
-							struct Echar echar_type[MAX_BIOME], struct Mass mass[], 
-                            struct Flux *flux, 
-							FILE *fp_r);
-void f_experiment(			struct Grid grid[], struct Loct *loct, struct Echar *echar, 
-							struct Echar echar_type[MAX_BIOME], struct Mass mass[], 
-                            struct Flux *flux, 
-							FILE *fp_r[N_OFILE]);
-void f_daily_scheme(		struct Grid *grid, struct Loct *loct, struct Echar *echar, 
+void f_spinup(				struct Grid grid[], struct Loct loct[], struct Echar echar[],
+                            struct Mass mass[], struct Flux flux[], FILE *fp_r);
+void f_experiment(			struct Grid grid[], struct Loct loct[], struct Echar echar[],
+                            struct Mass mass[], struct Flux flux[], FILE *fp_r[N_OFILE]);
+void f_daily_scheme(		struct Grid *grid, struct Loct *loct, struct Echar *echar,
                             struct Mass *mass, 
 							struct Flux *flux);
 
