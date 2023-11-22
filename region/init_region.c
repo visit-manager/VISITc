@@ -293,6 +293,9 @@ void f_init_global_run(
     }
     for(i=0; i<WGRIDS; i++){
         grid[i].clay_frac = fdat[i]/100.0;
+        if(grid[i].clay_frac < 0.01){
+            grid[i].clay_frac = 0.011;
+        }
     }
     fclose(fp_dat);
     if(NOTICE==1){
@@ -310,6 +313,9 @@ void f_init_global_run(
     }
     for(i=0; i<WGRIDS; i++){
         grid[i].sand_frac = fdat[i]/100.0;
+        if(grid[i].sand_frac < 0.01){
+            grid[i].sand_frac = 0.01;
+        }
     }
     fclose(fp_dat);
     if(NOTICE==1){
@@ -360,6 +366,9 @@ void f_init_global_run(
         
         /* soil parameterizatrions using Saxton (1986) *********/
         f_soil_saxton(&grid[i]);
+        if(grid[i].field_cap <= 1.0){
+            grid[i].field_cap = 1.0;
+        }
         
         grid[i].fieldcap30 = grid[i].field_cap; /* top 30cm */
         //grid[i].fieldcap = grid[i].field_cap * 3.333; /* 100cm */

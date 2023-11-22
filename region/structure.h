@@ -64,8 +64,8 @@ struct Grid{
 		float		gp_tem;				/* average temperature during the growing period, degree C */
 		float		gp_pre;				/* precipitation during the prowing period, mm */
 		float		prec_ann;		/* precipitation, mm year-1 */
-        float        tsoil_annav;    /* annual mean temperature */
-        float        npp_max;        /* maximum daily NPP, g C m-2 day-1 */
+        float       tsoil_annav;    /* annual mean temperature */
+        float       npp_max;        /* maximum daily NPP, g C m-2 day-1 */
 
 		/* climate data for regional simulstions */
 		float		prec_region;        /* precipitation */
@@ -623,8 +623,8 @@ struct Schar{
 
 /* ecosystem characteristics *******************************************************/
 struct Echar{ 
-		char		para_ver_id[15];		/* parameter vesion ID */
-		char		para_date_id[15];		/* parameter update date */
+		char		para_ver_id[16];		/* parameter vesion ID */
+		char		para_date_id[16];		/* parameter update date */
 
 		struct		Pchar tree;			/* for tree plants */
 		struct		Pchar c3;			/* for c3 herbaceous plants */
@@ -652,10 +652,10 @@ struct Pmas{
 		
 		float		gdd;				/* growing degree days */
 		float		cdd;				/* coldness degree days */
-		long		    season;             /* seasonal stage identifer */
+		long		season;             /* seasonal stage identifer */
 		float		grwpd;              /* growing period, days */
-		long		    day_frush;          /* day of leaf frush */
-		long		    day_shed;           /* day of leaf shedding */
+		long		day_frush;          /* day of leaf frush */
+		long		day_shed;           /* day of leaf shedding */
 	
 
 		/* stable carbon isotope composition, dimensionless */
@@ -929,27 +929,27 @@ struct Sflx{
 
 		/* nitrogen flux **********************************************/
 		/* N flow, g N ha-1 day-1 **/
-		float	d_n2o_ntr_ngas;			/* N2O by nitrification, NGAS scheme */
-		float	d_n2o_dnt_ngas;			/* N2O by denitrification, NGAS scheme */
-		float	d_n2o_ngas;				/* total N2O, NGAS scheme */
-		float	d_n2_ngas;				/* N2O by denitrification, NGAS scheme */
+		float       d_n2o_ntr_ngas;			/* N2O by nitrification, NGAS scheme */
+		float       d_n2o_dnt_ngas;			/* N2O by denitrification, NGAS scheme */
+		float       d_n2o_ngas;				/* total N2O, NGAS scheme */
+		float       d_n2_ngas;				/* N2O by denitrification, NGAS scheme */
 		
-		float	d_n2o_ntr_ngas_2;			
-		float	d_n2o_dnt_ngas_2;			
-		float	d_n2o_ngas_2;			
-		float	d_n2_ngas_2;			
+		float       d_n2o_ntr_ngas_2;
+		float       d_n2o_dnt_ngas_2;
+		float       d_n2o_ngas_2;
+		float       d_n2_ngas_2;
 		
-		float	d_n2o_casa;			
-		float	d_no_casa;			
-		float	d_n2_casa;			
+		float       d_n2o_casa;
+		float       d_no_casa;
+		float       d_n2_casa;
 		
-		float	n_nh3vlt;			
-		float	n_leach;			
-		float	n_minerlz_lttr;
-		float	n_minerlz_hums;
-		float	n_nitrif;			/* in NGAS */
-		float	n_immbl;
-		float	n_mcrb_abdn;
+		float       n_nh3vlt;
+		float       n_leach;
+		float       n_minerlz_lttr;
+		float       n_minerlz_hums;
+		float       n_nitrif;			/* in NGAS */
+		float       n_immbl;
+		float       n_mcrb_abdn;
 			
 		/* stable carbon isotope composition, in per mil */
 		float		d13c_li_f;		/* leaf litter input */

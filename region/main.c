@@ -27,10 +27,21 @@
 /* global variables */
 #include"global_var.h"
 
-/*** main simulation roop ***********************************************/
+/* main simulation roop *************************************************/
 int main(void){
 	FILE *fp_r[N_OFILE];
-	
+    struct Grid *grid2;
+    struct Mass *mass2;
+    struct Loct *loct2;
+    struct Echar *echar2;
+    struct Flux *flux2;
+    
+    grid2 = (struct Grid *)malloc(sizeof(struct Grid) * NROW * NCOL);
+    mass2 = (struct Mass *)malloc(sizeof(struct Mass) * NROW * NCOL);
+    loct2 = (struct Loct *)malloc(sizeof(struct Loct) * NROW * NCOL);
+    echar2 = (struct Echar *)malloc(sizeof(struct Echar) * NROW * NCOL);
+    flux2 = (struct Flux *)malloc(sizeof(struct Flux) * NROW * NCOL);
+
 	/* *******************************************************************/
 	/** setting configuration **/
 	f_setting(&grid2[0]);
@@ -50,8 +61,15 @@ int main(void){
 	f_experiment(grid2, loct2, echar2, mass2, flux2, fp_r); /* */
 	
 	/* *******************************************************************/
-	/** close files **/
-	f_terminate(fp_r);
-	
+    
+    free(grid2);
+    free(mass2);
+    free(loct2);
+    free(echar2);
+    free(flux2);
+
+    /** close files **/
+    f_terminate(fp_r);
+    
 	return 0;
 }

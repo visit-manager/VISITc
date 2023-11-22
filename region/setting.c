@@ -30,7 +30,7 @@ extern long SPUPT;
 void f_setting(
 	struct Grid *grid
 ){
-	char varread[10];
+	char varread[16];
 	char smode[] = "MODE";
 	char sfsfx[] = "FSFX";
 	char ssite[] = "SITE";

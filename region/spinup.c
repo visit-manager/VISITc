@@ -792,14 +792,16 @@ void f_spinup(
                     outdat04[i] = loct[i].ppfd_h;
                     #endif
                 }
-                printf("%8.4f %8.4f %8.4f : %10.2f %10.2f %10.2f: %10.3f: ",
-                       100.0*gpp_a/nn, 100.0*npp_a/nn, 100.0*nep_a/nn, 
+                printf("%7.3f %7.3f %7.3f : %8.2f %8.2f %8.2f: %6.3f: ",
+                       100.0*gpp_a/nn, 100.0*npp_a/nn, 100.0*nep_a/nn,
                        lai_a/nn, plant_a/nn, soil_a/nn, ch4_a/nn);
                 /* printf("%10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %10.4f: ",
                        xx[0]/nn, xx[1]/nn, xx[2]/nn, xx[3]/nn, xx[4]/nn, xx[5]/nn, xx[6]/nn, xx[7]/nn, xx[8]/nn, xx[9]/nn);
                 printf("%10.2f %10.2f %10.2f %10.2f %10.2f %10.2f:  ",
                        xx[10]/nn, xx[11]/nn, xx[12]/nn, xx[13]/nn, xx[14]/nn, xx[15]/nn); */
-                printf("%.0f\n", nn);
+                printf("%6.1f: ",xx[0]/nn);
+                printf("%6.1f: ",xx[2]/nn);
+                printf("\n");
 
                 fprintf(fp_log,"%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f ",
                        nn, gpp_a, npp_a, nep_a, lai_a, plant_a, soil_a, ch4_a,
@@ -932,7 +934,7 @@ void f_spinup(
         fwrite(&echar[f], sizeof(echar0), 1, fp_ss_echar);
     }
 
-	if(NOTICE==1){
+	if(NOTICE == 1){
 		printf("done\n");
 	}
 	

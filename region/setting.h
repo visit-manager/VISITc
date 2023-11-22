@@ -20,8 +20,8 @@
 
 /* ERA5: 2021/03/30 by A.Ito */
 /* ERA5: 2023/10/20 by A.Ito */
-//#define NROW 720
-//#define NCOL 1440
+#define NROW 720
+#define NCOL 1440
 
 /* CFSR: 2012/01/02 by A.Ito */
 //#define NROW 576
@@ -48,8 +48,8 @@
 //#define NCOL 300
 
 /* PAWCs center: 2023/06/13 by A.Ito */
-#define NROW 200
-#define NCOL 1490
+//#define NROW 200
+//#define NCOL 1490
 
 
 
@@ -57,8 +57,8 @@
 
 /* ERA5: 2021/03/30 by A.Ito */
 /* ERA5: 2023/10/20 by A.Ito */
-//#define BYR 2019
-//#define EYR 2021
+#define BYR 2019
+#define EYR 2021
 
 /* CFSR: 2012/01/02 by A.Ito */
 //#define BYR 1979
@@ -80,8 +80,8 @@
 //#define EYR 2020
 
 /* PAWCs: 2023/06/13 by A.Ito */
-#define BYR 2003
-#define EYR 2020
+//#define BYR 2003
+//#define EYR 2020
 
 #define PERIOD (EYR-BYR+1)
 

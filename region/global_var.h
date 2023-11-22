@@ -58,11 +58,11 @@ float		atm_n2o_b2[553];	/* SRES B2 */
 
 /* global variables */
 /* structures */
-struct Grid grid2[NROW * NCOL];
+/* struct Grid grid2[NROW * NCOL];
 struct Mass mass2[NROW * NCOL];
 struct Loct loct2[NROW * NCOL];
 struct Echar echar2[NROW * NCOL];
-struct Flux flux2[NROW * NCOL];
+struct Flux flux2[NROW * NCOL]; */
 struct Echar echar_type[MAX_BIOME];		/* default parameters */
 
 

@@ -26,7 +26,7 @@ float frl(
 	struct Loct *loct,
 	struct Schar *schar
 ){
-	float ftl, fwl, fal, fsm;
+	float ftl, fwl, fal, fsl;
 	
 	/* temperature effect, exponential */
 	/* ftl=exp(log(soil->qTl)/10.0*(grid->tmp10_soil-to)); */
@@ -39,7 +39,7 @@ float frl(
 	} 
 	
 	if(NOTICE == 1 && ftl<0.0){
-		printf("FARTAL ERROR: negative ftl (soil_proc.c): %f\n", ftl);
+		printf("FARTAL ERROR: negative ftl in frl (decomposition.c): %f\n", ftl);
 	}
 
 	/* soil moisture effect, saturating */
@@ -47,13 +47,13 @@ float frl(
 	/* soil apparence effect */
 	fal = 0.4 * loct->soilappr_l*(1.0*schar->kmsl)/(schar->kmsl + loct->soilappr_l)+0.6;
 	
-	fsm = (fwl>fal)?fal:fwl;
+    fsl = (fwl>fal)?fal:fwl;
 	
 	if(NOTICE == 1 && fwl<0.0){
-		printf("FARTAL ERROR: negative fsm (soil_proc.c): %f\n", fwl);
+		printf("FARTAL ERROR: negative fsl in frl (decomposition.c): %f %f %f\n", fsl, fwl, fal);
 	}
 
-	return (ftl*fsm);
+	return (ftl*fsl);
 }
 
 /* soil respiration coefficient of humus layer *********************************/
@@ -62,7 +62,7 @@ float frh(
 	struct Loct *loct, 
 	struct Schar *schar
 ){
-	float fth, fwh, fah, fsm;	
+	float fth, fwh, fah, fsh;
 	
 	/* temperature effect, exponential */
 	/* fth=exp(log(soil->qTh)/10.0*(grid->tmp200_soil-to)); */
@@ -75,7 +75,7 @@ float frh(
 	} 
 
 	if(NOTICE==1 && fth<0.0){
-		printf("FARTAL ERROR: negative fth (soil_proc.c): %f\n", fth);
+		printf("FARTAL ERROR: negative fth in frh (decomposition.c): %f\n", fth);
 	}
 
 	/* soil moisture effect, saturating */
@@ -83,11 +83,11 @@ float frh(
 	/* soil apparence effect */
 	fah = 0.4*loct->soilappr_w*(1.0*schar->kmsh)/(schar->kmsh + loct->soilappr_w)+0.6;
 	
-	fsm = (fwh>fah)?fah:fwh;
+    fsh = (fwh>fah)?fah:fwh;
 		
-	if(NOTICE==1 && fsm<0.0){
-		printf("FARTAL ERROR: negative fsm (soil_proc.c): %f\n", fsm);
+	if(NOTICE==1 && fsh<0.0){
+		printf("FARTAL ERROR: negative fsh in frh (decomposition.c): %f %f %f\n", fsh, fwh, fah);
 	}
 
-	return (fth*fsm);
+	return (fth*fsh);
 }
