@@ -29,20 +29,9 @@ extern long	month_day[12];
 extern long	WMODE;
 extern long	WGRIDS;
 extern long NBIOME;
-extern float tmp10_soil_d[PERIOD][366];
 extern float fdat[NROW*NCOL];
 extern int idat[NROW*NCOL];
 extern struct Echar echar_type[MAX_BIOME];
-
-#if OUT_DAY==1
-extern float outdat01[NROW*NCOL];
-extern float outdat02[NROW*NCOL];
-extern float outdat03[NROW*NCOL];
-extern float outdat04[NROW*NCOL];
-#endif
-
-/* annual maps **********/
-extern float out_a[N_ANNRES][NROW*NCOL];
 
 double mean_veg[20][32];
 
@@ -53,18 +42,24 @@ void f_experiment(
   struct Loct loct[],
   struct Echar echar[],
   struct Mass mass[],
-  struct Flux flux[],
-	FILE *fp_r[N_OFILE]
+  struct Flux flux[]
 ){
 	long e, f, h, i, j;
 	char num[8], filename[128];
 	long ndy, end_year, calc_flag, pstart, pend;
 	float gpp_a, npp_a, nep_a, lai_a, plant_a, soil_a, xx1_a, xx2_a, xx3_a, ch4_a, nn;
     float gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga, prec_ga, rdata, vps;
+    struct Grid grid0;
+    struct Loct loct0;
+    struct Echar echar0;
+    struct Mass mass0;
+    struct Flux flux0;
+    float* out_ann;
+    float* out_hr;
 	/* FILE *fp_o; */
-	FILE *fp_restart;
 	FILE *fp_clim[N_CLIMD];
-	FILE *fp_out[1+24], *fp_log;
+	FILE *fp_out[1+N_ANNRES], *fp_log;
+    FILE *fp_ss_grid, *fp_ss_loct, *fp_ss_mass, *fp_ss_flux, *fp_ss_echar;
     FILE *fp_monitor, *fp_veg;
     FILE *fp_lai;
     
@@ -85,85 +80,79 @@ void f_experiment(
 		printf("Start experimental phase\n");
 	}
 	
-	if(WMODE == 1){
-		for(e=1;e<N_OFILE;e++){
-			fprintf(fp_r[e],"%s %s\n", echar[0].para_ver_id, echar[0].para_date_id);
-		}
-	}else if(WMODE == 2){
-		for(e=1;e<N_OFILE;e++){
-			fprintf(fp_r[e],"%s %s\n", echar_type[0].para_ver_id, echar_type[0].para_date_id);
-		}
-	}
-    
     for(i=0;i<20;i++){
         for(j=0;j<32;j++){
             mean_veg[i][j] = 0.0;
         }
     }
-			
-	/***************************************************************************/
-	if(USE_RESTART == 1){
-		strcpy(filename, grid[0].area_id);
-		strcat(filename, "_restart.txt");
-		if( (fp_restart = fopen(filename,"rt")) == NULL){
-			printf("! No restart data !\n");
-			exit (1);
-		}
-		for(i=pstart; i<=pend; i++){ 
-			fscanf(fp_restart,"%f", &(mass[i].snwa));
-			fscanf(fp_restart,"%f", &(mass[i].sw30));
-			fscanf(fp_restart,"%f", &(mass[i].sww));
+    
+    out_ann = (float *)malloc(sizeof(float) * N_ANNRES*(pend-pstart+1));
+    out_hr = (float *)malloc(sizeof(float) * N_ANNRES*(pend-pstart+1));
 
-			fscanf(fp_restart,"%f", &((mass[i].tree).gdd));
-			fscanf(fp_restart,"%f", &((mass[i].tree).cdd));
-			fscanf(fp_restart,"%f", &((mass[i].tree).grwpd));
-			fscanf(fp_restart,"%ld", &((mass[i].tree).day_frush));
-			fscanf(fp_restart,"%ld", &((mass[i].tree).day_shed));
-            
-			fscanf(fp_restart,"%f", &((mass[i].c3).gdd));
-			fscanf(fp_restart,"%f", &((mass[i].c3).cdd));
-			fscanf(fp_restart,"%f", &((mass[i].c3).grwpd));
-			fscanf(fp_restart,"%ld", &((mass[i].c3).day_frush));
-			fscanf(fp_restart,"%ld", &((mass[i].c3).day_shed));
-            
-			fscanf(fp_restart,"%f", &((mass[i].c4).gdd));
-			fscanf(fp_restart,"%f", &((mass[i].c4).cdd));
-			fscanf(fp_restart,"%f", &((mass[i].c4).grwpd));
-			fscanf(fp_restart,"%ld", &((mass[i].c4).day_frush));
-			fscanf(fp_restart,"%ld", &((mass[i].c4).day_shed));
+	/* **************************************************************************/
+    if(USE_RESTART == 1){
+        if(NOTICE == 1){
+            printf("Read restart file...");
+        }
+
+        strcpy(filename, grid[0].area_id);
+        strcat(filename, "_restart_grid.flt");
+        if((fp_ss_grid = fopen(filename,"rb")) == NULL){
+            printf("!! NO %s\n",filename);
+            exit (1);
+        }
+
+        strcpy(filename, grid[0].area_id);
+        strcat(filename, "_restart_loct.flt");
+        if((fp_ss_loct = fopen(filename,"rb")) == NULL){
+            printf("!! NO %s\n",filename);
+            exit (1);
+        }
+
+        strcpy(filename, grid[0].area_id);
+        strcat(filename, "_restart_mass.flt");
+        if((fp_ss_mass = fopen(filename,"rb")) == NULL){
+            printf("!! NO %s\n",filename);
+            exit (1);
+        }
+
+        strcpy(filename, grid[0].area_id);
+        strcat(filename, "_restart_flux.flt");
+        if((fp_ss_flux = fopen(filename,"rb")) == NULL){
+            printf("!! NO %s\n",filename);
+            exit (1);
+        }
+
+        strcpy(filename, grid[0].area_id);
+        strcat(filename, "_restart_echar.flt");
+        if((fp_ss_echar = fopen(filename,"rb")) == NULL){
+            printf("!! NO %s\n",filename);
+            exit (1);
+        }
+
+        for(f=0;f<NCOL*NROW;f++){
+            fread(&grid[f], sizeof(grid0), 1, fp_ss_grid);
+            fwrite(&loct[f], sizeof(loct0), 1, fp_ss_loct);
+            fread(&mass[f], sizeof(mass0), 1, fp_ss_mass);
+            fread(&flux[f], sizeof(flux0), 1, fp_ss_flux);
+            fread(&echar[f], sizeof(echar0), 1, fp_ss_echar);
+        }
         
-			fscanf(fp_restart,"%f", &((mass[i].tree).fol));
-			fscanf(fp_restart,"%f", &((mass[i].tree).stm));
-			fscanf(fp_restart,"%f", &((mass[i].tree).rot));
-            
-			fscanf(fp_restart,"%f", &((mass[i].c3).fol));
-			fscanf(fp_restart,"%f", &((mass[i].c3).stm));
-			fscanf(fp_restart,"%f", &((mass[i].c3).rot));
-            
-			fscanf(fp_restart,"%f", &((mass[i].c4).fol));
-			fscanf(fp_restart,"%f", &((mass[i].c4).stm));
-			fscanf(fp_restart,"%f", &((mass[i].c4).rot));
-            
-            fscanf(fp_restart,"%f", &((mass[i].tree).nsch_storage));
-            fscanf(fp_restart,"%f", &((mass[i].c3).nsch_storage));
-            fscanf(fp_restart,"%f", &((mass[i].c4).nsch_storage));
-
-			fscanf(fp_restart,"%f", &((mass[i].soil).ltr_tf));
-			fscanf(fp_restart,"%f", &((mass[i].soil).ltr_tc));
-			fscanf(fp_restart,"%f", &((mass[i].soil).ltr_tr));
-			fscanf(fp_restart,"%f", &((mass[i].soil).ltr_gf));
-			fscanf(fp_restart,"%f", &((mass[i].soil).ltr_gc));
-			fscanf(fp_restart,"%f", &((mass[i].soil).ltr_gr));
-			fscanf(fp_restart,"%f", &((mass[i].soil).msl_a));
-			fscanf(fp_restart,"%f", &((mass[i].soil).msl_i));
-			fscanf(fp_restart,"%f", &((mass[i].soil).msl_p));
-		}
-	}
+        fclose(fp_ss_grid);
+        fclose(fp_ss_loct);
+        fclose(fp_ss_mass);
+        fclose(fp_ss_flux);
+        fclose(fp_ss_echar);
+        
+        if(NOTICE == 1){
+            printf("done\n");
+        }
+    }
     
 	/* annual mean output */
 	strcpy(filename, grid[0].area_id);
+    strcat(filename, "_ann_");
 	strcat(filename, grid[0].file_name);
-	strcat(filename, "_ann");
 	strcat(filename, ".flt");
 	fp_out[0] = fopen(filename,"wb");
     
@@ -201,9 +190,7 @@ void f_experiment(
 		/* string of year ADXXXX */
 		snprintf(num, 8, "%04d", (short)e);
 
-        #if OUT_DAY==1
-            f_create_dfile_global(loct[0].phase, loct[0].adyear, &grid[0], filename, fp_out);
-        #endif
+        f_create_dfile_global(loct[0].phase, loct[0].adyear, &grid[0], filename, fp_out);
         
         /* fix canopy N exp: 2014/08/17 by A.Ito *************************/
         if((FIX_LAI == 2 || FIX_LAI == 3) && CONST_KN==0){
@@ -241,6 +228,10 @@ void f_experiment(
 		/* ************************************************/
         gpp_ga = npp_ga = nep_ga = plant_ga = soil_ga = prec_ga = 0.0;
         
+        for(i=0; i<(N_ANNRES*(pend-pstart+1)); i++){
+            out_ann[i] = 0.0;
+        }
+                 
         for(h=0; h<ndy; h++){
             doyTmody(e, h, &(loct[0].month), &(loct[0].mday));
             for(i=pstart; i<=pend; i++){
@@ -265,6 +256,9 @@ void f_experiment(
             for(f=0; f<DSTEP; f++){
                 for(i=pstart; i<=pend; i++){
                     loct[i].hour = f;
+                    for(j=0;j<N_ANNRES;j++){
+                        out_hr[j*(pend-pstart+1) + i] = 0.0;
+                    }
                 }
 
                 if(strcmp(grid[0].area_id, "JAPAN") == 0){
@@ -492,28 +486,11 @@ void f_experiment(
                 /* initial assumption ******/
                 /* grid[i].wind_region = 1.5;	*/
                 
-                for(i=pstart; i<=pend; i++){
-                    for(j=0;j<N_ANNRES;j++){
-                        out_a[j][i] = 0.0;
-                    }
-                }
-                         
                 /* ****************************************************/
                 /* OpenMP */
                 #pragma omp parallel for schedule(dynamic, 4) private(calc_flag)
 
                 for(i=pstart; i<=pend; i++){ 
-                    #if OUT_DAY==1
-                    outdat01[i] = 0.0;
-                    outdat02[i] = 0.0;
-                    outdat03[i] = 0.0;
-                    outdat04[i] = 0.0;
-                    #endif
-
-                    /* if(WMODE==2){
-                        echar[i] = echar_type[grid[i].veg_type];
-                    } */
-                    
                     calc_flag = 1;
                     if(grid[i].flag_datavl!=1){
                         calc_flag = 0;
@@ -573,57 +550,13 @@ void f_experiment(
 
                         /* basic scheme ****************************************/
                         f_daily_scheme(&(grid[i]), &(loct[i]), &(echar[i]), &(mass[i]), &(flux[i]));
-                                            
-                        /* summation for output *********/
-                        #if OUT_DAY==1		
-                        /* daily outputs */
-                        
-                        /* CFSR */
-                        /* //outdat01[i] = flux2[i].gpp;
-                        //outdat02[i] = flux2[i].er;
-                        //outdat03[i] = flux2[i].nep;
-                        //outdat04[i] = flux2[i].sr;
-                        //outdat04[i] = loct2[i].lai; */
-
-                        /* BAMIYAN */
-                        outdat01[i] = flux[i].gpp;
-                        outdat02[i] = flux[i].npp;
-                        //outdat03[i] = ((mass[i].tree).plant + loct2[i].funder_c3 * (mass[i].c3).plant + loct2[i].funder_c4 * (mass[i].c4).plant);
-                        //outdat04[i] = loct2[i].lai;
-                        
-                        outdat03[i] = flux[i].nep;
-                        outdat04[i] = (flux[i].soil).ch4_wh;
-                        
-                        /* //outdat01[i] = (mass[i].tree).gdd;
-                        //outdat02[i] = (mass[i].tree).lai;
-                        //outdat03[i] = (float)(mass[i].tree).season;
-                        //outdat04[i] = loct2[i].tair_dayav; */
-                        #endif
-                        
-                        /* annual mean/sum outputs ***************/
-                        out_a[0][i] += flux[i].gpp;
-                        out_a[1][i] += flux[i].npp;
-                        out_a[2][i] += flux[i].nep;
-                        //out_a[3][i] += flux2[i].nep;
-                        out_a[3][i] += (flux[i].soil).ch4_wh;
-
-                        out_a[4][i] += loct[i].lai/(double)ndy/(double)DSTEP;
-                        out_a[5][i] += ((mass[i].tree).plant + loct[i].funder_c3 * (mass[i].c3).plant
-                                        + loct[i].funder_c4 * (mass[i].c4).plant)/(double)ndy/(double)DSTEP;
-                        out_a[6][i] += (mass[i].soil).soil/(double)ndy;
-                        
-                        out_a[7][i] += loct[i].tmp_2m/(double)ndy/(double)DSTEP;
-                        out_a[8][i] += loct[i].ppfd_h/(double)ndy/(double)DSTEP;
-                        out_a[9][i] += loct[i].vpd/(double)ndy/(double)DSTEP;
-                        out_a[10][i] += loct[i].prate_sfc;
-                        out_a[11][i] += loct[i].aet;
                     }
                     
                     /* erosion */
                     /* f_erosion_rusle(&grid[i], loct, &mass[i], flux);
                     (mass[i].soil).msl_a -= (flux->soil).erosion_carbon; */
                     
-                    /**********************************************/
+                    /* *********************************************/
                     /* monitoring */
                     if(WMODE == 2){
                         /* printf("%4d ", grid[i].calc_flag); */
@@ -668,11 +601,49 @@ void f_experiment(
                                     loct[i].funder_c4 * (mass[i].c4).plant) / (float)(DSTEP*ndy) / 1000000.0;
                         soil_ga += grid[i].area * (mass[i].soil).soil / (float)(DSTEP*ndy) / 1000000.0;
                         prec_ga += grid[i].area * loct[i].prate_sfc / 100.0;
+
+                        /* summation for output *********/
+                        /* hourly outputs */
+                        
+                        /* CFSR */
+                        /* //outdat01[i] = flux2[i].gpp;
+                        //outdat02[i] = flux2[i].er;
+                        //outdat03[i] = flux2[i].nep;
+                        //outdat04[i] = flux2[i].sr;
+                        //outdat04[i] = loct2[i].lai; */
+
+                        /* BAMIYAN */
+                        /* GLOBAL */
+                        out_hr[0*(pend-pstart+1) + i] = flux[i].gpp;
+                        out_hr[1*(pend-pstart+1) + i] = flux[i].npp;
+                        out_hr[2*(pend-pstart+1) + i] = flux[i].nep;
+                        out_hr[3*(pend-pstart+1) + i] = (flux[i].soil).ch4_wh;
+                        
+                        //outdat03[i] = ((mass[i].tree).plant + loct2[i].funder_c3 * (mass[i].c3).plant + loct2[i].funder_c4 * (mass[i].c4).plant);
+                        //outdat04[i] = loct2[i].lai;
+                        
+                        /* //outdat01[i] = (mass[i].tree).gdd;
+                        //outdat02[i] = (mass[i].tree).lai;
+                        //outdat03[i] = (float)(mass[i].tree).season;
+                        //outdat04[i] = loct2[i].tair_dayav; */
+                        
+                        /* annual mean/sum outputs ***************/
+                        out_ann[0*(pend-pstart+1) + i] += flux[i].gpp;
+                        out_ann[1*(pend-pstart+1) + i] += flux[i].npp;
+                        out_ann[2*(pend-pstart+1) + i] += flux[i].nep;
+                        out_ann[3*(pend-pstart+1) + i] += (flux[i].soil).ch4_wh;
+
+                        out_ann[4*(pend-pstart+1) + i] += loct[i].lai/(double)ndy/(double)DSTEP;
+                        out_ann[5*(pend-pstart+1) + i] += ((mass[i].tree).plant + loct[i].funder_c3 * (mass[i].c3).plant
+                                        + loct[i].funder_c4 * (mass[i].c4).plant)/(double)ndy/(double)DSTEP;
+                        out_ann[6*(pend-pstart+1) + i] += (mass[i].soil).soil/(double)ndy;
+                        
+                        out_ann[7*(pend-pstart+1) + i] += loct[i].tmp_2m/(double)ndy/(double)DSTEP;
+                        out_ann[8*(pend-pstart+1) + i] += loct[i].ppfd_h/(double)ndy/(double)DSTEP;
+                        out_ann[9*(pend-pstart+1) + i] += loct[i].vpd/(double)ndy/(double)DSTEP;
+                        out_ann[10*(pend-pstart+1) + i] += loct[i].prate_sfc;
+                        out_ann[11*(pend-pstart+1) + i] += loct[i].aet;
                     }
-                    /* //outdat01[i] = loct2[i].hangle;
-                    //outdat02[i] = loct2[i].solhgt_h;
-                    //outdat03[i] = loct2[i].toprad_h;
-                    //outdat04[i] = loct2[i].ppfd_h; */
 
                     mean_veg[grid[i].veg_type][0] += (double)(grid[i].area / 24.0 / (double)ndy);
                     mean_veg[grid[i].veg_type][1] += (double)(grid[i].area * flux[i].gpp);
@@ -709,14 +680,14 @@ void f_experiment(
                 
                 fprintf(fp_monitor,"\n");
 
-                #if OUT_DAY==1
                 if(e>=BYR && e<=EYR){
-                    fwrite(outdat01, sizeof(float), NROW*NCOL, fp_out[1]);
-                    fwrite(outdat02, sizeof(float), NROW*NCOL, fp_out[2]);
-                    fwrite(outdat03, sizeof(float), NROW*NCOL, fp_out[3]);
-                    fwrite(outdat04, sizeof(float), NROW*NCOL, fp_out[4]);
+                    for(j=0;j<N_ANNRES;j++){
+                        for(i=pstart; i<=pend; i++){
+                            fdat[i] = out_hr[j*(pend-pstart+1) + i];
+                        }
+                        fwrite(fdat, sizeof(float), (pend-pstart+1), fp_out[j+1]);
+                    }
                 }
-                #endif
                 
                 if(strcmp(grid[0].area_id, "JAPAN")==0 || strcmp(grid[0].area_id, "BB")==0
                     || strcmp(grid[0].area_id, "JAPANc")==0 || strcmp(grid[0].area_id, "JAPANh")==0
@@ -772,17 +743,15 @@ void f_experiment(
 		
 		/* output annual maps */
 		if(e>=BYR && e<=EYR){
-			fwrite(out_a, sizeof(float), N_ANNRES*NROW*NCOL, fp_out[0]);
+			fwrite(out_ann, sizeof(float), N_ANNRES*(pend-pstart+1), fp_out[0]);
 		}
-        
-        #if OUT_DAY==1
-		for(j=1;j<=4;j++){
-            fclose(fp_out[j]);
-        }
-        #endif	
         
         if(FIX_LAI == 2 || FIX_LAI == 3){
             fclose(fp_lai);
+        }
+        
+        for(i=1;i<=N_ANNRES;i++){
+            fclose(fp_out[i]);
         }
 
         printf("ANNUAL %ld %f %f %f %f %f %f\n",loct[0].adyear, gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga, prec_ga);
@@ -813,10 +782,6 @@ void f_experiment(
     fclose(fp_monitor);
     fclose(fp_veg);
 		
-	if(USE_RESTART == 1){
-		fclose(fp_restart);
-	}
-
 	if(NOTICE == 1){
 		printf("done\n");
 	}

@@ -22,8 +22,7 @@
 /* climatology: *_d[] means the time-series during 1948 to 2004- */	
 extern float	tmp_sfc_dav[366];
 extern float	tmp_2m_dav[366];	
-extern float	tmp10_soil_dav[366];	
-extern float	tmp200_soil_dav[366];	
+extern float	tmp200_soil_dav[366];
 extern float	prate_sfc_dav[366];	
 extern float	dswrf_sfc_dav[366];	
 extern float	spfh_2m_dav[366];	
@@ -58,7 +57,6 @@ void clear_b(
 	for(e=0;e<366;e++){
 		tmp_sfc_dav[e] = 0.0;
 		tmp_2m_dav[e] = 0.0;
-		tmp10_soil_dav[e] = 0.0;
 		tmp200_soil_dav[e] = 0.0;
 		prate_sfc_dav[e] = 0.0;
 		dswrf_sfc_dav[e] = 0.0;

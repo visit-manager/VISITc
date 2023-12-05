@@ -28,7 +28,6 @@ float	prate_sfc_ncep_mav[12];		/* precipitation, mm mon-1 */
 
 float	tmp_sfc_dav[366];	
 float	tmp_2m_dav[366];	
-float	tmp10_soil_dav[366];	
 float	tmp200_soil_dav[366];	
 float	prate_sfc_dav[366];	
 float	dswrf_sfc_dav[366];	
@@ -69,12 +68,3 @@ struct Echar echar_type[MAX_BIOME];		/* default parameters */
 float fdat[NROW * NCOL], fdatc[NROW * NCOL];
 unsigned char cdat[NROW * NCOL];
 int idat[NROW * NCOL];
-
-#if OUT_DAY==1
-float outdat01[NROW*NCOL];
-float outdat02[NROW*NCOL];
-float outdat03[NROW*NCOL];
-float outdat04[NROW*NCOL];
-#endif
-
-float out_a[N_ANNRES][NROW*NCOL];

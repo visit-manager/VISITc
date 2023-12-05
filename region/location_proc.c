@@ -27,8 +27,7 @@ extern float tmp_2m_ncep_dav[366];			/* 2m air temperature, degree Celcius */
 extern float prate_sfc_ncep_mav[12];		/* precipitation, mm mon-1 */
 extern float tmp_sfc_dav[366];	
 extern float tmp_2m_dav[366];	
-extern float tmp10_soil_dav[366];	
-extern float tmp200_soil_dav[366];	
+extern float tmp200_soil_dav[366];
 extern float prate_sfc_dav[366];	
 extern float dswrf_sfc_dav[366];	
 extern float spfh_2m_dav[366];	

@@ -15,6 +15,7 @@
 #include<stdlib.h>
 #include<math.h>
 #include<string.h>
+#include<time.h>
 #include"definition.h"
 #include"setting.h"
 #include"structure.h"
@@ -29,7 +30,6 @@
 
 /* main simulation roop *************************************************/
 int main(void){
-	FILE *fp_r[N_OFILE];
     struct Grid *grid2;
     struct Mass *mass2;
     struct Loct *loct2;
@@ -45,20 +45,20 @@ int main(void){
 	/* *******************************************************************/
 	/** setting configuration **/
 	f_setting(&grid2[0]);
-    srand(1393);
+    srand( time(NULL)%(100000) );
 	
 	/* *******************************************************************/
 	/** initialization & open files **/
-	f_initialize(grid2, loct2, echar2, mass2, flux2, fp_r);
+	f_initialize(grid2, loct2, echar2, mass2, flux2);
 	
 	/* *******************************************************************/
 	/** spin-up **/
-    if(USE_RESTART == 0){
-        f_spinup(grid2, loct2, echar2, mass2, flux2, fp_r[0]);
+    if(USE_RESTART == 0 || USE_RESTART == 2){
+        f_spinup(grid2, loct2, echar2, mass2, flux2);
     }
 	
 	/** experiment **/
-	f_experiment(grid2, loct2, echar2, mass2, flux2, fp_r); /* */
+	f_experiment(grid2, loct2, echar2, mass2, flux2); /* */
 	
 	/* *******************************************************************/
     
@@ -68,8 +68,5 @@ int main(void){
     free(echar2);
     free(flux2);
 
-    /** close files **/
-    f_terminate(fp_r);
-    
 	return 0;
 }

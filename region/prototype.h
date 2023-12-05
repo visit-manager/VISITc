@@ -24,10 +24,9 @@ void delete_soil(			struct Smas *mass);
 
 /* **** INITIALIZATION *****/
 void f_setting(				struct Grid *grid);
-void f_terminate(			FILE *fp_r[N_OFILE]);
 
 void f_initialize(			struct Grid grid[], struct Loct loct[], struct Echar echar[],
-							struct Mass mass[], struct Flux flux[], FILE *fp_r[N_OFILE]);
+							struct Mass mass[], struct Flux flux[]);
 void f_init_cond(					struct Grid *grid, struct Loct *loct, struct Echar *echar,
 							struct Mass *mass, struct Flux *flux);
 void f_init_loct(					struct Grid *grid, struct Loct *loct, struct Echar *echar, 
@@ -53,7 +52,7 @@ void f_open_japanh_clim(    short stage, short yr, short mon, short day, short h
 void f_open_japank_clim(    short stage, short yr, short mon, short day, short hour, FILE *fp_clim[N_CLIMD]);
 void f_open_pawcs_clim(     short stage, short yr, short mon, short day, short hour, FILE *fp_clim[N_CLIMD]);
 void f_create_dfile_global( short phase, short year, struct Grid *grid,
-                            char filename[128], FILE *fp[N_OFILE]);
+                            char filename[128], FILE *fp[N_ANNRES]);
 float grid_area(			float lat1, float lat2, float lon1, float lon2);
 
 /* **** MASS & PARAMETERS INITIALIZATION *****/
@@ -153,18 +152,14 @@ void interval(				struct Grid *grid, struct Loct *loct, struct Pchar *pchar,
 
 /* **** SCHEMES *****/
 void f_spinup(				struct Grid grid[], struct Loct loct[], struct Echar echar[],
-                            struct Mass mass[], struct Flux flux[], FILE *fp_r);
+                            struct Mass mass[], struct Flux flux[]);
 void f_experiment(			struct Grid grid[], struct Loct loct[], struct Echar echar[],
-                            struct Mass mass[], struct Flux flux[], FILE *fp_r[N_OFILE]);
+                            struct Mass mass[], struct Flux flux[]);
 void f_daily_scheme(		struct Grid *grid, struct Loct *loct, struct Echar *echar,
                             struct Mass *mass, 
 							struct Flux *flux);
 
-void f_flux_TKY(			struct Grid *grid, struct Loct *loct, struct Echar *echar, 
-							struct Mass *mass, struct Flux *flux, FILE *fp_o, 
-                            FILE *fp_r[N_OFILE]);
-
-void disturbance_regime(	long year, struct Grid *grid, struct Loct *loct, struct Mass *mass, 
+void disturbance_regime(	long year, struct Grid *grid, struct Loct *loct, struct Mass *mass,
 							struct Flux *flux);
 void logging_event(			struct Grid *grid, struct Mass *mass);
 void grazing_event(			struct Grid *grid, struct Loct* loct, struct Mass *mass);

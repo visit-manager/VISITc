@@ -121,25 +121,6 @@ void modyTdoy(
 	*doy += day;
 }
 
-/******************************************************/
-void f_terminate(
-	FILE *fp_r[N_OFILE]
-){
-	long h;
-	
-	if(NOTICE==1){
-		printf("Close output files...");
-	}
-	
-	for(h=0;h<N_OFILE;h++){
-		fclose(fp_r[h]); 
-	}
-
-	if(NOTICE==1){
-		printf("done\n");
-	}
-}
-
 /* *********************************************************/
 /* area (ha) of grid lat1-lat2 x lon1-lon2 (in degree)    */
 float grid_area(

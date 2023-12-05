@@ -53,8 +53,7 @@ void f_initialize(
 	struct Loct loct[],
 	struct Echar echar[],
 	struct Mass mass[],
-	struct Flux flux[],
-	FILE *fp_r[N_OFILE]
+	struct Flux flux[]
 ){
 	char filename[128];
 	long h, i, yr, day;
@@ -170,7 +169,7 @@ void f_initialize(
     for(i=0; i<WGRIDS; i++){
         loct[i].depo_nh4_model_av = 0.0;
         loct[i].depo_no3_model_av = 0.0;
-}
+    }
 	
     /* site simulation */
     
@@ -279,74 +278,6 @@ void f_initialize(
 			}
 			break;
 		default:
-			break;
-	}
-	if(NOTICE == 1){
-		printf("done\n");
-	}
-
-	/* *****************************************************************/
-	if(NOTICE == 1){
-		printf("Creating result files...");
-	}
-	switch(WMODE){
-		case 1: /* point */
-			for(h=0;h<N_OFILE;h++){
-				strcpy(filename, grid[0].area_id);
-				strcat(filename, grid[0].file_name);
-				
-				switch(h){
-					case 0:		strcat(filename, "_spinup");		break;
-					case 1:		strcat(filename, "_hourly");		break;
-					case 2:		strcat(filename, "_daily");			break;
-					case 3:		strcat(filename, "_monthly");		break;
-					case 4:		strcat(filename, "_annual");		break;
-					case 5:		strcat(filename, "_ansis1");	break;
-					case 6:		strcat(filename, "_ansis2");		break;
-					case 7:		strcat(filename, "_ansis3");			break;
-					case 8:		strcat(filename, "_ansis4");			break;
-					case 9:		strcat(filename, "_ansis5");		break;
-					case 10:	strcat(filename, "_99-30min");		break;
-					case 11:	strcat(filename, "_00-30min");		break;
-					case 12:	strcat(filename, "_01-30min");		break;
-					case 13:	strcat(filename, "_02-30min");		break;
-					case 14:	strcat(filename, "_03-30min");		break;
-					case 15:	strcat(filename, "_04-30min");		break;
-					case 16:	strcat(filename, "_05-30min");		break;
-				}
-				strcat(filename, ".txt");
-				fp_r[h] = fopen(filename,"wt");
-			}
-			break;
-		case 2: case 3:  /* region */
-			
-            for(h=0;h<N_OFILE;h++){
-                strcpy(filename, grid[0].area_id);
-                strcat(filename, grid[0].file_name);
-                switch(h){
-                    case 0:		strcat(filename, "_spinup");		break;
-                    case 1:		strcat(filename, "_hourly");		break;
-                    case 2:		strcat(filename, "_daily");		break;
-                    case 3:		strcat(filename, "_monthly");		break;
-                    case 4:		strcat(filename, "_annual");		break;
-                        
-                    case 5:		strcat(filename, "_ansis1");		break;
-                    case 6:		strcat(filename, "_ansis2");		break;
-                    case 7:		strcat(filename, "_ansis3");		break;
-                    case 8:		strcat(filename, "_ansis4");		break;
-                    case 9:		strcat(filename, "_ansis5");		break;
-                    case 10:	strcat(filename, "_04-daily");		break;
-                    case 11:	strcat(filename, "_05-daily");		break;
-                    case 12:	strcat(filename, "_06-daily");		break;
-                    case 13:	strcat(filename, "_07-daily");		break;
-                    case 14:	strcat(filename, "_dat1");			break;
-                    case 15:	strcat(filename, "_dat2");			break;
-                    case 16:	strcat(filename, "_dat3");			break;
-                }
-                strcat(filename, ".txt");
-                fp_r[h] = fopen(filename,"wt");
-            }
-			
 			break;
 	}
 	if(NOTICE == 1){

@@ -33,21 +33,13 @@ extern int idat[NROW * NCOL];
 extern long month_day[12];
 extern struct Echar echar_type[MAX_BIOME];
 
-#if OUT_DAY==1
-extern float outdat01[NROW*NCOL];
-extern float outdat02[NROW*NCOL];
-extern float outdat03[NROW*NCOL];
-extern float outdat04[NROW*NCOL];
-#endif
-
 /* spin-up ************************************************************************/
 void f_spinup(
   struct Grid grid[],
   struct Loct loct[],
   struct Echar echar[],
   struct Mass mass[],
-  struct Flux flux[],
-	FILE *fp_spinup
+  struct Flux flux[]
 ){
 	long e, f, h, i, j, calc_flag, sasu_flag, climyr, end_climyr;
 	char filename[128];
@@ -56,8 +48,7 @@ void f_spinup(
 	float gpp_a, npp_a, nep_a, lai_a, plant_a, soil_a, xx[20], ch4_a, nn, mm;
     float gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga;
     float wi, ti, ll, rdata, vps;
-	FILE *fp_clim[N_CLIMD], *fp_error;
-	FILE *fp_out[1+4], *fp_log;
+	FILE *fp_clim[N_CLIMD], *fp_error, *fp_log;
     FILE *fp_ss_grid, *fp_ss_loct, *fp_ss_mass, *fp_ss_flux, *fp_ss_echar;
 	struct Grid grid0;
 	struct Loct loct0;
@@ -74,57 +65,81 @@ void f_spinup(
         pend = P_MONI;
     }
     
+    /* **************************************************************************/
+    if(USE_RESTART == 2){
+        if(NOTICE == 1){
+            printf("Read restart file...");
+        }
+
+        strcpy(filename, grid[0].area_id);
+        strcat(filename, "_restart_grid.flt");
+        if((fp_ss_grid = fopen(filename,"rb")) == NULL){
+            printf("!! NO %s\n",filename);
+            exit (1);
+        }
+
+        strcpy(filename, grid[0].area_id);
+        strcat(filename, "_restart_loct.flt");
+        if((fp_ss_loct = fopen(filename,"rb")) == NULL){
+            printf("!! NO %s\n",filename);
+            exit (1);
+        }
+
+        strcpy(filename, grid[0].area_id);
+        strcat(filename, "_restart_mass.flt");
+        if((fp_ss_mass = fopen(filename,"rb")) == NULL){
+            printf("!! NO %s\n",filename);
+            exit (1);
+        }
+
+        strcpy(filename, grid[0].area_id);
+        strcat(filename, "_restart_flux.flt");
+        if((fp_ss_flux = fopen(filename,"rb")) == NULL){
+            printf("!! NO %s\n",filename);
+            exit (1);
+        }
+
+        strcpy(filename, grid[0].area_id);
+        strcat(filename, "_restart_echar.flt");
+        if((fp_ss_echar = fopen(filename,"rb")) == NULL){
+            printf("!! NO %s\n",filename);
+            exit (1);
+        }
+
+        for(f=0;f<NCOL*NROW;f++){
+            fread(&grid[f], sizeof(grid0), 1, fp_ss_grid);
+            fwrite(&loct[f], sizeof(loct0), 1, fp_ss_loct);
+            fread(&mass[f], sizeof(mass0), 1, fp_ss_mass);
+            fread(&flux[f], sizeof(flux0), 1, fp_ss_flux);
+            fread(&echar[f], sizeof(echar0), 1, fp_ss_echar);
+        }
+        
+        fclose(fp_ss_grid);
+        fclose(fp_ss_loct);
+        fclose(fp_ss_mass);
+        fclose(fp_ss_flux);
+        fclose(fp_ss_echar);
+        
+        if(NOTICE == 1){
+            printf("done\n");
+        }
+    }
+
     for(i=pstart; i<=pend; i++){
         loct[i].phase = 1;
     }
     
-	/* strcpy(filename, grid[0].area_id);
-	strcat(filename, "_restart.txt");
-	fp_restart = fopen(filename,"wt"); */
-    
-	strcpy(filename, grid[0].area_id);
-	strcat(filename, "_restart_grid.flt");
-	fp_ss_grid = fopen(filename,"wb");
-    
-	strcpy(filename, grid[0].area_id);
-	strcat(filename, "_restart_loct.flt");
-	fp_ss_loct = fopen(filename,"wb");
-    
-	strcpy(filename, grid[0].area_id);
-	strcat(filename, "_restart_mass.flt");
-	fp_ss_mass = fopen(filename,"wb");
-    
-	strcpy(filename, grid[0].area_id);
-	strcat(filename, "_restart_flux.flt");
-	fp_ss_flux = fopen(filename,"wb");
-    
-	strcpy(filename, grid[0].area_id);
-	strcat(filename, "_restart_echar.flt");
-	fp_ss_echar = fopen(filename,"wb");
-
-	
     /* error file */
 	fp_error = fopen("log_error.txt","wt");
     
     /* log file */
 	fp_log = fopen("log_spinup.txt","wt");
     
-	strcpy(filename, grid[0].area_id);
-    strcat(filename, grid[0].file_name);
-	strcat(filename, "_watch.flt");
-	fp_out[0] = fopen(filename,"wb");
-
 	if(NOTICE == 1){
 		printf("Start spin-up phase\n");
 	}
 	
-	if(WMODE == 1){
-		fprintf(fp_spinup,"%s %s\n", echar[0].para_ver_id, echar[0].para_date_id);
-	}else if(WMODE == 2){
-		fprintf(fp_spinup,"%s %s\n", echar_type[0].para_ver_id, echar_type[0].para_date_id);
-	}
-	
-	for(i=pstart; i<=pend; i++){ 
+	for(i=pstart; i<=pend; i++){
 		grid[i].time = 0;
 		grid[i].age_stand = 0.0;
         
@@ -178,10 +193,6 @@ void f_spinup(
         /* string of year ADXXXX */
         snprintf(num, 8, "%04d", (short)e);
 
-        #if OUT_DAY==1
-            //f_create_dfile_global(loct->phase, &grid[0], filename, fp_out);
-        #endif
-        
         if(e>=6 && (e%2==0)){
             for(i=pstart; i<=pend; i++){ 
                 (mass[i].soil).sasu_li_tf = 0.0;
@@ -614,14 +625,6 @@ void f_spinup(
                         /* basic scheme ******************************************/
                         f_daily_scheme(&grid[i], &loct[i], &echar[i], &mass[i], &flux[i]);
                         
-                        #if OUT_DAY==1		/* daily outputs */
-                        /* CFSR run */
-                        outdat01[i] = flux[i].gpp;
-                        outdat02[i] = flux[i].er;
-                        outdat03[i] = flux[i].nep;
-                        outdat04[i] = loct[i].rn_eco;
-                        #endif
-                        
                         /* cumulative parameters for SASU */
                         if(USE_SASU == 1 && sasu_flag == 1){
                             (mass[i].soil).sasu_li_tf += (flux[i].soil).li_tf;
@@ -788,9 +791,6 @@ void f_spinup(
                                     loct[i].funder_c4 * (mass[i].c4).plant) / (float)(DSTEP*ndy) / 1000000.0;
                         soil_ga += grid[i].area * (mass[i].soil).soil / (float)(DSTEP*ndy) / 1000000.0;
                     }
-                    #if OUT_DAY==1
-                    outdat04[i] = loct[i].ppfd_h;
-                    #endif
                 }
                 printf("%7.3f %7.3f %7.3f : %8.2f %8.2f %8.2f: %6.3f: ",
                        100.0*gpp_a/nn, 100.0*npp_a/nn, 100.0*nep_a/nn,
@@ -811,13 +811,6 @@ void f_spinup(
                        lai_a/nn, plant_a/nn, soil_a/nn); */
                 fprintf(fp_log,"\n");
                 
-                /*****************************/
-                #if OUT_DAY==1
-                if(e==BYR && f==0){
-                    fwrite(outdat04,sizeof(float),WGRIDS, fp_out[0]);
-                }
-                #endif
-
                 if(strcmp(grid[0].area_id, "JAPAN")==0 || strcmp(grid[0].area_id, "BB")==0
                         || strcmp(grid[0].area_id, "JAPANc")==0 || strcmp(grid[0].area_id, "JAPANh")==0
                         || strcmp(grid[0].area_id, "JAPANk")==0){
@@ -877,55 +870,26 @@ void f_spinup(
         }
     }
 
-    fclose(fp_out[0]);
+    strcpy(filename, grid[0].area_id);
+    strcat(filename, "_restart_grid.flt");
+    fp_ss_grid = fopen(filename,"wb");
     
-    /* RESTART FILES ***********/
-    /* for(i=pstart; i<=pend; i++){
-        fprintf(fp_restart,"%f ", mass[i].snwa);
-        fprintf(fp_restart,"%f ", mass[i].sw30);
-        fprintf(fp_restart,"%f ", mass[i].sww);
-
-        fprintf(fp_restart,"%f ", (mass[i].tree).gdd);
-        fprintf(fp_restart,"%f ", (mass[i].tree).cdd);
-        fprintf(fp_restart,"%f ", (mass[i].tree).grwpd);
-        fprintf(fp_restart,"%ld ", (mass[i].tree).day_frush);
-        fprintf(fp_restart,"%ld ", (mass[i].tree).day_shed);
-        fprintf(fp_restart,"%f ", (mass[i].c3).gdd);
-        fprintf(fp_restart,"%f ", (mass[i].c3).cdd);
-        fprintf(fp_restart,"%f ", (mass[i].c3).grwpd);
-        fprintf(fp_restart,"%ld ", (mass[i].c3).day_frush);
-        fprintf(fp_restart,"%ld ", (mass[i].c3).day_shed);
-        fprintf(fp_restart,"%f ", (mass[i].c4).gdd);
-        fprintf(fp_restart,"%f ", (mass[i].c4).cdd);
-        fprintf(fp_restart,"%f ", (mass[i].c4).grwpd);
-        fprintf(fp_restart,"%ld ", (mass[i].c4).day_frush);
-        fprintf(fp_restart,"%ld ", (mass[i].c4).day_shed);
-
-        fprintf(fp_restart,"%f ", (mass[i].tree).fol);
-        fprintf(fp_restart,"%f ", (mass[i].tree).stm);
-        fprintf(fp_restart,"%f ", (mass[i].tree).rot);
-        fprintf(fp_restart,"%f ", (mass[i].c3).fol);
-        fprintf(fp_restart,"%f ", (mass[i].c3).stm);
-        fprintf(fp_restart,"%f ", (mass[i].c3).rot);
-        fprintf(fp_restart,"%f ", (mass[i].c4).fol);
-        fprintf(fp_restart,"%f ", (mass[i].c4).stm);
-        fprintf(fp_restart,"%f ", (mass[i].c4).rot);
-
-        fprintf(fp_restart,"%f ", (mass[i].tree).nsch_storage);
-        fprintf(fp_restart,"%f ", (mass[i].c3).nsch_storage);
-        fprintf(fp_restart,"%f ", (mass[i].c4).nsch_storage);
-
-        fprintf(fp_restart,"%f ", (mass[i].soil).ltr_tf);
-        fprintf(fp_restart,"%f ", (mass[i].soil).ltr_tc);
-        fprintf(fp_restart,"%f ", (mass[i].soil).ltr_tr);
-        fprintf(fp_restart,"%f ", (mass[i].soil).ltr_gf);
-        fprintf(fp_restart,"%f ", (mass[i].soil).ltr_gc);
-        fprintf(fp_restart,"%f ", (mass[i].soil).ltr_gr);
-        fprintf(fp_restart,"%f ", (mass[i].soil).msl_a);
-        fprintf(fp_restart,"%f ", (mass[i].soil).msl_i);
-        fprintf(fp_restart,"%f\n", (mass[i].soil).msl_p);
-    } */
+    strcpy(filename, grid[0].area_id);
+    strcat(filename, "_restart_loct.flt");
+    fp_ss_loct = fopen(filename,"wb");
     
+    strcpy(filename, grid[0].area_id);
+    strcat(filename, "_restart_mass.flt");
+    fp_ss_mass = fopen(filename,"wb");
+    
+    strcpy(filename, grid[0].area_id);
+    strcat(filename, "_restart_flux.flt");
+    fp_ss_flux = fopen(filename,"wb");
+    
+    strcpy(filename, grid[0].area_id);
+    strcat(filename, "_restart_echar.flt");
+    fp_ss_echar = fopen(filename,"wb");
+
     for(f=0;f<NCOL*NROW;f++){
         fwrite(&grid[f], sizeof(grid0), 1, fp_ss_grid);
         fwrite(&loct[f], sizeof(loct0), 1, fp_ss_loct);
@@ -934,16 +898,16 @@ void f_spinup(
         fwrite(&echar[f], sizeof(echar0), 1, fp_ss_echar);
     }
 
-	if(NOTICE == 1){
-		printf("done\n");
-	}
-	
-	fclose(fp_error);
-    fclose(fp_log);
-
 	fclose(fp_ss_grid);
 	fclose(fp_ss_loct);
 	fclose(fp_ss_mass);
 	fclose(fp_ss_flux);
 	fclose(fp_ss_echar);
+    
+    fclose(fp_error);
+    fclose(fp_log);
+    
+    if(NOTICE == 1){
+        printf("done\n");
+    }
 }

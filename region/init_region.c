@@ -293,12 +293,15 @@ void f_init_global_run(
     }
     for(i=0; i<WGRIDS; i++){
         grid[i].clay_frac = fdat[i]/100.0;
-        if(grid[i].clay_frac < 0.01){
+        if(grid[i].clay_frac < 0.0){
+            grid[i].field_cap = 8; /* no soil data */
+        }
+       if(grid[i].clay_frac < 0.01){
             grid[i].clay_frac = 0.011;
         }
     }
     fclose(fp_dat);
-    if(NOTICE==1){
+    if(NOTICE == 1){
         printf("done\n");
     }
     
@@ -313,12 +316,15 @@ void f_init_global_run(
     }
     for(i=0; i<WGRIDS; i++){
         grid[i].sand_frac = fdat[i]/100.0;
+        if(grid[i].sand_frac < 0.0){
+            grid[i].field_cap = 8; /* no soil data */
+        }
         if(grid[i].sand_frac < 0.01){
             grid[i].sand_frac = 0.01;
         }
     }
     fclose(fp_dat);
-    if(NOTICE==1){
+    if(NOTICE == 1){
         printf("done\n  ");
     }
     
@@ -347,7 +353,7 @@ void f_init_global_run(
             grid[i].flag_datavl = 7; /* no land */
         }
         
-        if(NOTICE==1){
+        if(NOTICE == 1){
             /* printf("%2d", grid[i].flag_datavl); */
             /* if((i+1)%30==0) printf("%.2f ", grid[i].lat); */
             if((i+1)%10==0 && ((i/NCOL)%1==0)) printf("%2d", grid[i].veg_type);
@@ -366,7 +372,7 @@ void f_init_global_run(
         
         /* soil parameterizatrions using Saxton (1986) *********/
         f_soil_saxton(&grid[i]);
-        if(grid[i].field_cap <= 1.0){
+       if(grid[i].field_cap <= 1.0){
             grid[i].field_cap = 1.0;
         }
         
@@ -375,9 +381,6 @@ void f_init_global_run(
         grid[i].fieldcap = grid[i].field_cap * (rdepth[grid[i].veg_type] - 0.3)/0.3; /* 30-rooting_depth */
         grid[i].hyd_cond = 0.004313;
 
-        if(grid[i].fieldcap < 0.0){
-            grid[i].flag_datavl = 8; /* no soil data */
-        }
     }
 }
 
@@ -464,7 +467,7 @@ void f_init_bamiyan_run(
         exit (1);
     }
     fread(fdat, sizeof(float), WGRIDS, fp_dat);
-    if(NOTICE==1){
+    if(NOTICE == 1){
         printf(" Reading ./data/bamiyan_landcover_3sec.flt...");
     }
     for(i=0; i<WGRIDS; i++){

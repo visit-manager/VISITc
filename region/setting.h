@@ -15,7 +15,7 @@
 #define N_ANSBM 32
 #define N_CLIMD 7
 
-/**********************************************************/
+/* *********************************************************/
 /* experimental area ********/
 
 /* ERA5: 2021/03/30 by A.Ito */
@@ -50,8 +50,6 @@
 /* PAWCs center: 2023/06/13 by A.Ito */
 //#define NROW 200
 //#define NCOL 1490
-
-
 
 /* experimental period ***********************/
 
@@ -98,6 +96,12 @@
 /* leap-year: 2017/08/15 by A.Ito */
 #define LEAP_YR 0
 
+/* restart file */
+#define USE_RESTART 0
+/* 0: off */
+/* 1: use restart file (skip spin-up) */
+/* 2: use restart file (continue spin-up) */
+
 /* **********************************************/
 /* number of MAX biomes */
 #define MAX_BIOME 128
@@ -106,9 +110,6 @@
 
 /* number of land-use data */
 #define N_LUDATA 34 /* UNH harmonized data */
-
-/* number of output files */
-#define N_OFILE 5
 
 /* show message */
 #define NOTICE 1
@@ -120,9 +121,6 @@
 /* 0: no */
 /* 1: on */
 
-/* output daily results **************************/
-#define OUT_DAY 1
-
 /* nitrogen cycle scheme */
 #define N_CYCLE 0
 /* 0: skip, i.e. not calculate */
@@ -132,11 +130,6 @@
 #define SCI_SCHEME 0
 /* 0: neglect */
 /* 1: include */
-
-/* restart */
-#define USE_RESTART 0
-/* 0: no use */
-/* 1: use */
 
 /* *********************************************/
 /* solve equilibrium leaf gas exchange */
