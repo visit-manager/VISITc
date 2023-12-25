@@ -55,7 +55,7 @@ float f_solhgt(
 	loct->sinb_h = 
 		(loct->sinb_h>=-1.0)?loct->sinb_h:-1.0;
 		
-	bbb = asin(loct->sinb_h)*rTd;
+	bbb = asin(loct->sinb_h) * rTd;
 	
 	return (bbb);
 }

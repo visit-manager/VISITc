@@ -48,7 +48,7 @@ void f_spinup(
 	float gpp_a, npp_a, nep_a, lai_a, plant_a, soil_a, xx[20], ch4_a, nn, mm;
     float gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga;
     float wi, ti, ll, rdata, vps;
-	FILE *fp_clim[N_CLIMD], *fp_error, *fp_log;
+	FILE *fp_clim[N_CLIMD], *fp_error, *fp_log, *fp_check;
     FILE *fp_ss_grid, *fp_ss_loct, *fp_ss_mass, *fp_ss_flux, *fp_ss_echar;
 	struct Grid grid0;
 	struct Loct loct0;
@@ -134,6 +134,9 @@ void f_spinup(
     
     /* log file */
 	fp_log = fopen("log_spinup.txt","wt");
+    
+    /* log file */
+    fp_check = fopen("log_check.txt","wt");
     
 	if(NOTICE == 1){
 		printf("Start spin-up phase\n");
@@ -859,8 +862,9 @@ void f_spinup(
             mm += 1.0;
         }
         
-        printf("ANNUAL %ld %f %f %f %f %f\n",loct[0].adyear, gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga);
-        
+        //printf("ANNUAL %ld %f %f %f %f %f\n",loct[0].adyear, gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga);
+        fprintf(fp_check,"%ld %f %f %f %f %f\n",loct[0].adyear, gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga);
+
         if(strcmp(grid[0].area_id, "BAMIYAN")==0){
             fclose(fp_clim[0]);
             fclose(fp_clim[1]);
@@ -906,7 +910,8 @@ void f_spinup(
     
     fclose(fp_error);
     fclose(fp_log);
-    
+    fclose(fp_check);
+
     if(NOTICE == 1){
         printf("done\n");
     }
