@@ -45,9 +45,9 @@ void f_spinup(
 	char filename[128];
 	char num[8];
 	long ndy, pstart, pend;
-	float gpp_a, npp_a, nep_a, lai_a, plant_a, soil_a, xx[20], ch4_a, nn, mm;
-    float gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga;
-    float wi, ti, ll, rdata, vps;
+	double gpp_a, npp_a, nep_a, lai_a, plant_a, soil_a, ch4_a, nn;
+    double gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga;
+    float wi, ti, ll, rdata, vps, xx[20], mm;
 	FILE *fp_clim[N_CLIMD], *fp_error, *fp_log, *fp_check;
     FILE *fp_ss_grid, *fp_ss_loct, *fp_ss_mass, *fp_ss_flux, *fp_ss_echar;
 	struct Grid grid0;
@@ -795,7 +795,7 @@ void f_spinup(
                         soil_ga += grid[i].area * (mass[i].soil).soil / (float)(DSTEP*ndy) / 1000000.0;
                     }
                 }
-                printf("%7.3f %7.3f %7.3f : %8.2f %8.2f %8.2f: %6.3f: ",
+                printf("%7.3lf %7.3lf %7.3lf : %8.2lf %8.2lf %8.2lf: %6.3lf: ",
                        100.0*gpp_a/nn, 100.0*npp_a/nn, 100.0*nep_a/nn,
                        lai_a/nn, plant_a/nn, soil_a/nn, ch4_a/nn);
                 /* printf("%10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %10.4f: ",
@@ -806,7 +806,7 @@ void f_spinup(
                 printf("%6.1f: ",xx[2]/nn);
                 printf("\n");
 
-                fprintf(fp_log,"%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f ",
+                fprintf(fp_log,"%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf ",
                        nn, gpp_a, npp_a, nep_a, lai_a, plant_a, soil_a, ch4_a,
                        xx[0], xx[1], xx[2], xx[3], xx[4], xx[5], xx[6], xx[7], xx[8], xx[9]);
                 /* fprintf(fp_log,"%12.2f %12.2f %12.2f %12.2f %12.2f %12.2f\n",
@@ -863,7 +863,7 @@ void f_spinup(
         }
         
         //printf("ANNUAL %ld %f %f %f %f %f\n",loct[0].adyear, gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga);
-        fprintf(fp_check,"%ld %f %f %f %f %f\n",loct[0].adyear, gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga);
+        fprintf(fp_check,"%ld %lf %lf %lf %lf %lf\n",loct[0].adyear, gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga);
 
         if(strcmp(grid[0].area_id, "BAMIYAN")==0){
             fclose(fp_clim[0]);

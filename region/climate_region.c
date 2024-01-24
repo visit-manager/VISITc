@@ -21,7 +21,7 @@
 #include"structure.h"
 #include"prototype.h"
 
-/* **********************************************/
+/* ****************************************************/
 void f_open_global_clim(
     short stage,
     short yr, 
@@ -123,7 +123,7 @@ void f_open_global_clim(
     }
 }
 
-/* **********************************************/
+/* ****************************************************/
 void f_open_bamiyan_clim(
     short stage,
     short yr, 
