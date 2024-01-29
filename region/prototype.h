@@ -52,7 +52,7 @@ void f_open_japanh_clim(    short stage, short yr, short mon, short day, short h
 void f_open_japank_clim(    short stage, short yr, short mon, short day, short hour, FILE *fp_clim[N_CLIMD]);
 void f_open_pawcs_clim(     short stage, short yr, short mon, short day, short hour, FILE *fp_clim[N_CLIMD]);
 void f_create_dfile_global( short phase, short year, struct Grid *grid,
-                            char filename[128], FILE *fp[N_ANNRES]);
+                            char filename[128], FILE *fp[N_OUTHR]);
 float grid_area(			float lat1, float lat2, float lon1, float lon2);
 
 /* **** MASS & PARAMETERS INITIALIZATION *****/

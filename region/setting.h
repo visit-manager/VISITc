@@ -10,10 +10,12 @@
 	modify: 2013 / 01 / 04 by Akihiko Ito
 */
 
-#define N_ANNRES 12
 #define N_ANSDAY 32
 #define N_ANSBM 32
 #define N_CLIMD 7
+
+#define N_OUTANN 12
+#define N_OUTHR 12
 
 /* *********************************************************/
 /* experimental area ********/

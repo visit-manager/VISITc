@@ -24,14 +24,14 @@ void f_create_dfile_global(
     short year, 
     struct Grid *grid,
     char filename[128],
-    FILE *fp_out[1+N_ANNRES]
+    FILE *fp_outhr[1+N_OUTHR]
 ){
     short i;
     char num[8], syr[8];
     
     snprintf(syr, 8, "%04d", year);
     
-    for(i=1;i<=N_ANNRES;i++){
+    for(i=1;i<=N_OUTHR;i++){
         snprintf(num, 8, "%02d", i);
         
         strcpy(filename, grid->area_id);
@@ -43,6 +43,6 @@ void f_create_dfile_global(
         strcat(filename, "_");
         strcat(filename, grid->file_name);
         strcat(filename, ".flt");
-        fp_out[i] = fopen(filename,"wb");
+        fp_outhr[i] = fopen(filename,"wb");
     }
 }

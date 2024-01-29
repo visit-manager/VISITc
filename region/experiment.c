@@ -58,7 +58,7 @@ void f_experiment(
     float* out_hr;
 	/* FILE *fp_o; */
 	FILE *fp_clim[N_CLIMD];
-	FILE *fp_out[1+N_ANNRES], *fp_log;
+	FILE *fp_outann, *fp_outhr[N_OUTHR], *fp_log;
     FILE *fp_ss_grid, *fp_ss_loct, *fp_ss_mass, *fp_ss_flux, *fp_ss_echar;
     FILE *fp_monitor, *fp_veg;
     FILE *fp_lai;
@@ -86,8 +86,8 @@ void f_experiment(
         }
     }
     
-    out_ann = (float *)malloc(sizeof(float) * N_ANNRES*(pend-pstart+1));
-    out_hr = (float *)malloc(sizeof(float) * N_ANNRES*(pend-pstart+1));
+    out_ann = (float *)malloc(sizeof(float) * N_OUTANN*(pend-pstart+1));
+    out_hr = (float *)malloc(sizeof(float) * N_OUTHR*(pend-pstart+1));
 
 	/* **************************************************************************/
     if(USE_RESTART == 1){
@@ -154,9 +154,9 @@ void f_experiment(
     strcat(filename, "_ann_");
 	strcat(filename, grid[0].file_name);
 	strcat(filename, ".flt");
-	fp_out[0] = fopen(filename,"wb");
+    fp_outann = fopen(filename,"wb");
     
-    /* log file */
+     /* log file */
     fp_log = fopen("log_ext.txt","wt");
     fp_monitor = fopen("monitor.txt","wt");
     fp_veg = fopen("veg_mean.txt","wt");
@@ -190,7 +190,7 @@ void f_experiment(
 		/* string of year ADXXXX */
 		snprintf(num, 8, "%04d", (short)e);
 
-        f_create_dfile_global(loct[0].phase, loct[0].adyear, &grid[0], filename, fp_out);
+        f_create_dfile_global(loct[0].phase, loct[0].adyear, &grid[0], filename, fp_outhr);
         
         /* fix canopy N exp: 2014/08/17 by A.Ito *************************/
         if((FIX_LAI == 2 || FIX_LAI == 3) && CONST_KN==0){
@@ -228,7 +228,7 @@ void f_experiment(
 		/* ************************************************/
         gpp_ga = npp_ga = nep_ga = plant_ga = soil_ga = prec_ga = 0.0;
         
-        for(i=0; i<(N_ANNRES*(pend-pstart+1)); i++){
+        for(i=0; i<(N_OUTANN*(pend-pstart+1)); i++){
             out_ann[i] = 0.0;
         }
                  
@@ -256,7 +256,7 @@ void f_experiment(
             for(f=0; f<DSTEP; f++){
                 for(i=pstart; i<=pend; i++){
                     loct[i].hour = f;
-                    for(j=0;j<N_ANNRES;j++){
+                    for(j=0;j<N_OUTHR;j++){
                         out_hr[j*(pend-pstart+1) + i] = 0.0;
                     }
                 }
@@ -619,6 +619,14 @@ void f_experiment(
                         out_hr[2*(pend-pstart+1) + i] = flux[i].nep;
                         out_hr[3*(pend-pstart+1) + i] = (flux[i].soil).ch4_wh;
                         
+                        out_hr[4*(pend-pstart+1) + i] = grid[i].srad_region;
+                        out_hr[5*(pend-pstart+1) + i] = loct[i].sfcrad_h;
+                        out_hr[6*(pend-pstart+1) + i] = loct[i].ppfd_h;
+
+                        
+                        
+                        
+                        
                         //outdat03[i] = ((mass[i].tree).plant + loct2[i].funder_c3 * (mass[i].c3).plant + loct2[i].funder_c4 * (mass[i].c4).plant);
                         //outdat04[i] = loct2[i].lai;
                         
@@ -681,11 +689,11 @@ void f_experiment(
                 fprintf(fp_monitor,"\n");
 
                 if(e>=BYR && e<=EYR){
-                    for(j=0;j<N_ANNRES;j++){
+                    for(j=0;j<N_OUTHR;j++){
                         for(i=pstart; i<=pend; i++){
                             fdat[i] = out_hr[j*(pend-pstart+1) + i];
                         }
-                        fwrite(fdat, sizeof(float), (pend-pstart+1), fp_out[j+1]);
+                        fwrite(fdat, sizeof(float), (pend-pstart+1), fp_outhr[j]);
                     }
                 }
                 
@@ -741,17 +749,18 @@ void f_experiment(
             } */
         }
 		
-		/* output annual maps */
-		if(e>=BYR && e<=EYR){
-			fwrite(out_ann, sizeof(float), N_ANNRES*(pend-pstart+1), fp_out[0]);
-		}
-        
         if(FIX_LAI == 2 || FIX_LAI == 3){
             fclose(fp_lai);
         }
         
-        for(i=1;i<=N_ANNRES;i++){
-            fclose(fp_out[i]);
+		/* output annual maps */
+		if(e>=BYR && e<=EYR){
+			fwrite(out_ann, sizeof(float), N_OUTANN*(pend-pstart+1), fp_outann);
+		}
+        fclose(fp_outann);
+        
+        for(i=1;i<N_OUTHR;i++){
+            fclose(fp_outhr[i]);
         }
 
         printf("ANNUAL %ld %f %f %f %f %f %f\n",loct[0].adyear, gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga, prec_ga);
@@ -777,7 +786,6 @@ void f_experiment(
         fprintf(fp_veg,"\n");
     }
     
-	fclose(fp_out[0]);
     fclose(fp_log);
     fclose(fp_monitor);
     fclose(fp_veg);
