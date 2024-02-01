@@ -685,7 +685,6 @@ void f_experiment(
                 fprintf(fp_monitor,"%f %f ",loct[P_MONI].dswrf_sfc, loct[P_MONI].tcdc_clm);
                 fprintf(fp_monitor,"%f %f ",loct[P_MONI].rn_short_eco, loct[P_MONI].rn_long_eco);
                 fprintf(fp_monitor,"%f %f %f %f ",loct[P_MONI].prate_sfc, loct[P_MONI].pet, loct[P_MONI].aet, loct[P_MONI].ro2);
-                
                 fprintf(fp_monitor,"\n");
 
                 if(e>=BYR && e<=EYR){
@@ -757,9 +756,8 @@ void f_experiment(
 		if(e>=BYR && e<=EYR){
 			fwrite(out_ann, sizeof(float), N_OUTANN*(pend-pstart+1), fp_outann);
 		}
-        fclose(fp_outann);
         
-        for(i=1;i<N_OUTHR;i++){
+        for(i=0;i<N_OUTHR;i++){
             fclose(fp_outhr[i]);
         }
 
@@ -777,7 +775,7 @@ void f_experiment(
             fclose(fp_clim[4]);
         }
 	}
-    
+
     for(i=0;i<20;i++){
         fprintf(fp_veg,"%ld ",i);
         for(j=0;j<32;j++){
@@ -786,6 +784,7 @@ void f_experiment(
         fprintf(fp_veg,"\n");
     }
     
+    fclose(fp_outann);
     fclose(fp_log);
     fclose(fp_monitor);
     fclose(fp_veg);
