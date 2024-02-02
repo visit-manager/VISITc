@@ -622,6 +622,11 @@ void f_experiment(
                         out_hr[4*(pend-pstart+1) + i] = grid[i].srad_region;
                         out_hr[5*(pend-pstart+1) + i] = loct[i].sfcrad_h;
                         out_hr[6*(pend-pstart+1) + i] = loct[i].ppfd_h;
+                        out_hr[7*(pend-pstart+1) + i] = loct[i].toprad_h;
+                        out_hr[8*(pend-pstart+1) + i] = loct[i].sinb_h;
+                        out_hr[9*(pend-pstart+1) + i] = loct[i].hangle;
+                        out_hr[10*(pend-pstart+1) + i] = loct[i].daylen;
+                        out_hr[11*(pend-pstart+1) + i] = loct[i].rn_eco;
 
                         
                         
