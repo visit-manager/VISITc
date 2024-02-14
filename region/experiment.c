@@ -614,23 +614,24 @@ void f_experiment(
 
                         /* BAMIYAN */
                         /* GLOBAL */
-                        out_hr[0*(pend-pstart+1) + i] = flux[i].gpp;
-                        out_hr[1*(pend-pstart+1) + i] = flux[i].npp;
-                        out_hr[2*(pend-pstart+1) + i] = flux[i].nep;
-                        out_hr[3*(pend-pstart+1) + i] = (flux[i].soil).ch4_wh;
+                        //out_hr[0*(pend-pstart+1) + i] = flux[i].gpp;
+                        //out_hr[1*(pend-pstart+1) + i] = flux[i].npp;
+                        //out_hr[2*(pend-pstart+1) + i] = flux[i].nep;
+                        //out_hr[3*(pend-pstart+1) + i] = (flux[i].soil).ch4_wh;
                         
-                        out_hr[4*(pend-pstart+1) + i] = grid[i].srad_region;
-                        out_hr[5*(pend-pstart+1) + i] = loct[i].sfcrad_h;
-                        out_hr[6*(pend-pstart+1) + i] = loct[i].ppfd_h;
-                        out_hr[7*(pend-pstart+1) + i] = loct[i].toprad_h;
-                        out_hr[8*(pend-pstart+1) + i] = loct[i].sinb_h;
-                        out_hr[9*(pend-pstart+1) + i] = loct[i].hangle;
-                        out_hr[10*(pend-pstart+1) + i] = loct[i].daylen;
-                        out_hr[11*(pend-pstart+1) + i] = loct[i].rn_eco;
+                        out_hr[0*(pend-pstart+1) + i] = grid[i].srad_region;
+                        out_hr[1*(pend-pstart+1) + i] = loct[i].hour;
+                        out_hr[2*(pend-pstart+1) + i] = loct[i].hangle;
+                        out_hr[3*(pend-pstart+1) + i] = loct[i].solhgt_h;
+                        out_hr[4*(pend-pstart+1) + i] = loct[i].soldec;
+                        out_hr[5*(pend-pstart+1) + i] = loct[i].daylen;
+                        out_hr[6*(pend-pstart+1) + i] = loct[i].toprad_h;
+                        out_hr[7*(pend-pstart+1) + i] = loct[i].sinb_h;
+                        out_hr[8*(pend-pstart+1) + i] = loct[i].sfcrad_h;
+                        out_hr[9*(pend-pstart+1) + i] = loct[i].ppfd_h;
 
                         
-                        
-                        
+                        //out_hr[11*(pend-pstart+1) + i] = loct[i].rn_eco;
                         
                         //outdat03[i] = ((mass[i].tree).plant + loct2[i].funder_c3 * (mass[i].c3).plant + loct2[i].funder_c4 * (mass[i].c4).plant);
                         //outdat04[i] = loct2[i].lai;
