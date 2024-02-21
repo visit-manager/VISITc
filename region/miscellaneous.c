@@ -145,12 +145,12 @@ float grid_area(
 	l_lat = PI/180.0*e_rad*(1.0 - e_exc*e_exc)/pow(aa, 1.5) * fabs(lat1 - lat2);
 	
 	/* bug fixed 2007/12/25 E.Kato and A.Ito */
-	aa = 1.0 - e_exc * e_exc*sin(lat1*PI/180.0) * sin(lat1*PI/180.0);
-	l_lon1 = PI/180.0 * e_rad*cos(lat1*PI/180.0)/sqrt(aa) * fabs(lon1-lon2);
-	aa = 1.0 - e_exc * e_exc*sin(lat2*PI/180.0) * sin(lat2*PI/180.0);
-	l_lon2 = PI/180.0 * e_rad*cos(lat2*PI/180.0)/sqrt(aa) * fabs(lon1-lon2);
+	aa = 1.0 - e_exc * e_exc * sin(lat1*PI/180.0) * sin(lat1*PI/180.0);
+	l_lon1 = PI/180.0 * e_rad * cos(lat1*PI/180.0)/sqrt(aa) * fabs(lon1-lon2);
+	aa = 1.0 - e_exc * e_exc * sin(lat2*PI/180.0) * sin(lat2*PI/180.0);
+	l_lon2 = PI/180.0 * e_rad * cos(lat2*PI/180.0)/sqrt(aa) * fabs(lon1-lon2);
 	
-	area = (l_lon1 + l_lon2)*l_lat/2.0;
+	area = (l_lon1 + l_lon2) * l_lat/2.0;
 	
 	return (area/1000000.0); /* km2 */
 }

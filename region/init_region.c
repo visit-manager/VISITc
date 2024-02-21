@@ -56,7 +56,8 @@ void f_init_global_run(
         printf(" Setting longitude...");
     }
     for(i=0; i<WGRIDS; i++){
-        grid[i].lat = -180.0 - ((float)(i%NCOL) + 0.5) * (360.0 / (float)NCOL);
+        /* corrected: 2024/02/21 */
+        grid[i].lon = -180.0 - ((float)(i%NCOL) + 0.5) * (360.0 / (float)NCOL);
     }
     if(NOTICE==1){
         printf("done\n");
