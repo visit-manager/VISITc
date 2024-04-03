@@ -41,31 +41,32 @@ void f_init_global_run(
     
     /* region data ***************************************************/
     /* latitude */
-    if(NOTICE==1){
+    if(NOTICE == 1){
         printf(" Setting latitude...");
     }
     for(i=0; i<WGRIDS; i++){
         grid[i].lat = 90.0 - ((float)(i/NCOL) + 0.5) * (180.0 / (float)NROW);
     }
-    if(NOTICE==1){
+    if(NOTICE == 1){
         printf("done\n");
     }
  
     /* longitude */
-    if(NOTICE==1){
+    if(NOTICE == 1){
         printf(" Setting longitude...");
     }
     for(i=0; i<WGRIDS; i++){
         /* corrected: 2024/02/21 */
-        grid[i].lon = -180.0 - ((float)(i%NCOL) + 0.5) * (360.0 / (float)NCOL);
+        grid[i].lon = -180.0 + ((float)(i%NCOL) + 0.5) * (360.0 / (float)NCOL);
     }
-    if(NOTICE==1){
+    if(NOTICE == 1){
         printf("done\n");
     }
  
     /* grid area */
     for(i=0; i<NROW; i++){
-        garea = grid_area(90.0 - ((float)(i/NCOL)) * (180.0 / (float)NROW), 90.0 - ((float)(i/NCOL) + 1.0) * (180.0 / (float)NROW),  0.0, 360.0/(double)NCOL);
+        /* 2024/04/03 */
+        garea = grid_area(90.0 - ((float)(i)) * (180.0 / (float)NROW), 90.0 - ((float)(i) + 1.0) * (180.0 / (float)NROW),  0.0, 360.0/(float)NCOL);
         
         for(j=0;j<NCOL;j++){
             grid[i*NCOL+j].area = garea;
