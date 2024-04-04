@@ -152,5 +152,5 @@ float grid_area(
 	
 	area = (l_lon1 + l_lon2) * l_lat/2.0;
 	
-	return (area/1000000.0); /* km2 */
+	return (area/10000.0); /* ha */
 }

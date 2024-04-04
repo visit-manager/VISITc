@@ -35,7 +35,7 @@ void f_init_global_run(
     struct Grid grid[]
 ){
     long i, j;
-    double garea;
+    float garea;
     double rdepth[18]={0.0, 1.8, 3.0, 2.0, 2.0, 2.4, 2.5, 3.1, 1.7, 2.4, 1.5, 1.0, 1.5, 1.5, 1.5, 1.0, 4.0, 1.0};
     FILE *fp_dat;
     

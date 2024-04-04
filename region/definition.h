@@ -34,7 +34,7 @@
 /* from dry-matter-base to Carbon base */
 #define cTdm 0.4545	
 
-/* from micro-mol m-2 s-1 to Mg C ha-1 day-1*/
+/* from micro-mol m-2 s-1 to Mg C ha-1 hour-1 */
 #define lTs (3600.0*12.0/100000000.0) 
 
 /* zero degree centigrade in absolute temperature */

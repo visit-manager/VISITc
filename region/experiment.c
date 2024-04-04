@@ -593,13 +593,13 @@ void f_experiment(
                         ch4_a += (flux[i].soil).ch4_wh;
                         
                         gpp_ga += grid[i].area * ((flux[i].tree).gpp + loct[i].funder_c3 * (flux[i].c3).gpp
-                            + loct[i].funder_c4 * (flux[i].c4).gpp) / 1000000.0;
+                            + loct[i].funder_c4 * (flux[i].c4).gpp) / 1000000000.0;
                         npp_ga += grid[i].area * ((flux[i].tree).npp + loct[i].funder_c3 * (flux[i].c3).npp
-                            + loct[i].funder_c4 * (flux[i].c4).npp) / 1000000.0;
-                        nep_ga += grid[i].area * flux[i].nep / 1000000.0;
+                            + loct[i].funder_c4 * (flux[i].c4).npp) / 1000000000.0;
+                        nep_ga += grid[i].area * flux[i].nep / 1000000000.0;
                         plant_ga += grid[i].area * ((mass[i].tree).plant + loct[i].funder_c3 * (mass[i].c3).plant +
-                                    loct[i].funder_c4 * (mass[i].c4).plant) / (float)(DSTEP*ndy) / 1000000.0;
-                        soil_ga += grid[i].area * (mass[i].soil).soil / (float)(DSTEP*ndy) / 1000000.0;
+                                    loct[i].funder_c4 * (mass[i].c4).plant) / (float)(DSTEP*ndy) / 1000000000.0;
+                        soil_ga += grid[i].area * (mass[i].soil).soil / (float)(DSTEP*ndy) / 1000000000.0;
                         prec_ga += grid[i].area * loct[i].prate_sfc / 100.0;
 
                         /* summation for output *********/

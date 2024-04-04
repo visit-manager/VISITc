@@ -787,12 +787,12 @@ void f_spinup(
                         //xx[6] += (mass[i].tree).lai;
                         //xx[7] += (mass[i].tree).plant;
                         
-                        gpp_ga += grid[i].area * ((flux[i].tree).gpp + loct[i].funder_c3 * (flux[i].c3).gpp + loct[i].funder_c4 * (flux[i].c4).gpp) / 1000000.0;
-                        npp_ga += grid[i].area * ((flux[i].tree).npp + loct[i].funder_c3 * (flux[i].c3).npp + loct[i].funder_c4 * (flux[i].c4).npp) / 1000000.0;
-                        nep_ga += grid[i].area * flux[i].nep / 1000000.0;
+                        gpp_ga += grid[i].area * ((flux[i].tree).gpp + loct[i].funder_c3 * (flux[i].c3).gpp + loct[i].funder_c4 * (flux[i].c4).gpp) / 1000000000.0;
+                        npp_ga += grid[i].area * ((flux[i].tree).npp + loct[i].funder_c3 * (flux[i].c3).npp + loct[i].funder_c4 * (flux[i].c4).npp) / 1000000000.0;
+                        nep_ga += grid[i].area * flux[i].nep / 1000000000.0;
                         plant_ga += grid[i].area * ((mass[i].tree).plant + loct[i].funder_c3 * (mass[i].c3).plant +
-                                    loct[i].funder_c4 * (mass[i].c4).plant) / (float)(DSTEP*ndy) / 1000000.0;
-                        soil_ga += grid[i].area * (mass[i].soil).soil / (float)(DSTEP*ndy) / 1000000.0;
+                                    loct[i].funder_c4 * (mass[i].c4).plant) / (float)(DSTEP*ndy) / 1000000000.0;
+                        soil_ga += grid[i].area * (mass[i].soil).soil / (float)(DSTEP*ndy) / 1000000000.0;
                     }
                 }
                 printf("%7.3lf %7.3lf %7.3lf : %8.2lf %8.2lf %8.2lf: %6.3lf: ",

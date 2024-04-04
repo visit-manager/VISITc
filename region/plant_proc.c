@@ -166,7 +166,7 @@ void plant_process(
     /* total */
 	flux->rpm = flux->rfm + flux->rcm + flux->rrm;
 
-	if(SCI_SCHEME==1){
+	if(SCI_SCHEME == 1){
 		/* stable carbon isotope */
 		flux->d13c_rfm = mass->d13c_fol;
 		flux->d13c_rcm = mass->d13c_stm;
@@ -180,7 +180,7 @@ void plant_process(
 	allocation(pchar, mass, flux);
     //flux->tpf = flux->tpc = flux->tpr = 0.0;
 	
-	if(SCI_SCHEME==1){
+	if(SCI_SCHEME == 1){
 		/* stable carbon isotopic ratio of translocation */
 		flux->d13c_tpf = flux->d13c_gpp;
 		flux->d13c_tpc = flux->d13c_gpp;
@@ -202,14 +202,14 @@ void plant_process(
 	}
     //flux->rfg = flux->rcg = flux->rrg = 0.0;
 	
-	if(SCI_SCHEME==1){
+	if(SCI_SCHEME == 1){
 		/* stable carbon isotope */
 		flux->d13c_rfg = mass->d13c_fol;
 		flux->d13c_rcg = mass->d13c_stm;
 		flux->d13c_rrg = mass->d13c_rot;
 	}
 	
-	if(SCI_SCHEME==1){
+	if(SCI_SCHEME == 1){
 		/* stable carbon isotope */
 		if(flux->epp>0.0){
 			mass->d13c_fol = d13c_addition(mass->d13c_fol, mass->fol, flux->d13c_tpf, flux->tpf);
