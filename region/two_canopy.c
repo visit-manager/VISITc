@@ -43,14 +43,14 @@ void f_leaf_prop(
 	/* CO2 compensation point, Pa */
 	/* Brooks & Farquhar (1985) */
 	/* Eq.9 in De Pury and Farquhar (1997) */
-	pchar->comp_co2 = 3.69+0.188*(pchar->tmp-25.0)+0.0036*(pchar->tmp-25.0)*(pchar->tmp-25.0);
+	pchar->comp_co2 = 3.69+0.188*(pchar->tmp-25.0)+0.0036*(pchar->tmp-25.0)*(pchar->tmp - 25.0);
 		
 	/* Michaelis constant of carboxylation and oxygenation rates */
 	/* Eq.8 in De Pury and Farquhar (1997) */
 	/* Rubisco carboxylation */
-	pchar->kc = pchar->kc0*exp(pchar->acen_kc*(pchar->tmp-25.0)/(298.15*UGC*(pchar->tmp+ZAT)));
+	pchar->kc = pchar->kc0*exp(pchar->acen_kc*(pchar->tmp-25.0)/(298.15*UGC*(pchar->tmp + ZAT)));
 	/* Rubisco oxygenation */
-	pchar->ko = pchar->ko0*exp(pchar->acen_ko*(pchar->tmp-25.0)/(298.15*UGC*(pchar->tmp+ZAT)));
+	pchar->ko = pchar->ko0*exp(pchar->acen_ko*(pchar->tmp-25.0)/(298.15*UGC*(pchar->tmp + ZAT)));
 	/* effective Michaelis constant of Rubisco */
 	pchar->k_effc = pchar->kc*(1.0+pchar->o2_i/pchar->ko);
 	
@@ -74,7 +74,7 @@ void f_leaf_prop(
 	}
 	
 	/* temperature coefficient of dark respiration */
-	pchar->ft_rd = exp(66400.0*(pchar->tmp-25.0)/(UGC*298.0*(273.15+pchar->tmp)));
+	pchar->ft_rd = exp(66400.0*(pchar->tmp-25.0)/(UGC*298.0*(273.15 + pchar->tmp)));
 	/* 66400.0:	activation energy */
 }
 
@@ -138,7 +138,7 @@ void f_apar_sunshade(
 		/* absorbed PPFD by shaded leaves: Eq.A26a of DF97 */
 		pchar->appfd_sd = appfd_sd1 + appfd_sd2;
 		/* absorbed PPFD by shaded leaves PS II */
-		pchar->apar_sd = pchar->appfd_sd*(1.0-pchar->spect)/2.0; /* Eq.6 of DF97 */
+		pchar->apar_sd = pchar->appfd_sd*(1.0 - pchar->spect)/2.0; /* Eq.6 of DF97 */
 		
 		/* canopy-absorbed PAR */
 		pchar->apar = pchar->apar_sn + pchar->apar_sd;
@@ -263,11 +263,11 @@ void f_gpp_sunshade(
             pchar->j_sn = 0.0;
         }
         
-		if(SOLV_LEAF==0){
+		if(SOLV_LEAF == 0){
 			/** stabilization with Discrete Newton method **/
 			nn = 0;
 			crit = 10.0;
-			while(crit>0.1&&nn<20){
+			while(crit>0.1 && nn<20){
 				pchar->ci_sn = pchar->ci_sn - f_gas_sun(pchar, pchar->ci_sn)*step/
 						(f_gas_sun(pchar, pchar->ci_sn+step) - f_gas_sun(pchar, pchar->ci_sn));
 				crit = fabs(f_gas_sun(pchar, pchar->ci_sn));
@@ -277,7 +277,7 @@ void f_gpp_sunshade(
 					//printf("FARTAL ERROR: negative Ci of sun-leaf: %f %f %f\n", pchar->ci_sn, pchar->p_sn, pchar->gs_sn);
 				}
 			} 
-		}else if(SOLV_LEAF==1){
+		}else if(SOLV_LEAF == 1){
 			/** analytical solution by Baldocchi (1994) **/
 			leaf_ansolv(0, pchar);
 		}
@@ -321,7 +321,7 @@ void f_gpp_sunshade(
             pchar->j_sd = 0.0;
         }
         
-		if(SOLV_LEAF==0){
+		if(SOLV_LEAF == 0){
 			/** stabilization with Discrete Newton method **/
 			nn=0;
 			crit=10.0;
@@ -335,7 +335,7 @@ void f_gpp_sunshade(
 					//printf("FARTAL ERROR: negative Ci of shade-leaf: %f\n", pchar->ci_sd);
 				}
 			} 
-		}else if(SOLV_LEAF==1){
+		}else if(SOLV_LEAF == 1){
 			/** analytical solution by Baldocchi (1994) **/
 			leaf_ansolv(1, pchar); 
 		}

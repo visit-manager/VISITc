@@ -630,7 +630,7 @@ void f_experiment(
                         out_hr[8*(pend-pstart+1) + i] = loct[i].sfcrad_h;
                         out_hr[9*(pend-pstart+1) + i] = loct[i].ppfd_h; */
                         
-                        out_hr[2*(pend-pstart+1) + i] = flux[i].gpp;
+                        /* out_hr[2*(pend-pstart+1) + i] = flux[i].gpp;
                         out_hr[3*(pend-pstart+1) + i] = flux[i].nep;
                         out_hr[4*(pend-pstart+1) + i] = loct[i].lai;
                         out_hr[5*(pend-pstart+1) + i] = (mass[i].tree).plant;
@@ -639,7 +639,22 @@ void f_experiment(
                         out_hr[8*(pend-pstart+1) + i] = loct[i].ro2;
                         out_hr[9*(pend-pstart+1) + i] = (flux[i].soil).ch4_wh;
                         out_hr[10*(pend-pstart+1) + i] = (flux[i].soil).d_n2o_ngas;
-                        out_hr[11*(pend-pstart+1) + i] = loct[i].rn_eco;
+                        out_hr[11*(pend-pstart+1) + i] = loct[i].rn_eco; */
+                        
+                        out_hr[2*(pend-pstart+1) + i] = loct[i].prate_sfc;
+                        out_hr[3*(pend-pstart+1) + i] = loct[i].tmp_2m;
+                        out_hr[4*(pend-pstart+1) + i] = mass[i].sw30;
+                        out_hr[5*(pend-pstart+1) + i] = mass[i].sww;
+                        out_hr[6*(pend-pstart+1) + i] = loct[i].vpd;
+                        out_hr[7*(pend-pstart+1) + i] = loct[i].aet;
+                        out_hr[8*(pend-pstart+1) + i] = loct[i].ro2;
+                        out_hr[9*(pend-pstart+1) + i] = ((echar[i]).tree).vcmx;
+                        out_hr[10*(pend-pstart+1) + i] = ((echar[i]).c3).vcmx;
+                        out_hr[11*(pend-pstart+1) + i] = ((echar[i]).tree).ci_sn;
+                        
+                        
+                        
+                        
 
                         //out_hr[11*(pend-pstart+1) + i] = loct[i].rn_eco;
                         //outdat03[i] = ((mass[i].tree).plant + loct2[i].funder_c3 * (mass[i].c3).plant + loct2[i].funder_c4 * (mass[i].c4).plant);
