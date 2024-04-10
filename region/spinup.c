@@ -365,7 +365,9 @@ void f_spinup(
                         if(fdat[i] < 0.0){
                             fdat[i] = 0.0;
                         }
-                        grid[i].prec_region = fdat[i] * 3600.0; /* precipitation, mm/h */
+                        /* 2024/04/10 */
+                        /* grid[i].prec_region = fdat[i] * 3600.0; */ /* precipitation, mm/h */
+                        grid[i].prec_region = fdat[i] * 1000.0; /* precipitation, mm/h */
                     }
                     
                     /* shortwave radiation */
