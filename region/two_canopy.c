@@ -38,21 +38,21 @@ void f_leaf_prop(
 	pchar->co2_a = loct->aCO2/10.0;	/* ppmv -> Pa */
 	
 	/* O2 concentration, 21% of atmospheric pressure, Pa */
-	pchar->o2_i = 0.21 * loct->air_prsr*100.0; 
+	pchar->o2_i = 0.21 * loct->air_prsr * 100.0;
 	
 	/* CO2 compensation point, Pa */
 	/* Brooks & Farquhar (1985) */
 	/* Eq.9 in De Pury and Farquhar (1997) */
-	pchar->comp_co2 = 3.69+0.188*(pchar->tmp-25.0)+0.0036*(pchar->tmp-25.0)*(pchar->tmp - 25.0);
+	pchar->comp_co2 = 3.69 + 0.188*(pchar->tmp-25.0)+0.0036*(pchar->tmp - 25.0)*(pchar->tmp - 25.0);
 		
 	/* Michaelis constant of carboxylation and oxygenation rates */
 	/* Eq.8 in De Pury and Farquhar (1997) */
 	/* Rubisco carboxylation */
-	pchar->kc = pchar->kc0*exp(pchar->acen_kc*(pchar->tmp-25.0)/(298.15*UGC*(pchar->tmp + ZAT)));
+	pchar->kc = pchar->kc0 * exp(pchar->acen_kc*(pchar->tmp-25.0)/(298.15*UGC*(pchar->tmp + ZAT)));
 	/* Rubisco oxygenation */
-	pchar->ko = pchar->ko0*exp(pchar->acen_ko*(pchar->tmp-25.0)/(298.15*UGC*(pchar->tmp + ZAT)));
+	pchar->ko = pchar->ko0 * exp(pchar->acen_ko*(pchar->tmp-25.0)/(298.15*UGC*(pchar->tmp + ZAT)));
 	/* effective Michaelis constant of Rubisco */
-	pchar->k_effc = pchar->kc*(1.0+pchar->o2_i/pchar->ko);
+	pchar->k_effc = pchar->kc * (1.0 + pchar->o2_i/pchar->ko);
 	
 	/* temperature coefficient of electron transport */
 	/* Eq.10 in De Pury and Farquhar (1997) */
@@ -480,7 +480,7 @@ float f_gas_shade(
 	return (ci + pchar->a_sd/gb + pchar->a_sd/pchar->gs_sd - pchar->co2_a);
 }
 
-/********************************************************/
+/* *******************************************************/
 /*
 Baldocchi D. (1994). An analytical solution for coupled leaf photosynthesis and 
 stomatal conductance models. Tree Physiology, 14, 1069-1079.

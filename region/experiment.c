@@ -621,8 +621,8 @@ void f_experiment(
                         //out_hr[2*(pend-pstart+1) + i] = flux[i].nep;
                         //out_hr[3*(pend-pstart+1) + i] = (flux[i].soil).ch4_wh;
                         
-                        out_hr[0*(pend-pstart+1) + i] = grid[i].srad_region;
-                        out_hr[1*(pend-pstart+1) + i] = loct[i].ppfd_h;
+                        //out_hr[0*(pend-pstart+1) + i] = grid[i].srad_region;
+                        //out_hr[1*(pend-pstart+1) + i] = loct[i].ppfd_h;
                         /* out_hr[2*(pend-pstart+1) + i] = loct[i].hangle;
                         out_hr[3*(pend-pstart+1) + i] = loct[i].solhgt_h;
                         out_hr[4*(pend-pstart+1) + i] = loct[i].soldec;
@@ -643,7 +643,7 @@ void f_experiment(
                         out_hr[10*(pend-pstart+1) + i] = (flux[i].soil).d_n2o_ngas;
                         out_hr[11*(pend-pstart+1) + i] = loct[i].rn_eco; */
                         
-                        out_hr[2*(pend-pstart+1) + i] = loct[i].prate_sfc;
+                        /* out_hr[2*(pend-pstart+1) + i] = loct[i].prate_sfc;
                         out_hr[3*(pend-pstart+1) + i] = loct[i].tmp_2m;
                         out_hr[4*(pend-pstart+1) + i] = mass[i].sw30;
                         out_hr[5*(pend-pstart+1) + i] = mass[i].sww;
@@ -652,7 +652,19 @@ void f_experiment(
                         out_hr[8*(pend-pstart+1) + i] = loct[i].ro2;
                         out_hr[9*(pend-pstart+1) + i] = ((echar[i]).tree).vcmx;
                         out_hr[10*(pend-pstart+1) + i] = ((echar[i]).c3).vcmx;
-                        out_hr[11*(pend-pstart+1) + i] = ((echar[i]).tree).ci_sn;
+                        out_hr[11*(pend-pstart+1) + i] = ((echar[i]).tree).ci_sn; */
+                        
+                        out_hr[0*(pend-pstart+1) + i] = loct[i].ppfd_h;
+                        out_hr[1*(pend-pstart+1) + i] = loct[i].lai;
+                        out_hr[2*(pend-pstart+1) + i] = ((echar[i]).tree).psat;
+                        out_hr[3*(pend-pstart+1) + i] = ((echar[i]).tree).opt_lai;
+                        out_hr[4*(pend-pstart+1) + i] = ((mass[i]).tree).lai;
+                        out_hr[5*(pend-pstart+1) + i] = ((flux[i]).tree).gpp;
+                        out_hr[6*(pend-pstart+1) + i] = ((echar[i]).c3).psat;
+                        out_hr[7*(pend-pstart+1) + i] = ((echar[i]).c3).opt_lai;
+                        out_hr[8*(pend-pstart+1) + i] = ((mass[i]).c3).lai;
+                        out_hr[9*(pend-pstart+1) + i] = ((flux[i]).c3).gpp;
+
                         
                         
                         

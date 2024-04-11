@@ -150,7 +150,7 @@
 #define AG_RD 1			/* Rd */
 
 /* CH4 emission with a multi-layer model */
-#define WH_CH4 1
+#define WH_CH4 0
 /* 0: off */
 /* 1: on */
 
@@ -159,7 +159,7 @@
 /* 0: off */
 /* 1: on */
 
-#define EX_URBAN_FOREST 1
+#define EX_URBAN_FOREST 0
 /* 0: off */
 /* 1: replaced by evergreen broadleaved forest */
 
@@ -185,7 +185,7 @@
 /* 2: all direct */
 /* 3: diffuse:direct = 50:50 */
 
-#define CONST_KN 3
+#define CONST_KN 1
 /* 0: default */
 /* 1: de Pury & Farquhar default (KN = 0.713 = Kdiff) */
 /* 2: high (KN = 1.22: meadian meta-analysis: 2015/01/26 by A.Ito) */
