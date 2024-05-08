@@ -664,6 +664,8 @@ void f_experiment(
                         out_hr[7*(pend-pstart+1) + i] = ((echar[i]).c3).opt_lai;
                         out_hr[8*(pend-pstart+1) + i] = ((mass[i]).c3).lai;
                         out_hr[9*(pend-pstart+1) + i] = ((flux[i]).c3).gpp;
+                        out_hr[10*(pend-pstart+1) + i] = ((echar[i]).tree).vcmx;
+                        out_hr[11*(pend-pstart+1) + i] = ((echar[i]).c3).vcmx;
 
                         
                         

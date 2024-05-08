@@ -185,7 +185,7 @@
 /* 2: all direct */
 /* 3: diffuse:direct = 50:50 */
 
-#define CONST_KN 1
+#define CONST_KN 2
 /* 0: default */
 /* 1: de Pury & Farquhar default (KN = 0.713 = Kdiff) */
 /* 2: high (KN = 1.22: meadian meta-analysis: 2015/01/26 by A.Ito) */
