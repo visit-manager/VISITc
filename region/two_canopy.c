@@ -201,7 +201,7 @@ void f_gpp_sunshade(
         
         kn = pchar->lai * kb;
         
-        if(kn > 1.0){
+        if(kn > 1.5){
             kn  = 1.5;
         }
         if(kn < 0.1){
