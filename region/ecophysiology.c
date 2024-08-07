@@ -59,7 +59,7 @@ void f_ecophysiology(
 		f_incelco2(loct, pchar); 
 	}
 	/** photosynthetic 13C discrimination, permille **/
-	if(SCI_SCHEME == 1){
+	if(SCI_CALC == 1){
 		photo_13c_frac(grid, loct, pchar);
 	}
 	

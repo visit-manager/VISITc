@@ -108,7 +108,7 @@ void f_daily_scheme(
 	(flux->soil).li_gc = loct->funder_c3 * (flux->c3).lc + loct->funder_c4 * (flux->c4).lc;	
 	(flux->soil).li_gr = loct->funder_c3 * (flux->c3).lr + loct->funder_c4 * (flux->c4).lr;	
 	/**/
-	if(SCI_SCHEME == 1){
+	if(SCI_CALC == 1){
 		(flux->soil).d13c_li_f = d13c_addition((flux->tree).d13c_lf,(flux->tree).lf, 
 				(flux->c3).d13c_lf,(flux->c3).lf);
 		(flux->soil).d13c_li_c = d13c_addition((flux->tree).d13c_lc,(flux->tree).lc, 
@@ -158,7 +158,7 @@ void f_daily_scheme(
 				loct->funder_c4 * (flux->c4).rp + (flux->soil).hr;
 	
 	/* stable carbon isotope */
-	if(SCI_SCHEME == 1){
+	if(SCI_CALC == 1){
 		d13c_efflux(grid, loct, flux);
 	}
 	

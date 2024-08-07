@@ -17,6 +17,11 @@
 #define N_OUTANN 12
 #define N_OUTHR 12
 
+/* **********************************************/
+/* initial mass, Mg C ha-1 ****/
+#define INIT_C 1.0
+#define INIT_N 0.1
+
 /* *********************************************************/
 /* experimental area ********/
 
@@ -90,6 +95,16 @@
 #define RUNFAST 1
 /* 1: every grid */
 
+/* show message */
+#define NOTICE 1
+/* 0: no */
+/* 1: with debug message */
+
+/* Semi-analytical spi-up */
+#define USE_SASU 1
+/* 0: no */
+/* 1: on */
+
 #define P_MONI 0
 // 0 all area
 // 345988 Manaus
@@ -113,25 +128,10 @@
 /* number of land-use data */
 #define N_LUDATA 34 /* UNH harmonized data */
 
-/* show message */
-#define NOTICE 1
-/* 0: no */
-/* 1: with debug message */
-
-/* Semi-analytical spi-up */
-#define USE_SASU 0
-/* 0: no */
-/* 1: on */
-
 /* nitrogen cycle scheme */
 #define N_CYCLE 0
 /* 0: skip, i.e. not calculate */
 /* 1: calculate */
-
-/* stable carbon isotope */
-#define SCI_SCHEME 0
-/* 0: neglect */
-/* 1: include */
 
 /* *********************************************/
 /* solve equilibrium leaf gas exchange */
@@ -140,19 +140,24 @@
 /* 1: analytical */
 
 /* CH4 & N2O schemes */
-#define GHG_CALC 1
+#define GHG_CALC 0
 #define GHG_OUT 0
-
-/* flags for seasonal change in leaf properties */
-#define AG_VMX 1		/* Vcmax */
-#define AG_JVR 1		/* Jmax/Vcmax */
-#define AG_LMA 1		/* LMA */
-#define AG_RD 1			/* Rd */
 
 /* CH4 emission with a multi-layer model */
 #define WH_CH4 0
 /* 0: off */
 /* 1: on */
+
+/* stable carbon isotope */
+#define SCI_CALC 0
+/* 0: neglect */
+/* 1: include */
+
+/* flags for seasonal change in leaf properties */
+#define AG_VMX 0		/* Vcmax */
+#define AG_JVR 0		/* Jmax/Vcmax */
+#define AG_LMA 0		/* LMA */
+#define AG_RD 0			/* Rd */
 
 /* calculation using potential vegetation */
 #define VEG_POT 0
@@ -185,7 +190,7 @@
 /* 2: all direct */
 /* 3: diffuse:direct = 50:50 */
 
-#define CONST_KN 2
+#define CONST_KN 1
 /* 0: default */
 /* 1: de Pury & Farquhar default (KN = 0.713 = Kdiff) */
 /* 2: high (KN = 1.22: meadian meta-analysis: 2015/01/26 by A.Ito) */
@@ -222,11 +227,6 @@
 /* 3: -2% grazing */
 /* 4: -3% grazing */
 /* 5: -4% grazing */
-
-/* **********************************************/
-/** initial mass, Mg C ha-1 **/
-#define INIT_C 1.0
-#define INIT_N 0.1
 
 /* land use setting */
 #define LANDUSE 0

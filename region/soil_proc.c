@@ -167,7 +167,7 @@ void f_cycle_soil(
 			flux->mr_a + flux->mr_i + flux->mr_p;
 	
 	/* stable carbon isotope ******************************************************************/	
-	if(SCI_SCHEME == 1){
+	if(SCI_CALC == 1){
 		flux->d13c_mr_f = mass->d13c_ltr_f;
 		flux->d13c_mr_c = mass->d13c_ltr_c;
 		flux->d13c_mr_r = mass->d13c_ltr_r;
