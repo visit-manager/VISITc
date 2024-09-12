@@ -129,13 +129,13 @@ void f_spinup(
         loct[i].phase = 1;
     }
     
-    /* error file */
+    /* error log file */
 	fp_error = fopen("log_error.txt","wt");
     
-    /* log file */
+    /* spin-up log file */
 	fp_log = fopen("log_spinup.txt","wt");
     
-    /* log file */
+    /* check log file */
     fp_check = fopen("log_check.txt","wt");
     
 	if(NOTICE == 1){
@@ -146,12 +146,12 @@ void f_spinup(
 		grid[i].time = 0;
 		grid[i].age_stand = 0.0;
         
-        //clear_b(&loct2[i], &echar2[i], &flux2[i]);
+        //f_clear_b(&loct2[i], &echar2[i], &flux2[i]);
 	}
 	
     /* number of pararelization threds with OpenMP */
 	#ifdef _OPENMP
-	omp_set_num_threads(48); /* cores */
+	omp_set_num_threads(16); /* cores */
 	#endif
     
     mm = 1.0;

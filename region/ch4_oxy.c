@@ -24,20 +24,11 @@
 /* source: http://crga.atmos.uiuc.edu/research/post-sres.html
  M.E.Schlesinger and S.Malyshev			*/
 /* atmospheric CO2, ppmv */
-extern float		atm_co2_a1[GHG_TS];	/* SRES A1 */
-extern float		atm_co2_a2[GHG_TS];	/* SRES A2 */
-extern float		atm_co2_b1[GHG_TS];	/* SRES B1 */
-extern float		atm_co2_b2[GHG_TS];	/* SRES B2 */
+extern float		atm_co2[4][GHG_TS];	/* CO2 scenarios */
 /* atmospheric CH4, pptv*/
-extern float		atm_ch4_a1[GHG_TS];	/* SRES A1 */
-extern float		atm_ch4_a2[GHG_TS];	/* SRES A2 */
-extern float		atm_ch4_b1[GHG_TS];	/* SRES B1 */
-extern float		atm_ch4_b2[GHG_TS];	/* SRES B2 */
+extern float		atm_ch4[4][GHG_TS];	/* CH4 scenarios */
 /* atmospheric N2O, pptv*/
-extern float		atm_n2o_a1[GHG_TS];	/* SRES A1 */
-extern float		atm_n2o_a2[GHG_TS];	/* SRES A2 */
-extern float		atm_n2o_b1[GHG_TS];	/* SRES B1 */
-extern float		atm_n2o_b2[GHG_TS];	/* SRES B2 */
+extern float		atm_n2o[4][GHG_TS];	/* N2O scenarios */
 
 /* CH4 oxydation by Ridgewell et al. (1999) **********************************/
 /*
@@ -82,7 +73,7 @@ void f_ch4oxy_ridgewell(
 	}
 	
 	/* co_ch4 = 1.72; */ /* default */
-	co_ch4 = atm_ch4_a1[loct->CO2y-1750]/1000.0;
+	co_ch4 = atm_ch4[0][loct->CO2y - FDY_GHG]/1000.0;
 	
 	/* moisture factor */
 	if(((loct->prate_sfc + mass->sw30)/loct->pet)>1.0){
@@ -208,7 +199,7 @@ void f_ch4oxy_curry(
 	
 	float aaa, bbb;
 	
-	c_0 = atm_ch4_a1[loct->CO2y-1750]/1000.0;
+	c_0 = atm_ch4[0][loct->CO2y - FDY_GHG]/1000.0;
 
 	/* upland fraction */
 	f_i = 0.0;			/* inundation */

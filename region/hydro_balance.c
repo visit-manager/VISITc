@@ -21,8 +21,6 @@
 #include"structure.h"
 #include"prototype.h"
 
-extern long	month_day[12];
-
 /* additional message for hydrological scheme */
 #define VERB_HYD 0
 

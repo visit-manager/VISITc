@@ -165,7 +165,7 @@ void f_experiment(
     
     /* number of pararelization threds with OpenMP */
 	#ifdef _OPENMP
-	omp_set_num_threads(48); /* cores */
+	omp_set_num_threads(16); /* cores */
 	#endif
     
 	/* roop for experimental stage ************************************************/

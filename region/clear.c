@@ -29,7 +29,7 @@ extern float	spfh_2m_dav[366];
 extern float	tcdc_clm_dav[366];
 
 /* clear all variables and parameters ******************************/
-void clear_a(
+void f_clear_a(
 	struct Grid *grid, 
 	struct Mass *mass
 ){
@@ -45,7 +45,7 @@ void clear_a(
 }
 
 /* ***************************************************************/
-void clear_b(
+void f_clear_b(
 	struct Loct *loct, 
 	struct Echar *echar, 
 	struct Flux *flux

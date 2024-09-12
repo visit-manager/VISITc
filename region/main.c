@@ -8,6 +8,7 @@
 /* [history]
 	create: 2006 / 07 / 09 by Akihiko Ito
 	modify: 2013 / 01 / 04 by Akihiko Ito
+    modify: 2024 / 09 / 12 by Akihiko Ito
 */
 
 /* header files */
@@ -36,6 +37,7 @@ int main(void){
     struct Echar *echar2;
     struct Flux *flux2;
     
+    /* memory allocation for spatial structures */
     grid2 = (struct Grid *)malloc(sizeof(struct Grid) * NROW * NCOL);
     mass2 = (struct Mass *)malloc(sizeof(struct Mass) * NROW * NCOL);
     loct2 = (struct Loct *)malloc(sizeof(struct Loct) * NROW * NCOL);
@@ -43,25 +45,26 @@ int main(void){
     flux2 = (struct Flux *)malloc(sizeof(struct Flux) * NROW * NCOL);
 
 	/* *******************************************************************/
-	/** setting configuration **/
+	/* setting configuration **/
 	f_setting(&grid2[0]);
     srand( time(NULL)%(100000) );
 	
 	/* *******************************************************************/
-	/** initialization & open files **/
+	/* initialization & open files **/
 	f_initialize(grid2, loct2, echar2, mass2, flux2);
 	
 	/* *******************************************************************/
-	/** spin-up **/
+	/* spin-up **/
     if(USE_RESTART == 0 || USE_RESTART == 2){
         f_spinup(grid2, loct2, echar2, mass2, flux2);
     }
 	
-	/** experiment **/
+    /* *******************************************************************/
+	/* experiment **/
 	f_experiment(grid2, loct2, echar2, mass2, flux2); /* */
 	
 	/* *******************************************************************/
-    
+    /* free memory */
     free(grid2);
     free(mass2);
     free(loct2);

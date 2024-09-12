@@ -147,11 +147,11 @@ void f_setting(
 		exit (1);
 	}
 		
-	if(NOTICE==1){
+	if(NOTICE == 1){
 		printf("Mode:%ld Grids:%ld ", WMODE, WGRIDS);
 	}
 	
-	if(NOTICE==1){
+	if(NOTICE == 1){
 		printf("...done\n");
 	}
 	

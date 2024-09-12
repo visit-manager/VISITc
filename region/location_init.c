@@ -38,20 +38,11 @@ extern long	WMODE;
 /* source: http://crga.atmos.uiuc.edu/research/post-sres.html
  M.E.Schlesinger and S.Malyshev			*/
 /* atmospheric CO2, ppmv */
-extern float		atm_co2_a1[553];	/* SRES A1 */
-extern float		atm_co2_a2[553];	/* SRES A2 */
-extern float		atm_co2_b1[553];	/* SRES B1 */
-extern float		atm_co2_b2[553];	/* SRES B2 */
+extern float		atm_co2[4][553];	/* CO2 scenario */
 /* atmospheric CH4, pptv*/
-extern float		atm_ch4_a1[553];	/* SRES A1 */
-extern float		atm_ch4_a2[553];	/* SRES A2 */
-extern float		atm_ch4_b1[553];	/* SRES B1 */
-extern float		atm_ch4_b2[553];	/* SRES B2 */
+extern float		atm_ch4[4][553];	/* CH4 scenario */
 /* atmospheric N2O, pptv*/
-extern float		atm_n2o_a1[553];	/* SRES A1 */
-extern float		atm_n2o_a2[553];	/* SRES A2 */
-extern float		atm_n2o_b1[553];	/* SRES B1 */
-extern float		atm_n2o_b2[553];	/* SRES B2 */
+extern float		atm_n2o[4][553];	/* N2O scenario */
 
 /* location conditions derived from the primary data (Secondary data1) **********/
 void f_init_loct(
@@ -110,7 +101,7 @@ void f_init_loct(
 	
 	/* initialize soil CH4 concentration */
 	for(h=0;h<=SOILWET_LAYER;h++){
-		loct->prof_ch4[h] = atm_ch4_a1[loct->CO2y - 1750]/1000.0 
+		loct->prof_ch4[h] = atm_ch4[0][loct->CO2y - FDY_GHG]/1000.0 
                             * loct->air_prsr / (UGC*(loct->tmp10_soil + ZAT));
 	}
 }

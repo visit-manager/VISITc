@@ -21,8 +21,6 @@
 #include"structure.h"
 #include"prototype.h"
 
-extern long	month_day[12];
-
 /* additional message for hydrological scheme */
 #define VERB_HYD 0
 
@@ -34,7 +32,7 @@ float f_airdens(
 	float aaa, bbb, ccc, air_density;
 	
 	aaa = ZAT/(loct->tmp_2m + ZAT);
-	bbb = loct->air_prsr/1013.25;
+	bbb = loct->air_prsr / 1013.25;
 	ccc = 1.0 - 0.378 * loct->vp/loct->air_prsr;
 	air_density = 1.293 * aaa * bbb * ccc;
 	
@@ -115,7 +113,7 @@ float pm_incep(
 	spwt = loct->air_dns; /** density of air, in kg m-3 **/
 	cp = 0.2813; /** specific heat of air, in W h kg-1 K-1 **/
 	psycon = 0.667; /** psychlometer constant, in hPa K-1 **/
-	eta = 0.0224*1.0/1000.0; /** unit conversion of conductance from mmol H2O m-2 s-1 to m s-1 **/
+	eta = 0.0224 * 1.0 / 1000.0; /** unit conversion of conductance from mmol H2O m-2 s-1 to m s-1 **/
 	
 	/** no vegetation resistance **/
 	rc_p = 0.0;
@@ -147,11 +145,11 @@ float pm_evap(
 	float ggc, evaporation;
 	float aaa, bbb;
 	
-	spwt = loct->air_dns; /** density of air, in kg m-3 **/
-	cp = 0.2813; /** specific heat of air, in W h kg-1 K-1 **/
-	/* cp = 1014.0; */ /** specific heat of air, in J kg-1 K-1 **/
-	psycon = 0.667; /** psychlometer constant, in hPa K-1 **/
-	eta = 0.0224*1.0/1000.0; /** unit conversion of conductance from mmol H2O m-2 s-1 to m s-1 **/
+	spwt = loct->air_dns; /* density of air, in kg m-3 **/
+	cp = 0.2813; /* specific heat of air, in W h kg-1 K-1 **/
+	/* cp = 1014.0; */ /* specific heat of air, in J kg-1 K-1 **/
+	psycon = 0.667; /* psychlometer constant, in hPa K-1 **/
+	eta = 0.0224*1.0/1000.0; /* unit conversion of conductance from mmol H2O m-2 s-1 to m s-1 **/
 	
 	/* ground resistance */
 	ggc = 1000.0*(1.0 - (grid->fieldcap30 - loct->soilwtr_l)/grid->fieldcap30) + 100.0;

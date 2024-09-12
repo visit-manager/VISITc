@@ -24,20 +24,11 @@
 /* source: http://crga.atmos.uiuc.edu/research/post-sres.html
  M.E.Schlesinger and S.Malyshev			*/
 /* atmospheric CO2, ppmv */
-extern float		atm_co2_a1[GHG_TS];	/* SRES A1 */
-extern float		atm_co2_a2[GHG_TS];	/* SRES A2 */
-extern float		atm_co2_b1[GHG_TS];	/* SRES B1 */
-extern float		atm_co2_b2[GHG_TS];	/* SRES B2 */
+extern float		atm_co2[4][GHG_TS];	/* CO2 scenarios */
 /* atmospheric CH4, pptv*/
-extern float		atm_ch4_a1[GHG_TS];	/* SRES A1 */
-extern float		atm_ch4_a2[GHG_TS];	/* SRES A2 */
-extern float		atm_ch4_b1[GHG_TS];	/* SRES B1 */
-extern float		atm_ch4_b2[GHG_TS];	/* SRES B2 */
+extern float		atm_ch4[4][GHG_TS];	/* CH4 scenarios */
 /* atmospheric N2O, pptv*/
-extern float		atm_n2o_a1[GHG_TS];	/* SRES A1 */
-extern float		atm_n2o_a2[GHG_TS];	/* SRES A2 */
-extern float		atm_n2o_b1[GHG_TS];	/* SRES B1 */
-extern float		atm_n2o_b2[GHG_TS];	/* SRES B2 */
+extern float		atm_n2o[4][GHG_TS];	/* N2O scenarios */
 
 /* atmospheric CO2  ****************************************************************/
 void atmco2_trend(
@@ -82,11 +73,11 @@ void atmco2_trend(
 	//loct->bCO2 = base + lgrd + season + inc;
     
     /* loct->bCO2 = atm_co2_a1[loct->CO2y - 1750]; */
-    loct->bCO2 = atm_co2_b2[loct->CO2y - 1750];
+    loct->bCO2 = atm_co2[2][loct->CO2y - FDY_GHG];
 	
 	/* future */
 	if(loct->CO2y > EYR){
-		loct->bCO2 = atm_co2_a1[loct->CO2y - 1750];
+		loct->bCO2 = atm_co2[1][loct->CO2y - FDY_GHG];
 	}
 	
 	/* stable carbon isotope composition (d13C), permille  *****/

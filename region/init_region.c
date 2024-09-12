@@ -24,8 +24,7 @@
 /* climatology: *_d[] means the time-series during 1948 to 2004- */
 extern float tmp_2m_ncep_dav[366];            /* 2m air temperature, degree Celcius */
 extern float prate_sfc_ncep_mav[12];        /* precipitation, mm mon-1 */
-extern long    month_day[12];
-extern long    WGRIDS;
+extern long WGRIDS;
 extern float fdat[NROW*NCOL];
 extern unsigned char cdat[NROW*NCOL];
 
@@ -36,7 +35,8 @@ void f_init_global_run(
 ){
     long i, j;
     float garea;
-    double rdepth[18]={0.0, 1.8, 3.0, 2.0, 2.0, 2.4, 2.5, 3.1, 1.7, 2.4, 1.5, 1.0, 1.5, 1.5, 1.5, 1.0, 4.0, 1.0};
+    double rdepth[18]={0.0, 1.8, 3.0, 2.0, 2.0, 2.4, 2.5, 3.1, 1.7, 
+                    2.4, 1.5, 1.0, 1.5, 1.5, 1.5, 1.0, 4.0, 1.0};
     FILE *fp_dat;
     
     /* region data ***************************************************/
@@ -66,7 +66,9 @@ void f_init_global_run(
     /* grid area */
     for(i=0; i<NROW; i++){
         /* 2024/04/03 */
-        garea = grid_area(90.0 - ((float)(i)) * (180.0 / (float)NROW), 90.0 - ((float)(i) + 1.0) * (180.0 / (float)NROW),  0.0, 360.0/(float)NCOL);
+        garea = grid_area(90.0 - ((float)(i)) * (180.0 / (float)NROW), 
+                    90.0 - ((float)(i) + 1.0) * (180.0 / (float)NROW),
+                    0.0, 360.0/(float)NCOL);
         
         for(j=0;j<NCOL;j++){
             grid[i*NCOL+j].area = garea;
@@ -459,7 +461,7 @@ void f_init_bamiyan_run(
         //grid[i].topo = 100.0;
     }
     fclose(fp_dat);
-    if(NOTICE==1){
+    if(NOTICE == 1){
         printf("done\n");
     }
     

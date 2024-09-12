@@ -14,8 +14,8 @@
 #include"definition.h"
 
 /* **** CLEARANCE *****/
-void clear_a(				struct Grid *grid, struct Mass *mass);
-void clear_b(				struct Loct *loct, struct Echar *echar, struct Flux *flux);
+void f_clear_a(				struct Grid *grid, struct Mass *mass);
+void f_clear_b(				struct Loct *loct, struct Echar *echar, struct Flux *flux);
 
 void pflux_zero(			struct Pflx *flux);
 void sflux_zero(			struct Sflx *flux);

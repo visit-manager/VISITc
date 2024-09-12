@@ -23,7 +23,6 @@
 /* climatology: *_d[] means the time-series during 1948 to 2007- */	
 extern float paddy_wtd[366];
 
-extern long	month_day[12];
 extern long	WMODE;
 extern long	WGRIDS;
 extern struct Echar echar_type[MAX_BIOME];
@@ -32,20 +31,11 @@ extern struct Echar echar_type[MAX_BIOME];
 /* source: http://crga.atmos.uiuc.edu/research/post-sres.html
  M.E.Schlesinger and S.Malyshev			*/
 /* atmospheric CO2, ppmv */
-extern float		atm_co2_a1[553];	/* SRES A1 */
-extern float		atm_co2_a2[553];	/* SRES A2 */
-extern float		atm_co2_b1[553];	/* SRES B1 */
-extern float		atm_co2_b2[553];	/* SRES B2 */
+extern float		atm_co2[4][553];	/* CO2 scenarios */
 /* atmospheric CH4, pptv*/
-extern float		atm_ch4_a1[553];	/* SRES A1 */
-extern float		atm_ch4_a2[553];	/* SRES A2 */
-extern float		atm_ch4_b1[553];	/* SRES B1 */
-extern float		atm_ch4_b2[553];	/* SRES B2 */
+extern float		atm_ch4[4][553];	/* CH4 scenarios */
 /* atmospheric N2O, pptv*/
-extern float		atm_n2o_a1[553];	/* SRES A1 */
-extern float		atm_n2o_a2[553];	/* SRES A2 */
-extern float		atm_n2o_b1[553];	/* SRES B1 */
-extern float		atm_n2o_b2[553];	/* SRES B2 */
+extern float		atm_n2o[4][553];	/* n2O scenarios */
 
 /* *****************************************************************************/
 void f_initialize(
@@ -56,35 +46,35 @@ void f_initialize(
 	struct Flux flux[]
 ){
 	char filename[128];
-	long h, i, yr, day;
+	long i, yr, day;
 	FILE *fp_ghg, *fp_wtd;
 	
 	/* Number of days for each month */
-	month_day[0] = 31;	/* January */
-	month_day[1] = 28;	/* February */
-	month_day[2] = 31;	/* March */
-	month_day[3] = 30;	/* April */
-	month_day[4] = 31;	/* May */
-	month_day[5] = 30;	/* June */
-	month_day[6] = 31;	/* July */
-	month_day[7] = 31;	/* August */
-	month_day[8] = 30;	/* September */
-	month_day[9] = 31;	/* October */
-	month_day[10] = 30;	/* November */
-	month_day[11] = 31;	/* December */
+	/* month_day[0] = 31; */	/* January */
+    /* month_day[1] = 28; */	/* February */
+    /* month_day[2] = 31; */	/* March */
+    /* month_day[3] = 30; */	/* April */
+    /* month_day[4] = 31; */	/* May */
+    /* month_day[5] = 30; */	/* June */
+    /* month_day[6] = 31; */	/* July */
+    /* month_day[7] = 31; */	/* August */
+    /* month_day[8] = 30; */	/* September */
+    /* month_day[9] = 31; */	/* October */
+    /* month_day[10] = 30; */	/* November */
+    /* month_day[11] = 31; */	/* December */
 
 	/* *****************************************************************/	
 	for(i=0; i<WGRIDS; i++){
 		grid[i] = grid[0];
 	}
 	
-	/** clear all parameters **********/
+	/* clear all parameters **********/
 	if(NOTICE == 1){
 		printf("Clearing variables...");
 	}
 	for(i=0; i<WGRIDS; i++){
-		clear_a(&(grid[i]), &(mass[i]));
-        clear_b(&(loct[i]), &(echar[i]), &(flux[i]));
+		f_clear_a(&(grid[i]), &(mass[i]));
+        f_clear_b(&(loct[i]), &(echar[i]), &(flux[i]));
 	}
 	
 	if(NOTICE == 1){
@@ -92,7 +82,7 @@ void f_initialize(
 	}
 
 	/* *****************************************************************/
-	/** initialize grid condition **/
+	/* initialize grid condition **/
 	if(NOTICE == 1){
 		printf("Initializing site...\n");
 	}
@@ -132,7 +122,7 @@ void f_initialize(
 		printf("done\n");
 	}
 		
-	/******************************************************************/	
+	/* *****************************************************************/
 	if(NOTICE == 1){
 		printf("Reading GHG scenario...");
 	}
@@ -140,20 +130,20 @@ void f_initialize(
 		printf("No atmospheric GHG scenario!\n");
 		exit(1);
 	}
-	for(h=0;h<553;h++){
+	for(i=0;i<553;i++){
 		fscanf(fp_ghg,"%ld", &yr);
-		fscanf(fp_ghg,"%f", &atm_co2_a1[h]);
-		fscanf(fp_ghg,"%f", &atm_co2_a2[h]);
-		fscanf(fp_ghg,"%f", &atm_co2_b1[h]);
-		fscanf(fp_ghg,"%f", &atm_co2_b2[h]);
-		fscanf(fp_ghg,"%f", &atm_ch4_a1[h]);
-		fscanf(fp_ghg,"%f", &atm_ch4_a2[h]);
-		fscanf(fp_ghg,"%f", &atm_ch4_b1[h]);
-		fscanf(fp_ghg,"%f", &atm_ch4_b2[h]);
-		fscanf(fp_ghg,"%f", &atm_n2o_a1[h]);
-		fscanf(fp_ghg,"%f", &atm_n2o_a2[h]);
-		fscanf(fp_ghg,"%f", &atm_n2o_b1[h]);
-		fscanf(fp_ghg,"%f", &atm_n2o_b2[h]);
+		fscanf(fp_ghg,"%f", &atm_co2[0][i]);
+		fscanf(fp_ghg,"%f", &atm_co2[1][i]);
+		fscanf(fp_ghg,"%f", &atm_co2[2][i]);
+		fscanf(fp_ghg,"%f", &atm_co2[3][i]);
+		fscanf(fp_ghg,"%f", &atm_ch4[0][i]);
+		fscanf(fp_ghg,"%f", &atm_ch4[1][i]);
+		fscanf(fp_ghg,"%f", &atm_ch4[2][i]);
+		fscanf(fp_ghg,"%f", &atm_ch4[3][i]);
+		fscanf(fp_ghg,"%f", &atm_n2o[0][i]);
+		fscanf(fp_ghg,"%f", &atm_n2o[1][i]);
+		fscanf(fp_ghg,"%f", &atm_n2o[2][i]);
+		fscanf(fp_ghg,"%f", &atm_n2o[3][i]);
 	}
 	fclose(fp_ghg);
 	if(NOTICE == 1){
@@ -191,7 +181,7 @@ void f_initialize(
 	/* ******************************************************/
 	
 	/* *****************************************************************/
-	/** initialize vegatation and soil conditions **/ 
+	/* initialize vegatation and soil conditions **/
 	if(NOTICE == 1){
 		printf("Reading parameters...");
 	}

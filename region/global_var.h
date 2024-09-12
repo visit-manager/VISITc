@@ -20,9 +20,6 @@ long YLDIST;			/* year of the last disturbance */
 long SPUPT;				/* spin-up time (years) */
 long NBIOME;            /* number of biomes */
 
-/* climatology: *_d[] means the time-series during 1948 to 2005 */	
-long	month_day[12];
-
 float	tmp_2m_ncep_dav[366];		/* 2m air temperature, degree Celcius */
 float	prate_sfc_ncep_mav[12];		/* precipitation, mm mon-1 */
 
@@ -40,20 +37,11 @@ float	paddy_wtd[366];
 /* source: http://crga.atmos.uiuc.edu/research/post-sres.html
  M.E.Schlesinger and S.Malyshev			*/
 /* atmospheric CO2, ppmv */
-float		atm_co2_a1[553];	/* SRES A1 */
-float		atm_co2_a2[553];	/* SRES A2 */
-float		atm_co2_b1[553];	/* SRES B1 */
-float		atm_co2_b2[553];	/* SRES B2 */
+float		atm_co2[4][553];	/* CO2 scenarios */
 /* atmospheric CH4, pptv*/
-float		atm_ch4_a1[553];	/* SRES A1 */
-float		atm_ch4_a2[553];	/* SRES A2 */
-float		atm_ch4_b1[553];	/* SRES B1 */
-float		atm_ch4_b2[553];	/* SRES B2 */
+float		atm_ch4[4][553];	/* CH4 scenarios */
 /* atmospheric N2O, pptv*/
-float		atm_n2o_a1[553];	/* SRES A1 */
-float		atm_n2o_a2[553];	/* SRES A2 */
-float		atm_n2o_b1[553];	/* SRES B1 */
-float		atm_n2o_b2[553];	/* SRES B2 */
+float		atm_n2o[4][553];	/* n2O scenarios */
 
 /* global variables */
 /* structures */

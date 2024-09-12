@@ -133,6 +133,9 @@
 /* 0: skip, i.e. not calculate */
 /* 1: calculate */
 
+/* first year of GHG data */
+#define FDY_GHG 1750
+
 /* *********************************************/
 /* solve equilibrium leaf gas exchange */
 #define SOLV_LEAF 0
