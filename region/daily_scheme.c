@@ -212,7 +212,7 @@ void f_daily_scheme(
 	
 	/* nitrogen budget */
 	if(N_CYCLE == 1){
-		n_budget(grid, loct, mass, flux);
+		f_n_budget(grid, loct, mass, flux);
 	}
 	
 	/* store data as previous condition in the next step */

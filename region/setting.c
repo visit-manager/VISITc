@@ -56,15 +56,15 @@ void f_setting(
 	}
 	
 	/* MODE:  working mode */
-	fscanf(fp_set,"%s", &varread);
+	fscanf(fp_set,"%s", &(varread[0]));
 	if(strcmp(varread, smode)==0){
 		fscanf(fp_set,"%ld", &WMODE);
 	}
 	
 	/* file suffix string */
-	fscanf(fp_set,"%s", &varread);
+	fscanf(fp_set,"%s", &(varread[0]));
 	if(strcmp(varread, sfsfx)==0){
-		fscanf(fp_set,"%s", &grid->file_name);
+		fscanf(fp_set,"%s", &(grid->file_name[0]));
 	}
 	
 	/*  disturbance year */
@@ -73,70 +73,70 @@ void f_setting(
 	switch(WMODE){
 		case 1: /* site ********************************/
 			/* site ID */
-			fscanf(fp_set,"%s", &varread);
+			fscanf(fp_set,"%s", &(varread[0]));
 			if(strcmp(varread, ssite)==0){
-				fscanf(fp_set,"%s", &grid->area_id);
+				fscanf(fp_set,"%s", &(grid->area_id[0]));
 			}
 			printf("Site ID: %s\n", grid->area_id);
 			
 			/* last disturbance year */
-			fscanf(fp_set,"%s", &varread);
+			fscanf(fp_set,"%s", &(varread[0]));
 			if(strcmp(varread, syrdist)==0){
 				fscanf(fp_set,"%ld", &YLDIST);
 			}
 			/* spin-up time */
-			fscanf(fp_set,"%s", &varread);
+			fscanf(fp_set,"%s", &(varread[0]));
 			if(strcmp(varread, sspupt)==0){
 				fscanf(fp_set,"%ld", &SPUPT);
 			}
 
 			/* NCEP climate file name */
-			fscanf(fp_set,"%s", &varread);
+			fscanf(fp_set,"%s", &(varread[0]));
 			if(strcmp(varread, sncepf)==0){
-				fscanf(fp_set,"%s", &grid->file_ncep);
+				fscanf(fp_set,"%s", &(grid->file_ncep[0]));
 			}
 			/* site description filename */
-			fscanf(fp_set,"%s", &varread);
+			fscanf(fp_set,"%s", &(varread[0]));
 			if(strcmp(varread, ssitef)==0){
-				fscanf(fp_set,"%s", &grid->file_site);
+				fscanf(fp_set,"%s", &(grid->file_site[0]));
 			}
 			/* parameter file name */
-			fscanf(fp_set,"%s", &varread);
+			fscanf(fp_set,"%s", &(varread[0]));
 			if(strcmp(varread, sparaf)==0){
-				fscanf(fp_set,"%s", &grid->file_para);
+				fscanf(fp_set,"%s", &(grid->file_para[0]));
 			}
 
 			WGRIDS = 1;
 			break;
 		case 2: case 3: /* region **********************************/
 			/* region ID */
-			fscanf(fp_set,"%s", &varread);
+			fscanf(fp_set,"%s", &(varread[0]));
 			if(strcmp(varread, sregion)==0){
-				fscanf(fp_set,"%s", &grid->area_id);
+				fscanf(fp_set,"%s", &(grid->area_id[0]));
 			}
 			printf("Region ID: %s\n", grid->area_id);
 			/* strcpy(grid->area_id, "AsiaMIP"); */
 
 			/* study area: number of grids */
-			fscanf(fp_set,"%s", &varread);
+			fscanf(fp_set,"%s", &(varread[0]));
 			if(strcmp(varread, sreg)==0){
 				fscanf(fp_set,"%ld", &WGRIDS);
 			}
 			/* last disturbance year */
-			fscanf(fp_set,"%s", &varread);
+			fscanf(fp_set,"%s", &(varread[0]));
 			if(strcmp(varread, syrdist)==0){
 				fscanf(fp_set,"%ld", &YLDIST);
 			}
 			/* spin-up time */
-			fscanf(fp_set,"%s", &varread);
+			fscanf(fp_set,"%s", &(varread[0]));
 			if(strcmp(varread, sspupt)==0){
 				fscanf(fp_set,"%ld", &SPUPT);
 			}
             
             /* parameter file name: added by A.Ito (2012/02/07) */
-			fscanf(fp_set,"%s", &varread);
+			fscanf(fp_set,"%s", &(varread[0]));
 			if(strcmp(varread, sparaf)==0){
-				fscanf(fp_set,"%s", &grid->file_para);
+				fscanf(fp_set,"%s", &(grid->file_para[0]));
 			}
 			
 			break;

@@ -93,8 +93,8 @@ float irr_attn(				struct Grid *grid, struct Loct *loct, struct Pchar *pchar);
 void f_q10_ar(				struct Loct *loct, struct Pchar *pchar);
 void f_spcfc_resp(			struct Pchar *pchar, struct Pmas *mass);
 void f_mortality(			struct Grid *grid, struct Pchar *pchar);
-void stom_cond(				struct Grid *grid, struct Loct *loct, struct Pchar *pchar);
-float canopy_cond(			struct Grid *grid, struct Loct *loct, struct Pchar *pchar, 
+void f_stom_cond(				struct Grid *grid, struct Loct *loct, struct Pchar *pchar);
+float f_canopy_cond(		struct Grid *grid, struct Loct *loct, struct Pchar *pchar,
                             struct Pmas *mass);
 void f_pc_sat(				struct Grid *grid, struct Loct *loct, struct Pchar *pchar);
 
@@ -136,7 +136,7 @@ float f_lf(			struct Grid *grid, struct Pchar *pchar, struct Pmas *mas);
 float f_lc(			struct Grid *grid, struct Pchar *pchar, struct Pmas *mas);
 float f_lr(			struct Grid *grid, struct Pchar *pchar, struct Pmas *mas);
 
-void allocation(			struct Pchar *pchar, struct Pmas *mass, struct Pflx *flux);
+void f_allocation(			struct Pchar *pchar, struct Pmas *mass, struct Pflx *flux);
 void reallocation_survival(	struct Grid *grid, struct Pchar *pchar, struct Pmas *mass);
 
 float frl(					struct Grid *grid, struct Loct *loct, struct Schar *schar);
@@ -192,7 +192,7 @@ void f_ch4emit_plant(		struct Grid *grid, struct Loct *loct, struct Echar *echar
                             struct Mass *mass, struct Flux *flux);
 void f_ch4emit_walter(		struct Grid *grid, struct Loct *loct, struct Flux *flux);
 
-void n_budget(				struct Grid *grid, struct Loct *loct, struct Mass *mass, 
+void f_n_budget(				struct Grid *grid, struct Loct *loct, struct Mass *mass,
 							struct Flux *flux);
 void f_biolfix(				struct Grid *gsrid, struct Loct *loct, struct Flux *sflux);
 void f_nh3_volatilization(	struct Grid *grid, struct Loct *loct, struct Smas *mass, 
@@ -240,8 +240,8 @@ float ratioTdelta(			float ratio);
 float d13c_addition(		float d13c_a, float mass_a, float d13c_b, float mass_b);
 float d13c_addition3(		float d13c_a, float mass_a, float d13c_b, float mass_b, 
 							float d13c_c, float mass_c);
-void co2_in_canopy(			struct Grid *grid, struct Loct *loct, struct Mass *mass, 
-							struct Flux *flux);	
+void f_co2_in_canopy(		struct Grid *grid, struct Loct *loct, struct Mass *mass,
+							struct Flux *flux);
 void d13c_efflux(			struct Grid *grid, struct Loct *loct, struct Flux *flux);
 
 /* land use change ************************************************************/

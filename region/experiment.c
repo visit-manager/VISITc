@@ -45,7 +45,7 @@ void f_experiment(
   struct Flux flux[]
 ){
 	long e, f, h, i, j;
-	char num[8], filename[128];
+	char num[8], filename[128], filename_0[128];
 	long ndy, end_year, calc_flag, pstart, pend;
 	float gpp_a, npp_a, nep_a, lai_a, plant_a, soil_a, xx1_a, xx2_a, xx3_a, ch4_a, nn;
     float gpp_ga, npp_ga, nep_ga, plant_ga, soil_ga, prec_ga, rdata, vps;
@@ -94,6 +94,8 @@ void f_experiment(
         if(NOTICE == 1){
             printf("Read restart file...");
         }
+        
+        strcpy(filename_0,grid[0].file_name);
 
         strcpy(filename, grid[0].area_id);
         strcat(filename, "_restart_grid.flt");
@@ -101,6 +103,8 @@ void f_experiment(
             printf("!! NO %s\n",filename);
             exit (1);
         }
+        
+        strcpy(grid[0].file_name, filename_0);
 
         strcpy(filename, grid[0].area_id);
         strcat(filename, "_restart_loct.flt");
@@ -181,7 +185,7 @@ void f_experiment(
         }
 		
 		/* number of seasonal roop */
-        if(LEAP_YR ==1){
+        if(LEAP_YR == 1){
             ndy = (e%4==0)?366:365; /* */
         }else{
             ndy = 365; /* no leap year */

@@ -38,8 +38,8 @@ void set_parameter(
 	}
 	
 	/* scan version and date ID */
-	fscanf(fp_parameter,"%s", &(echar[0].para_ver_id));
-	fscanf(fp_parameter,"%s", &(echar[0].para_date_id));
+	fscanf(fp_parameter,"%s", &(echar[0].para_ver_id[0]));
+	fscanf(fp_parameter,"%s", &(echar[0].para_date_id[0]));
 	
 	/* number of biome types */
 	switch(mode){

@@ -53,7 +53,7 @@ void f_ecophysiology(
 		}
 
 		/* stomatal conductance, mmol H2O m-2 s-1 */
-		stom_cond(grid, loct, pchar); 
+		f_stom_cond(grid, loct, pchar); 
 
 		/* intercellular CO2 concentration, ppmv */
 		f_incelco2(loct, pchar); 
@@ -64,7 +64,7 @@ void f_ecophysiology(
 	}
 	
 	/** canopy conductance **/	
-	pchar->gc = canopy_cond(grid, loct, pchar, mass);
+	pchar->gc = f_canopy_cond(grid, loct, pchar, mass);
 
 	/** plant respiration **/
 	f_q10_ar(loct, pchar);	/* Q10 */
@@ -180,7 +180,7 @@ void f_photo_qy(
 }
 
 /* stomatal conductance ************************************/
-void stom_cond(
+void f_stom_cond(
 	struct Grid *grid, 
 	struct Loct *loct, 
 	struct Pchar *pchar
@@ -202,7 +202,7 @@ void stom_cond(
 }
 
 /* canopy conductance ********************************/
-float canopy_cond(
+float f_canopy_cond(
 	struct Grid *grid, 
 	struct Loct *loct, 
 	struct Pchar *pchar, 

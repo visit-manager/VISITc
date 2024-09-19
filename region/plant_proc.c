@@ -177,7 +177,7 @@ void plant_process(
 	flux->epp = flux->gpp - flux->rpm;
 	
 	/* translocation of photosynthate */
-	allocation(pchar, mass, flux);
+    f_allocation(pchar, mass, flux);
     //flux->tpf = flux->tpc = flux->tpr = 0.0;
 	
 	if(SCI_CALC == 1){

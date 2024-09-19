@@ -262,7 +262,7 @@ void f_init_cond(
 	/* atmosphere *********************************************************/
 	/* CO2 **************************************/
     atmco2_trend(grid, loct);
-	co2_in_canopy(grid, loct, mass, flux);
+	f_co2_in_canopy(grid, loct, mass, flux);
 	
     /* hour angle: local time */
 	loct->hangle = -180.0 + (float)(loct->hour)*15.0 + (float)(grid->lon);

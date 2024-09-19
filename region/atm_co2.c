@@ -94,7 +94,7 @@ void atmco2_trend(
 }
 
 /* intra-canopy CO2-d13C  ********************************************************/
-void co2_in_canopy(
+void f_co2_in_canopy(
 	struct  Grid *grid, 
 	struct  Loct *loct, 
 	struct  Mass *mass, 

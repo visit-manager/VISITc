@@ -21,8 +21,8 @@
 #include"prototype.h"
 
 /* allocation of photosynthate **********************************/
-void allocation(
-	struct Pchar *pchar, 
+void f_allocation(
+	struct Pchar *pchar,
 	struct Pmas *mass, 
 	struct Pflx *flux
 ){

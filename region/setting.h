@@ -114,7 +114,7 @@
 #define LEAP_YR 0
 
 /* restart file */
-#define USE_RESTART 0
+#define USE_RESTART 1
 /* 0: off */
 /* 1: use restart file (skip spin-up) */
 /* 2: use restart file (continue spin-up) */

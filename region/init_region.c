@@ -44,7 +44,7 @@ void f_init_global_run(
     if(NOTICE == 1){
         printf(" Setting latitude...");
     }
-    for(i=0; i<WGRIDS; i++){
+    for(i=0; i<NROW*NCOL; i++){
         grid[i].lat = 90.0 - ((float)(i/NCOL) + 0.5) * (180.0 / (float)NROW);
     }
     if(NOTICE == 1){
@@ -55,7 +55,7 @@ void f_init_global_run(
     if(NOTICE == 1){
         printf(" Setting longitude...");
     }
-    for(i=0; i<WGRIDS; i++){
+    for(i=0; i<NROW*NCOL; i++){
         /* corrected: 2024/02/21 */
         grid[i].lon = -180.0 + ((float)(i%NCOL) + 0.5) * (360.0 / (float)NCOL);
     }
@@ -80,11 +80,11 @@ void f_init_global_run(
         printf("!! NO global_srtm_qd.flt file\n");
         exit (1);
     }
-    fread(fdat, sizeof(float), WGRIDS, fp_dat);
+    fread(fdat, sizeof(float), NROW*NCOL, fp_dat);
     if(NOTICE == 1){
         printf(" Reading ./data/global_srtm_qd.flt...");
     }
-    for(i=0; i<WGRIDS; i++){
+    for(i=0; i<NROW*NCOL; i++){
         grid[i].topo = fdat[i];
         //grid[i].topo = 100.0;
     }
@@ -98,8 +98,8 @@ void f_init_global_run(
         printf("!! NO global_crop2015_qd.flt data\n");
         exit (1);
     }
-    fread(fdat, sizeof(float), WGRIDS, fp_dat);
-    for(i=0; i<WGRIDS; i++){
+    fread(fdat, sizeof(float), NROW*NCOL, fp_dat);
+    for(i=0; i<NROW*NCOL; i++){
         grid[i].agrPt = fdat[i];
     }
     if(NOTICE == 1){
@@ -115,11 +115,11 @@ void f_init_global_run(
         printf("!! NO global_synmap_qd.flt data\n");
         exit (1);
     }
-    fread(fdat, sizeof(float), WGRIDS, fp_dat);
+    fread(fdat, sizeof(float), NROW*NCOL, fp_dat);
     if(NOTICE == 1){
         printf(" Reading ./data/global_synmap_qd.flt...");
     }
-    for(i=0; i<WGRIDS; i++){
+    for(i=0; i<NROW*NCOL; i++){
         grid[i].veg_type = (short)fdat[i];
         
         /*  veg type by MOD12
@@ -274,7 +274,7 @@ void f_init_global_run(
         printf("!! NO global_soiltaxonomy_order_qd.flt data\n");
         exit (1);
     }
-    fread(fdat, sizeof(float), WGRIDS, fp_dat);
+    fread(fdat, sizeof(float), NROW*NCOL, fp_dat);
     for(i=0; i<WGRIDS; i++){
         grid[i].soil_type = (short)fdat[i];
     }
@@ -291,7 +291,7 @@ void f_init_global_run(
         printf("!! NO global_hwsd_soilmap_tclay_qd.flt data\n");
         exit (1);
     }
-    fread(fdat, sizeof(float), WGRIDS, fp_dat);
+    fread(fdat, sizeof(float), NROW*NCOL, fp_dat);
     if(NOTICE==1){
         printf(" Reading global_hwsd_soilmap_tclay_qd.flt...");
     }
@@ -314,7 +314,7 @@ void f_init_global_run(
         printf("!! NO global_hwsd_soilmap_tsand_qd.flt data\n");
         exit (1);
     }
-    fread(fdat, sizeof(float), WGRIDS, fp_dat);
+    fread(fdat, sizeof(float), NROW*NCOL, fp_dat);
     if(NOTICE==1){
         printf(" Reading global_hwsd_soilmap_tsand_qd.flt...");
     }
@@ -332,7 +332,7 @@ void f_init_global_run(
         printf("done\n  ");
     }
     
-    for(i=0; i<WGRIDS; i++){
+    for(i=0; i<NROW*NCOL; i++){
         if(grid[i].veg_type < 0){
             grid[i].veg_type = 0;
         }if(grid[i].veg_type >= 16){
@@ -345,7 +345,7 @@ void f_init_global_run(
     }
     
     /* *******************************************************/
-    for(i=0; i<WGRIDS; i++){
+    for(i=0; i<NROW*NCOL; i++){
         /* data available */
         grid[i].flag_datavl = 1;
         

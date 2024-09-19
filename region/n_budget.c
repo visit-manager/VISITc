@@ -19,7 +19,7 @@
 #include"prototype.h"
 
 /* N budget ******************************************/
-void n_budget(
+void f_n_budget(
 	struct Grid *grid, 
 	struct Loct *loct,
 	struct Mass *mass, 

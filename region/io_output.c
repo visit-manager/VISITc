@@ -18,7 +18,7 @@
 #include"structure.h"
 #include"prototype.h"
 
-/*******************************************************/
+/* ******************************************************/
 void f_create_dfile_global(
     short phase,
     short year, 
