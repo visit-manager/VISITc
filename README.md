@@ -12,7 +12,7 @@ This account (visit-manager) provides three versions of the VISIT model:
 
 - VISITa is designed for global-scale simulations and operates at a monthly time step.
 - VISITb is designed for point- or site-level simulations and operates at a daily time step.
-- VISITc is designed for point- or site-level simulations and operates at a daily time step.
+- VISITc is designed for point- or site-level simulations and operates at a 30-min time step.
 
 ## Overall Architecture
 
